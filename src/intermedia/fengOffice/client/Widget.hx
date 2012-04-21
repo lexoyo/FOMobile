@@ -11,9 +11,10 @@ class Widget {
 	private var _container : HtmlDom;
 	private var _id : String;
 
-	public var onCatBtn:Void->Void;
-	public var onTaskBtn:Void->Void;
-	public var onFilterBtn:Void->Void;
+	public var onHomeBtn:Void->Void;
+	public var onWorkspaceBtn:Void->Void;
+	public var onTabBtn:Void->Void;
+	public var onListBtn:Void->Void;
 	/**
 	 * constructor
 	 */
@@ -27,23 +28,27 @@ class Widget {
 
 		_container.innerHTML = output;
 
-		Lib.document.getElementById("WindowsId"+_id+"CatBtn").onclick = _onCatBtn;
-		Lib.document.getElementById("WindowsId"+_id+"TaskBtn").onclick = _onTaskBtn;
-		Lib.document.getElementById("WindowsId"+_id+"FilterBtn").onclick = _onFilterBtn;
+		Lib.document.getElementById("WindowsId"+_id+"HomeBtn").onclick = _onHomeBtn;
+		Lib.document.getElementById("WindowsId"+_id+"WorkspaceBtn").onclick = _onWorkspaceBtn;
+		Lib.document.getElementById("WindowsId"+_id+"TabBtn").onclick = _onTabBtn;
+		Lib.document.getElementById("WindowsId"+_id+"ListBtn").onclick = _onListBtn;
+//		Lib.document.getElementById("WindowsId"+_id+"FilterBtn").onclick = _onFilterBtn;
 
 		Lib.window.onresize = refresh;
 
-
 		refresh();
 	}
-	public function _onCatBtn(e:Event){
-		if (onCatBtn != null) onCatBtn();
+	public function _onHomeBtn(e:Event){
+		if (onHomeBtn != null) onHomeBtn();
 	}
-	public function _onTaskBtn(e:Event){
-		if (onTaskBtn != null) onTaskBtn();
+	public function _onWorkspaceBtn(e:Event){
+		if (onWorkspaceBtn != null) onWorkspaceBtn();
 	}
-	public function _onFilterBtn(e:Event){
-		if (onFilterBtn != null) onFilterBtn();
+	public function _onTabBtn(e:Event){
+		if (onTabBtn != null) onTabBtn();
+	}
+	public function _onListBtn(e:Event){
+		if (onListBtn != null) onListBtn();
 	}
 	/**
 	 * refresh the size and positions of body 
