@@ -1,0 +1,12 @@
+  <div id="workspaces" style="">
+    <div style="">
+	<button id="workspacesUp" type="button">Up</button>
+	<button id="workspacesRefresh" type="button">Refresh</button>
+	<button id="workspacesSelect" type="button">Select</button>
+    </div>
+    <div>
+	<ul>::foreach workspaces::
+	  <li><a href="#" id="workspaceId::id::">::name::</a><button style="position: absolute; right: 60px; " id="workspacesSelect::id::" type="button">Select</button></li>::end::
+	</ul>
+    </div>
+  </div>

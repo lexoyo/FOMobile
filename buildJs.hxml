@@ -1,0 +1,7 @@
+#-js bin/App.js
+-js /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/App.js
+-main MainJs
+-cp src
+-resource intermedia/fengOffice/client/templates/workspaces.html@workspaces
+-resource intermedia/fengOffice/client/templates/workspacesFooter.html@workspacesFooter
+-resource intermedia/fengOffice/client/templates/widget.html@widget

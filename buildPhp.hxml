@@ -1,0 +1,4 @@
+#-php bin/www/server
+-php /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/server/
+-main MainPhp
+-cp src
