@@ -129,6 +129,11 @@ trace(pass+" - "+userPass+" - "+decriptedPass+"<br/>");
 
 		// Convert dates to string
 		var l=new List();
+/*
+l.add({name:"test1"});
+l.add({name:"test2"});
+return l;
+*/
 		var r:List<Dynamic> = res.results();
 		for (item in r.iterator()){
 		    for (prop in Reflect.fields(item)){

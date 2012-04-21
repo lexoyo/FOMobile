@@ -3,5 +3,5 @@
 -main MainJs
 -cp src
 -resource intermedia/fengOffice/client/templates/workspaces.html@workspaces
--resource intermedia/fengOffice/client/templates/workspacesFooter.html@workspacesFooter
+-resource intermedia/fengOffice/client/templates/tasks.html@tasks
 -resource intermedia/fengOffice/client/templates/widget.html@widget

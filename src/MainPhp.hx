@@ -44,6 +44,16 @@ class MainPhp {
 		}
 		trace("<br />");
 /*		trace("************************<br />");
+		trace("Tasks<br />");
+		trace("************************<br />");
+//		var oid:Int = api.getContextList().first().id;
+		trace("Tasks "+api.listMembers(ServiceTypes.PROJECT_TASKS)+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.PROJECT_TASKS)){
+//			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
+			trace(workspace.name+ "<br />");
+		}
+		trace("<br />");
+/*		trace("************************<br />");
 		trace("1st Workspace<br />");
 		trace("************************<br />");
 		var oid:Int = api.getContextList().first().id;

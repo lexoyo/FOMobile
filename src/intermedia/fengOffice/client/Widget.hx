@@ -10,6 +10,10 @@ import js.Dom;
 class Widget {
 	private var _container : HtmlDom;
 	private var _id : String;
+
+	public var onCatBtn:Void->Void;
+	public var onTaskBtn:Void->Void;
+	public var onFilterBtn:Void->Void;
 	/**
 	 * constructor
 	 */
@@ -23,16 +27,30 @@ class Widget {
 
 		_container.innerHTML = output;
 
-Lib.window.onresize = refresh;
+		Lib.document.getElementById("WindowsId"+_id+"CatBtn").onclick = _onCatBtn;
+		Lib.document.getElementById("WindowsId"+_id+"TaskBtn").onclick = _onTaskBtn;
+		Lib.document.getElementById("WindowsId"+_id+"FilterBtn").onclick = _onFilterBtn;
+
+		Lib.window.onresize = refresh;
+
 
 		refresh();
+	}
+	public function _onCatBtn(e:Event){
+		if (onCatBtn != null) onCatBtn();
+	}
+	public function _onTaskBtn(e:Event){
+		if (onTaskBtn != null) onTaskBtn();
+	}
+	public function _onFilterBtn(e:Event){
+		if (onFilterBtn != null) onFilterBtn();
 	}
 	/**
 	 * refresh the size and positions of body 
 	 */
 	public function refresh(e:Event = null):Void {
 	      var desiredBodyHeight = Lib.document.body.clientHeight - (getTitleElement().clientHeight + getFooterElement().clientHeight);
-	      desiredBodyHeight -= 80;
+	      desiredBodyHeight -= 65;
 	      getBodyElement().style.height = desiredBodyHeight + "px";
 	}
 	/**

@@ -29,18 +29,6 @@ class Workspaces {
 	      _curWorkspace = null;
 	      refresh();
 	}
-	public function fillFooter(container:HtmlDom):Void {
-/*		var str = haxe.Resource.getString("workspacesFooter");
-		var t = new haxe.Template(str);
-		var output = t.execute({title:"Select Workspace"});
-		container.innerHTML = output;
-
-		var t = this;
-		Lib.document.getElementById("workspacesUp").onclick = selectWorkspaceUp;
-		Lib.document.getElementById("workspacesRefresh").onclick = refresh;
-		Lib.document.getElementById("workspacesSelect").onclick = function(e){t.selectWorkspace(t._curWorkspace);};
-
-*/	}
 	private function _displayContexts(workspaces:List<Workspace>):Void {
 		if (onLoading != null) onLoading(false);
 // 		trace("workspaces: "+workspaces);
