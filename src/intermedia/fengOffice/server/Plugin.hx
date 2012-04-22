@@ -10,7 +10,7 @@ class Plugin {
 	 * check if the plugin is activated
 	 */
     public function isActivated(){
-        var sql = "SELECT id FROM " + Config.TABLE_PREFIX + "plugins WHERE name = '" + Config.PLUGIN_NAME + "'";
+        var sql = "SELECT id FROM " + Config.getInstance().TABLE_PREFIX + "plugins WHERE name = '" + Config.getInstance().PLUGIN_NAME + "'";
         var res = _db.request( sql );
         if(res != null && res.length > 0) { 
             return true;

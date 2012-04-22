@@ -1,12 +1,21 @@
   <div style="padding: 10px; ">
     <div>
-	<button id="upBtn" type="button">Up</button>
-	<button id="refreshBtn" type="button">Refresh</button>
-	<button id="selectBtn" type="button">Select</button>
+		<button id="upBtn" type="button">Up</button>
+		<button id="refreshBtn" type="button">Refresh</button>
+		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">Open</button>
     </div>
+   	::if hasParent::
+    <div>
+    	<h2>::parent.name::</h2>
+    	<p>created by: ::parent.created_by_id::</p>
+    	<p>created on: ::parent.created_on::</p>
+    	<p>updated on: ::parent.updated_on::</p>
+    	<p>updated by: ::parent.updated_by_id::</p>
+    </div>
+   	::end::
     <div>
 	<ul style="list-style-type: none; padding: 0px; ">::foreach items::
-	  <li style=""><a href="#" id="itemBtn::id::" style="text-decoration: none; ">::name::</a><button style="position: absolute; right: 60px; " id="selectBtn::id::" type="button">Select</button></li>::end::
+	  <li style=""><a href="#" id="itemBtn::id::" style="text-decoration: none; ">::name::</a><button style="margin-left:auto;" id="selectBtn::id::" type="button">Select</button></li>::end::
 	</ul>
     </div>
   </div>

@@ -70,8 +70,8 @@ class FOObjectDetail {
 
 		// add interactions
 		Lib.document.getElementById("listFooterHomeBtn").onclick = onHome;
-		Lib.document.getElementById("listFooterBackBtn").onclick = onBack;
-		Lib.document.getElementById("listFooterForwardBtn").onclick = onForward;
+//		Lib.document.getElementById("listFooterBackBtn").onclick = onBack;
+//		Lib.document.getElementById("listFooterForwardBtn").onclick = onForward;
 	}
 	public function refresh(event:Event = null){
 		if (onLoading != null) onLoading(true);

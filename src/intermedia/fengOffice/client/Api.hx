@@ -9,9 +9,9 @@ import intermedia.fengOffice.client.application.Config;
  */
 class Api {
 	/*
-	 * takes a User as paramw hen success or null when disconnected
+	 * authenticated user
 	 */
-	public var onAuth:User->Void;
+	private var _user:User;
 	/**
 	 * constructor
 	 */
@@ -27,11 +27,40 @@ class Api {
 	}
 
 	/**
-	 * authenticate the user and returns his token 
+	 * check if we have authenticated successfully
 	 * @param	userName	the user name - required
 	 * @param	userPass	the user password - required
 	 */
-	public function authenticate(userName:String, userPass:String):Void {
+	private function _checkAuth():Bool {
+		if (_user == null)
+			throw("Not authenticated!");
+		return true;
+	}
+	/**
+	 * authenticate the user and returns his token 
+	 * @param	userName	the user name - required
+	 * @param	userPass	the user password - required
+	 * @param	onAuth		takes a User as paramw hen success or null when disconnected
+	 */
+	public function authenticate(userName:String, userPass:String, onAuth:User->Void, onError:Dynamic->Void = null):Void {
+		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
+		
+		if (onError != null)
+			cnx.setErrorHandler( onError );
+		else
+			cnx.setErrorHandler( defaultOnError );
+		  
+		var t = this;
+		cnx.api.authenticate.call([userName, userPass], function(user:User){
+			if (user == null){
+				trace("authentication failed");
+			}
+			else{
+				trace("authentication success");
+				t._user = user;
+			}
+			onAuth(user);
+		});
 	}
 	/**
 	 * Retrieves all object information
@@ -41,6 +70,8 @@ class Api {
 	 * @param	oid		the object id, integer - required
 	 */
 	public function getObject(oid:Int, onResult:Dynamic->Void, onError:Dynamic->Void = null):Void {
+		if (!_checkAuth()) return;
+		
 		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
 		
 		if (onError != null)
@@ -48,7 +79,7 @@ class Api {
 		else
 			cnx.setErrorHandler( defaultOnError );
 		  
-		cnx.api.getObject.call([oid], onResult);
+		cnx.api.getObject.call([oid, _user.username, _user.token], onResult);
 	}
 	/**
 	 * Returns a list of members
@@ -56,6 +87,8 @@ class Api {
 	 * @param	srv	the member object type hander - required
 	 */
 	public function listMembers(srv:ServiceType, parentId:Int = -1, onResult:List<Dynamic>->Void, onError:Dynamic->Void = null):Void {
+		if (!_checkAuth()) return;
+
 		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
 		
 		if (onError != null)
@@ -63,7 +96,7 @@ class Api {
 		else
 			cnx.setErrorHandler( defaultOnError );
 		  
-		cnx.api.listMembers.call([srv, parentId], onResult);
+		cnx.api.listMembers.call([srv, parentId, _user.username, _user.token], onResult);
 	}
 	/**
 	 * Generic list for Feng Office content objects
@@ -77,7 +110,7 @@ class Api {
 	 * @param	status
 	 * @return	array of objects
 	 */
-	public function listing(
+/*	public function listing(
 				srv:String, 
 				order_dir:String = "", 
 				order:String = "", 
@@ -86,4 +119,5 @@ class Api {
 				assigned_to:String = "", 
 				status:String = "" ):Void {
 	}
+*/
 }

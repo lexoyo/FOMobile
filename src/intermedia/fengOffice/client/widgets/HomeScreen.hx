@@ -29,7 +29,9 @@ class HomeScreen {
 	 */
 	public function new(widget:Widget):Void {
 	     _widget = widget;
-
+		 refresh();
+	}
+	public function refresh(){
 		// render the template
 		var str = haxe.Resource.getString("home");
 		var t = new haxe.Template(str);

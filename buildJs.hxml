@@ -20,4 +20,5 @@
 -resource intermedia/fengOffice/client/templates/project_events_detail.html@project_events_detail
 -resource intermedia/fengOffice/client/templates/contacts_detail.html@contacts_detail
 -resource intermedia/fengOffice/client/templates/mail_contents_detail.html@mail_contents_detail
+-resource intermedia/fengOffice/client/templates/login.html@login
 #-js bin/App.js

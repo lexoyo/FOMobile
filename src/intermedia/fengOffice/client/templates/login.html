@@ -1,0 +1,14 @@
+<div id="login" style="margin: auto; width: 200px; height: 100%px; padding-top: 20%; ">
+	<div id="loginUsernameDiv">
+		<label for="userName">Email or username:</label>
+		<input id="userName" value="" type="text">
+	</div>
+	<div id="loginPasswordDiv">
+	    <label for="userPass">Password:</label>
+	    <input id="userPass" class="medium" value="" type="password">
+	</div>
+	<button id="submitBtn" type="submit" >Login</button>
+	<div>
+		::if isError::<p style="color: orange;">::error::</p>::end::
+	</div>
+</div>

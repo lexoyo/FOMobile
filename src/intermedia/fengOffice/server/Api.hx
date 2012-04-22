@@ -27,7 +27,7 @@ class Api {
 	 * @param	parentId	the parent id or null
 	 * @return	a list of workspaces
 	 */
-    public function getContextList(parentId:String = null):List<Workspace>{
+/*    public function getContextList(parentId:String = null):List<Workspace>{
 
 		if (parentId != null)
 			throw ("not implemented");
@@ -43,6 +43,22 @@ class Api {
         return cast(res.results());
     }
 	/**
+	 * after authentication, the userName and token are used to check the authentication status 
+	 * @param	userName	the user name
+	 * @param	userPass	the token returned by authenticate
+	 * @return	true or false
+	 */
+    private function _checkAuth(userName:String, token:String):Bool{
+        //object_id,first_name,surname,is_company,company_id,brand_colors,department,job_title,birthday,timezone,user_type,is_active_user,token,display_name,username,picture_file,avatar_file,comments,last_login,last_visit,last_activity,disabled,default_billing_id 
+        var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` 
+	    WHERE `username`='"+userName+"' AND `token`='"+token+"'";
+		var res = _db.request( sql );
+        if(res == null || res.length == 0) { 
+            return false;
+        }
+		return true;
+	}
+	/**
 	 * authenticate the user and returns his token 
 	 * @param	userName	the user name
 	 * @param	userPass	the user password
@@ -50,20 +66,21 @@ class Api {
 	 */
     public function authenticate(userName:String, userPass:String):Null<User>{
 
-	untyped __call__ ("include_once", Config.FO_ROOT_PATH+"/application/functions.php");
+	untyped __call__ ("include_once", Config.getInstance().FO_ROOT_PATH+"/application/functions.php");
+	//untyped __call__ ("include_once", Config.getInstance().FO_ROOT_PATH+"/config/config.php");
 
-        var sql = "SELECT * FROM `"+Config.TABLE_PREFIX+"contacts` 
-	    WHERE `username`='"+userName+"'";
         //object_id,first_name,surname,is_company,company_id,brand_colors,department,job_title,birthday,timezone,user_type,is_active_user,token,display_name,username,picture_file,avatar_file,comments,last_login,last_visit,last_activity,disabled,default_billing_id 
-	var res = _db.request( sql );
+        var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` 
+	    	WHERE `username`='"+userName+"'";
+		var res = _db.request( sql );
         if(res == null || res.length == 0) { 
             return null;
         }
 	
-	var user:User = res.results().first();
+		var user:User = res.results().first();
  
 //trace(user+"<br/>");
-        sql = "SELECT * FROM "+Config.TABLE_PREFIX+"contact_passwords
+        sql = "SELECT id, contact_id, password_date, password FROM "+Config.getInstance().TABLE_PREFIX+"contact_passwords
 		  WHERE `contact_id`="+user.object_id; 
 //trace("-------------------<br/>"+sql+"<br/>-------------------<br/>");
 
@@ -71,33 +88,69 @@ class Api {
         if(res == null || res.length == 0) { 
             return null;
         }
-	var pass:Dynamic = res.results().first();
+		var pass:Dynamic = res.results().last();
 
 /// todo: cp_decrypt
-return user;
+//return user;
 
 //trace(pass+" - "+userPass+"<br/>");
-	untyped __call__("define", "SEED", user.salt);
-	var timestamp = untyped __call__("mktime", pass.password_date("H"), pass.password_date("i"), pass.password_date("s"), pass.password_date("m"), pass.password_date("d"), pass.password_date("y")); 
+	//untyped __call__("define", "SEED", user.salt);
+	//var timestamp = untyped __call__("mktime", pass.password_date("H"), pass.password_date("i"), pass.password_date("s"), pass.password_date("m"), pass.password_date("d"), pass.password_date("y")); 
+	var timestamp = untyped __call__("strtotime", pass.password_date); 
 	var decriptedPass = untyped __call__("cp_decrypt", pass.password, timestamp);
 
-trace(pass+" - "+userPass+" - "+decriptedPass+"<br/>");
+//trace(pass.password+" - "+userPass+" - "+decriptedPass+"<br/>"+timestamp+"<br/>");
 
-        if(decriptedPass != userPass) { 
+        if(decriptedPass != userPass || user.disabled == true) { 
             return null;
         }
+		// Convert dates to string
+	    for (prop in Reflect.fields(user)){
+			var propValue = Reflect.field(user, prop);
+			switch (Type.typeof(propValue)){
+			    case TClass(c):
+					Reflect.setField(user, prop, ""+Std.string(propValue));
+			    default:
+			}
+		}
 
-        return user;
+        return {
+		    object_id:user.object_id,
+		    first_name:user.first_name,
+		    surname:user.surname,
+		    is_company:user.is_company,
+		    company_id:user.company_id,
+		    brand_colors:user.brand_colors,
+		    department:user.department,
+		    job_title:user.job_title,
+		    birthday:user.birthday,
+		    timezone:user.timezone,
+		    user_type:user.user_type,
+		    is_active_user:user.is_active_user,
+		    token:user.token,
+		    display_name:user.display_name,
+		    username:user.username,
+		    picture_file:user.picture_file,
+		    avatar_file:user.avatar_file,
+		    comments:user.comments,
+		    last_login:user.last_login,
+		    last_visit:user.last_visit,
+		    last_activity:user.last_activity,
+		    disabled:user.disabled,
+		};
     }
+	
 	/**
 	 * Retrieves all object information
 	 * mimic the name of the service in v1 api, http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_api_documentation
 	 * @param	oid	the object id, integer - required
 	 */
-	public function getObject(oid:Int):Null<Dynamic> {
+	public function getObject(oid:Int, user:String, token:String):Null<Dynamic> {
+		if (!_checkAuth(user, token)) throw("authentication faild");
+
 		// retrieve the object
-		var sql = "SELECT * FROM `"+Config.TABLE_PREFIX+"objects` 
-							WHERE "+Config.TABLE_PREFIX+"objects.id = "+oid; 
+		var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"objects` 
+							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.id = "+oid; 
 
 		var res = _db.request( sql );
 		if(res == null || res.length == 0) { 
@@ -107,13 +160,13 @@ trace(pass+" - "+userPass+" - "+decriptedPass+"<br/>");
 
 		// find the object detail table
 		// SELECT * FROM `fo_object_types` WHERE id=4
-		sql = "SELECT * FROM `"+Config.TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
+		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
 		res = _db.request( sql );
 		var detailTableName = res.next().table_name;
 
 		// retrieve details of the object in the object detail table
 		//SELECT * FROM `fo_project_webpages` WHERE `object_id`=76
-		sql = "SELECT * FROM `"+Config.TABLE_PREFIX+detailTableName+"` WHERE `object_id`="+oid; 
+		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+detailTableName+"` WHERE `object_id`="+oid; 
 		res = _db.request( sql );
 		
 		// add details to the object
@@ -125,7 +178,7 @@ trace(pass+" - "+userPass+" - "+decriptedPass+"<br/>");
 		}
 		// retrieve details of the latest version of a file
 		//SELECT * FROM `fo_searchable_objects` WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id=8)
-		sql = "SELECT * FROM `"+Config.TABLE_PREFIX+"searchable_objects` 
+		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"searchable_objects` 
 							WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id="+oid+")"; 
 //		trace(sql+"<br/>***********<br/>");
 		res = _db.request( sql );
@@ -154,17 +207,20 @@ trace(pass+" - "+userPass+" - "+decriptedPass+"<br/>");
 	 * @param	srv	the member object type hander - required
 	 * @return	array of objects
 	 */
-	public function listMembers(srv:ServiceType, parentId:Int = -1):List<Dynamic> {
+	public function listMembers(srv:ServiceType, parentId:Int = -1, user:String, token:String):List<Dynamic> {
+
+		if (!_checkAuth(user, token)) throw("authentication faild");
+
 		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces)
-		var sql = "SELECT * FROM "+Config.TABLE_PREFIX+"objects 
-							WHERE "+Config.TABLE_PREFIX+"objects.`id` in (SELECT "+Config.TABLE_PREFIX+srv+".`object_id` 
-							FROM "+Config.TABLE_PREFIX+srv+")"; 
+		var sql = "SELECT * FROM "+Config.getInstance().TABLE_PREFIX+"objects 
+							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+srv+".`object_id` 
+							FROM "+Config.getInstance().TABLE_PREFIX+srv+")"; 
 		// case with a parent
 		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces) AND fo_objects.`id` in (SELECT id FROM fo_members WHERE `parent_member_id`="3")
 		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_project_tasks.`object_id` FROM fo_project_tasks) AND fo_objects.`id` in (SELECT object_id FROM fo_object_members WHERE `member_id`='3') 
 		if (parentId >= 0){
-		    sql += "AND ("+Config.TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.TABLE_PREFIX+"object_members WHERE `member_id`='"+parentId+"')";
-		    sql += "OR "+Config.TABLE_PREFIX+"objects.`id` in (SELECT id FROM "+Config.TABLE_PREFIX+"members WHERE `parent_member_id`='"+parentId+"'))";
+		    sql += "AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`='"+parentId+"')";
+		    sql += "OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id`='"+parentId+"'))";
 		}
 
 //		trace("request "+sql+"<br />");
@@ -208,7 +264,7 @@ return l;
 	 * @param	status
 	 * @return	array of objects
 	 */
-	public function listing(
+/*	public function listing(
 				srv:String, 
 				order_dir:String = "", 
 				order:String = "", 
@@ -219,4 +275,5 @@ return l;
 
 		return null;
 	}
+*/
 }

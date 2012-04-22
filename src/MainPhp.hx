@@ -11,21 +11,21 @@ import haxe.remoting.Context;
 class MainPhp {	
 	public function new(){
 		var db = new Db({
-				host:"", 
-				user:Config.DB_USER,
-				pass:Config.DB_PASS,
-				database:Config.DB_NAME
+				host:Config.getInstance().DB_HOST, 
+				user:Config.getInstance().DB_USER,
+				pass:Config.getInstance().DB_PASS,
+				database:Config.getInstance().DB_NAME
 			});
 		db.open();
 		var api = new Api(db);
 /*		trace("************************<br />");
 		trace("auth<br />");
 		trace("************************<br />");
-		trace("a: "+api.authenticate("a", "a"));
+		trace("____a: "+api.authenticate("lexa", "lexalexa"));
 		trace("<br />");
-		trace("b: "+api.authenticate("b", "b"));
-		trace("<br />");
-		var api = new Api(db);
+		trace("____b: "+api.authenticate("test", "test"));
+		trace("<br />"); 
+
 /*		trace("************************<br />");
 		trace("workspaces<br />");
 		trace("************************<br />");

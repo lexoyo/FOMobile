@@ -1,5 +1,6 @@
 package intermedia.fengOffice.client.widgets; 
 
+import intermedia.fengOffice.client.application.AppState; 
 import intermedia.fengOffice.cross.Data;
 import js.Lib;
 import js.Dom;
@@ -20,31 +21,32 @@ class FOObjectsList {
 
 	private var _api : Api;
 	private var _widget : Widget;
-	private var _serviceType : ServiceType;
 	private var _prevItems : Array<Dynamic>;
 	private var _curItem : Dynamic;
 	/**
 	 * @param	parentItem	the parent item, with a field "id"
 	 */
-	public function new(api:Api, widget:Widget, serviceType:ServiceType, parentItem:Dynamic=null):Void {
+	public function new(api:Api, widget:Widget):Void {
 	      _api = api;
 	      _widget = widget;
-	      _serviceType = serviceType;
+		  //_curItem = AppState.getInstance().curWorkspace;
 	      // init the process, get the top level contexts
-	      _prevItems = [];
-	      _curItem = parentItem;
+	      _prevItems = new Array();
 	      refresh();
 	}
 	private function _displayItems(items:List<Dynamic>):Void {
 		if (onLoading != null) onLoading(false);
 // 		trace("Items: "+items);
 		// render the template
-		var str = haxe.Resource.getString(_serviceType);
+		var str = haxe.Resource.getString(AppState.getInstance().curServiceType);
 		var t = new haxe.Template(str);
 		var title; 
 		if (_curItem != null) title = _curItem.name;
 		else title = "Select Item";
-		var output = t.execute({items:items, title:title});
+		var parent = null;
+		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
+		trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]);
+		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, title:title});
 
 		// attach to the dom
 		_widget.getBodyElement().innerHTML = output;
@@ -81,8 +83,8 @@ class FOObjectsList {
 
 		// add interactions
 		Lib.document.getElementById("listFooterHomeBtn").onclick = onHome;
-		Lib.document.getElementById("listFooterBackBtn").onclick = onBack;
-		Lib.document.getElementById("listFooterForwardBtn").onclick = onForward;
+//		Lib.document.getElementById("listFooterBackBtn").onclick = onBack;
+//		Lib.document.getElementById("listFooterForwardBtn").onclick = onForward;
 	}
 	public function openItem(item:Dynamic){
 	      _prevItems.push(_curItem);
@@ -98,15 +100,15 @@ class FOObjectsList {
 	      refresh();
 	}
 	public function refresh(event:Event = null){
-	      //trace("refresh "+_curItem);
-	      var curId : Int;
-	      if (_curItem != null) curId = _curItem.id;
-	      else curId = -1; // means all items
+		//trace("refresh "+_curItem);
+		var curId : Int;
+		if (_curItem != null) curId = _curItem.id;
+		else curId = AppState.getInstance().curWorkspace.id; // -1 means all items
   
 		if (onLoading != null) onLoading(true);
 		
-		trace("call listMembers("+_serviceType+", "+curId+"");
-	    _api.listMembers(_serviceType, curId,cast(_displayItems), onError);
+		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+"");
+	    _api.listMembers(AppState.getInstance().curServiceType, curId,cast(_displayItems), onError);
 	}
 	public function enableUp(){
 	      try{

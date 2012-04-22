@@ -58,7 +58,6 @@ typedef User = {
     user_type:Int,
     is_active_user:Bool,
     token:String,
-    salt:String,
     display_name:String,
     username:String,
     picture_file:String,
@@ -68,6 +67,5 @@ typedef User = {
     last_visit:String,
     last_activity:String,
     disabled:Bool,
-    default_billing_id:Int
 }
 

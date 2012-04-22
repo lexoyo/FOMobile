@@ -16,6 +16,7 @@ import js.Dom;
  * entry point for the application
  */
 class Application {
+	//private var objectLists : Hash<FOObjectsList>;
 	/**
 	 * FO API
 	 */
@@ -29,22 +30,67 @@ class Application {
 	 */
 	public function new(){
 		api = new Api();
+		//objectLists = new Hash();
 		
+		goAuthPage();
+	}
+	private function goAuthPage(errorMsg:String=""){
 		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
+		// get the template
+		var str = haxe.Resource.getString("login");
+		var t = new haxe.Template(str);
+		var output = t.execute({config:Config, appState:this, error:errorMsg, isError:(errorMsg!="")});
+		widget.setBody(output);
+		Lib.document.getElementById("submitBtn").onclick = onSubmit;
+	}
+	private function onSubmit(event:Event){
+		var userName = cast(Lib.document.getElementById("userName")).value;
+		var userPass = cast(Lib.document.getElementById("userPass")).value;
+		api.authenticate(userName, userPass, onAuth);
+	}
+	private function startAuth(userName:String, userPass:String){
+		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
+		trace("authentication start");
+		// get the template
+		var str = haxe.Resource.getString("loading");
+		var t = new haxe.Template(str);
+		var output = t.execute({config:Config, appState:this});
+		widget.setBody(output);
+		
+		api.authenticate(userName, userPass, onAuth);
+	}
+	private function onAuth(user:User){
+		if (user == null){
+			trace("authentication failed");
+			goAuthPage("wrong user name or password");
+			return;
+		}
+		trace("authentication success");
+		AppState.getInstance().curUser = user;
 		goHome();
 	}
 	/**
 	 * callback from the view
 	 */
 	private function goHome(e:Event = null){
-		var screen : HomeScreen = new HomeScreen(widget);
-		screen.onChange = goList;
+		var homeScreen = new HomeScreen(widget);
+		homeScreen.onChange = goList;
 	}
 	private function goList(srv:ServiceType){
 		trace("List selected "+srv);
 		AppState.getInstance().curServiceType = srv;
 		
-		var list : FOObjectsList = new FOObjectsList(api, widget, srv, AppState.getInstance().curWorkspace);
+		var list : FOObjectsList;
+/*		if (objectLists.exists(srv)){
+			list = objectLists.get(srv);
+			list.refresh();
+		}
+		else{
+			list = new FOObjectsList(api, widget);
+			objectLists.set(srv, list);
+		}
+*/		
+			list = new FOObjectsList(api, widget);
 		list.onHome = goHome;
 		list.onSelect = _onSelectItem;
 	}
