@@ -1,6 +1,7 @@
 package intermedia.fengOffice.client; 
 
 import intermedia.fengOffice.cross.Data;
+import intermedia.fengOffice.client.application.Config;
 
 /**
  * this class do the querries to FO db tables
@@ -40,6 +41,14 @@ class Api {
 	 * @param	oid		the object id, integer - required
 	 */
 	public function getObject(oid:Int, onResult:Dynamic->Void, onError:Dynamic->Void = null):Void {
+		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
+		
+		if (onError != null)
+			cnx.setErrorHandler( onError );
+		else
+			cnx.setErrorHandler( defaultOnError );
+		  
+		cnx.api.getObject.call([oid], onResult);
 	}
 	/**
 	 * Returns a list of members
@@ -47,13 +56,14 @@ class Api {
 	 * @param	srv	the member object type hander - required
 	 */
 	public function listMembers(srv:ServiceType, parentId:Int = -1, onResult:List<Dynamic>->Void, onError:Dynamic->Void = null):Void {
-	      var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
-	      if (onError != null)
-		cnx.setErrorHandler( onError );
-	      else
-		cnx.setErrorHandler( defaultOnError );
-	      
-	      cnx.api.listMembers.call([srv, parentId], onResult);
+		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
+		
+		if (onError != null)
+			cnx.setErrorHandler( onError );
+		else
+			cnx.setErrorHandler( defaultOnError );
+		  
+		cnx.api.listMembers.call([srv, parentId], onResult);
 	}
 	/**
 	 * Generic list for Feng Office content objects

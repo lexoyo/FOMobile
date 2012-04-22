@@ -1,21 +1,28 @@
-package intermedia.fengOffice.client; 
+package intermedia.fengOffice.client.widgets; 
 
 import js.Lib;
 import js.Dom;
 
 /**
- * this class do the querries to FO db tables
- * let you retrieve the needed data from your FO server
+ * main screen container, with header, body and footer
+ * instanciate the widget.html template
+ * querry FO objects and display them
  */
 class Widget {
+	/**
+	 * parent container
+	 */
 	private var _container : HtmlDom;
+	/**
+	 * ID of this widget, used in the ID of all UIs in the HTML template
+	 */
 	private var _id : String;
 
-	public var onHomeBtn:Void->Void;
+/*	public var onHomeBtn:Void->Void;
 	public var onWorkspaceBtn:Void->Void;
 	public var onTabBtn:Void->Void;
 	public var onListBtn:Void->Void;
-	/**
+*/	/**
 	 * constructor
 	 */
 	public function new(id:String, title:String, container:HtmlDom){
@@ -25,20 +32,20 @@ class Widget {
 		var str = haxe.Resource.getString("widget");
 		var t = new haxe.Template(str);
 		var output = t.execute({id:id, title:title});
-
 		_container.innerHTML = output;
 
-		Lib.document.getElementById("WindowsId"+_id+"HomeBtn").onclick = _onHomeBtn;
+/*		Lib.document.getElementById("WindowsId"+_id+"HomeBtn").onclick = _onHomeBtn;
 		Lib.document.getElementById("WindowsId"+_id+"WorkspaceBtn").onclick = _onWorkspaceBtn;
 		Lib.document.getElementById("WindowsId"+_id+"TabBtn").onclick = _onTabBtn;
 		Lib.document.getElementById("WindowsId"+_id+"ListBtn").onclick = _onListBtn;
 //		Lib.document.getElementById("WindowsId"+_id+"FilterBtn").onclick = _onFilterBtn;
+*/
 
+		// handle the size of the body
 		Lib.window.onresize = refresh;
-
 		refresh();
 	}
-	public function _onHomeBtn(e:Event){
+/*	public function _onHomeBtn(e:Event){
 		if (onHomeBtn != null) onHomeBtn();
 	}
 	public function _onWorkspaceBtn(e:Event){
@@ -50,8 +57,8 @@ class Widget {
 	public function _onListBtn(e:Event){
 		if (onListBtn != null) onListBtn();
 	}
-	/**
-	 * refresh the size and positions of body 
+*/	/**
+	 * refresh the size of the body 
 	 */
 	public function refresh(e:Event = null):Void {
 	      var desiredBodyHeight = Lib.document.body.clientHeight - (getTitleElement().clientHeight + getFooterElement().clientHeight);

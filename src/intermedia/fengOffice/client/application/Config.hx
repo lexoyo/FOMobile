@@ -1,4 +1,4 @@
-package intermedia.fengOffice.client;
+package intermedia.fengOffice.client.application;
 
 class Config {	
 	public static inline var PLUGIN_NAME:String = "MobileApp";

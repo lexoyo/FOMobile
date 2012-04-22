@@ -2,6 +2,10 @@ package intermedia.fengOffice.cross;
 
 typedef ServiceType = String;
 
+// todo: structures
+typedef Tab = Dynamic;
+typedef Task = Dynamic;
+
 class ServiceTypes {
 	public static inline var WORKSPACES:String = "workspaces";
 	public static inline var PROJECT_MESSAGES:String = "project_messages";

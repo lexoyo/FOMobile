@@ -47,8 +47,8 @@ class MainPhp {
 		trace("Tasks<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
-		trace("Tasks "+api.listMembers(ServiceTypes.PROJECT_TASKS)+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.PROJECT_TASKS)){
+		trace("Tasks "+api.listMembers(ServiceTypes.PROJECT_TASKS, 0)+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.PROJECT_TASKS, 3)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 			trace(workspace.name+ "<br />");
 		}
@@ -56,11 +56,10 @@ class MainPhp {
 /*		trace("************************<br />");
 		trace("1st Workspace<br />");
 		trace("************************<br />");
-		var oid:Int = api.getContextList().first().id;
+		var oid:Int = 8;//api.getContextList().first().id;
 		trace("workspace with id "+oid+"<br />");
 		trace("name = "+api.getObject(oid).name+"<br />");
-		trace("<br />");
-*/
+		trace(api.getObject(oid)+"<br />");
 /**/		// create an incoming connection and give access to the "instance" object 
 		var context = new Context(); 
 		context.addObject("api",api); 
