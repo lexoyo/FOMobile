@@ -17,3 +17,8 @@ ToDo:
 - settings in the app
 - my account
 - admin?
+
+Other todos
+- hr ds les listes
+- bugs : auth, sous taches...
+- mise en page

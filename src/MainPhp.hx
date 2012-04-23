@@ -17,7 +17,20 @@ class MainPhp {
 				database:Config.getInstance().DB_NAME
 			});
 		db.open();
-		var api = new Api(db);
+		var api:Api;
+		try{
+			api = new Api(db);
+		}catch(e:Dynamic)
+		{
+			db.close();
+			//trace("error "+e );
+			// get the template
+			var str = haxe.Resource.getString("not-activated");
+			var t = new haxe.Template(str);
+			var output = t.execute({config:Config, error:e});
+ 			Lib.print(output);
+			return;
+		}
 /*		trace("************************<br />");
 		trace("auth<br />");
 		trace("************************<br />");
@@ -37,8 +50,8 @@ class MainPhp {
 		trace("all Workspace<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
-		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES)+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.WORKSPACES)){
+		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES, 0, "a", "054af8831ee44863039ee5f00699ec8286dd8f2e")+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.WORKSPACES, 0, "a", "054af8831ee44863039ee5f00699ec8286dd8f2e")){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 			trace(workspace.name+ "<br />");
 		}
@@ -76,7 +89,11 @@ class MainPhp {
 /**/
 		db.close();
 		// handle normal request
-		Lib.print("This is a remoting server !");
+		var str = haxe.Resource.getString("activated");
+		var t = new haxe.Template(str);
+		var output = t.execute({config:Config.getInstance()});
+		Lib.print(output);
+		return;
 	}
 	
 	public static function main() {

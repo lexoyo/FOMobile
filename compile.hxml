@@ -1,4 +1,4 @@
--js /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/App.js
+-js bin/MobileApp/App.js
 -main MainJs
 -cp src
 -resource intermedia/fengOffice/client/templates/widget.html@widget
@@ -22,3 +22,22 @@
 -resource intermedia/fengOffice/client/templates/mail_contents_detail.html@mail_contents_detail
 -resource intermedia/fengOffice/client/templates/login.html@login
 #-js bin/App.js
+
+
+
+
+
+
+--next
+
+-php bin/MobileApp/server/
+-main MainPhp
+-cp src
+#-cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/MobileApp/
+-resource intermedia/fengOffice/server/templates/not-activated.html@not-activated
+-resource intermedia/fengOffice/server/templates/activated.html@activated
+
+
+
+
+

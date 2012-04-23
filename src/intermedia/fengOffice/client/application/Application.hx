@@ -65,7 +65,7 @@ class Application {
 			goAuthPage("wrong user name or password");
 			return;
 		}
-		trace("authentication success");
+		trace("authentication success "+user.token);
 		AppState.getInstance().curUser = user;
 		goHome();
 	}

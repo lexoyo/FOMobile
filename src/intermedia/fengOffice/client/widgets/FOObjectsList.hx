@@ -36,7 +36,7 @@ class FOObjectsList {
 	}
 	private function _displayItems(items:List<Dynamic>):Void {
 		if (onLoading != null) onLoading(false);
-// 		trace("Items: "+items);
+ 		trace("Items: "+items);
 		// render the template
 		var str = haxe.Resource.getString(AppState.getInstance().curServiceType);
 		var t = new haxe.Template(str);

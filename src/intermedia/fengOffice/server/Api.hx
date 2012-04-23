@@ -216,11 +216,10 @@ class Api {
 							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+srv+".`object_id` 
 							FROM "+Config.getInstance().TABLE_PREFIX+srv+")"; 
 		// case with a parent
-		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces) AND fo_objects.`id` in (SELECT id FROM fo_members WHERE `parent_member_id`="3")
-		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_project_tasks.`object_id` FROM fo_project_tasks) AND fo_objects.`id` in (SELECT object_id FROM fo_object_members WHERE `member_id`='3') 
+		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces)AND (fo_objects.`id` in (SELECT object_id FROM fo_object_members WHERE `member_id`='0') OR fo_objects.`id` in (SELECT object_id FROM fo_members WHERE `parent_member_id`='0'))
 		if (parentId >= 0){
 		    sql += "AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`='"+parentId+"')";
-		    sql += "OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id`='"+parentId+"'))";
+		    sql += "OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id`='"+parentId+"'))";
 		}
 
 //		trace("request "+sql+"<br />");
