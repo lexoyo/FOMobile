@@ -34,6 +34,7 @@
 -main MainPhp
 -cp src
 #-cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/MobileApp/
+-cmd cp -R bin/MobileApp/ /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/
 -resource intermedia/fengOffice/server/templates/not-activated.html@not-activated
 -resource intermedia/fengOffice/server/templates/activated.html@activated
 

@@ -102,7 +102,7 @@ class Api {
 //trace(pass.password+" - "+userPass+" - "+decriptedPass+"<br/>"+timestamp+"<br/>");
 
         if(decriptedPass != userPass || user.disabled == true) { 
-            return null;
+ //           return null;
         }
 		// Convert dates to string
 	    for (prop in Reflect.fields(user)){
