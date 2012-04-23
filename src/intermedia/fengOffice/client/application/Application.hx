@@ -49,7 +49,6 @@ class Application {
 		api.authenticate(userName, userPass, onAuth);
 	}
 	private function startAuth(userName:String, userPass:String){
-		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		trace("authentication start");
 		// get the template
 		var str = haxe.Resource.getString("loading");
@@ -73,6 +72,7 @@ class Application {
 	 * callback from the view
 	 */
 	private function goHome(e:Event = null){
+
 		var homeScreen = new HomeScreen(widget);
 		homeScreen.onChange = goList;
 	}

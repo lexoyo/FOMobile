@@ -2,21 +2,17 @@
     <div>
 		<button id="upBtn" type="button">Up</button>
 		<button id="refreshBtn" type="button">Refresh</button>
-		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">Open</button>
     </div>
-   	::if hasParent::
-    <div>
-    	<h2>::curItem.name::</h2>
-    	<p>created by: ::curItem.created_by_id::</p>
-    	<p>created on: ::curItem.created_on::</p>
-    	<p>updated on: ::curItem.updated_on::</p>
-    	<p>updated by: ::curItem.updated_by_id::</p>
-    </div>
-    ::else::
     <div>
     	<h2>::title::</h2>
+		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">Select Workspace</button>
+	   	::if hasParent::
+	    	<p>created by: ::curItem.created_by_id::</p>
+	    	<p>created on: ::curItem.created_on::</p>
+	    	<p>updated on: ::curItem.updated_on::</p>
+	    	<p>updated by: ::curItem.updated_by_id::</p>
+	    ::end::
     </div>
-   	::end::
     <div>
 	<ul style="list-style-type: none; text-align:right;margin:1em 0;padding:0">::foreach items::
 	  <li style="margin-bottom: 30px; border-bottom: medium groove gray; ">

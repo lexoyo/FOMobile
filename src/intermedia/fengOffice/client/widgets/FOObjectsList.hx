@@ -45,7 +45,7 @@ class FOObjectsList {
 		else title = "Select Item";
 		var parent = null;
 		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
-		trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
+		//trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
 		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title});
 
 		// attach to the dom
@@ -73,7 +73,7 @@ class FOObjectsList {
 		var title; 
 		if (_curItem != null) title = _curItem.name;
 		else title = "Select Item";
-		var output = t.execute({items:items, title:title});
+		var output = t.execute({items:items, title:title, curItem:_curItem});
 
 		// attach to the dom
 		_widget.getFooterElement().innerHTML = output;
