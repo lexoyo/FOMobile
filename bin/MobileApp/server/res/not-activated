@@ -1,0 +1,13 @@
+<html>
+		<head>
+			<title>Feng Office</title>
+			<link href="::config.ROOT_URL::/favicon.ico" rel="shortcut icon" />
+			<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+			<meta name="Viewport" content="width=device-width">
+		</head>
+		<body>
+		<div style="padding: 10px; ">
+			<p>Plugin is not activated yet, check <a href='http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_plugin_engine'>this article about activation</a></p>
+		</div>
+	</body>
+</html>
