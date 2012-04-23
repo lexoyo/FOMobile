@@ -1,12 +1,29 @@
   <div style="padding: 10px; ">
     <div>
-	<button id="upBtn" type="button">Up</button>
-	<button id="refreshBtn" type="button">Refresh</button>
-	<button id="selectBtn" type="button">Select</button>
+		<button id="upBtn" type="button">Up</button>
+		<button id="refreshBtn" type="button">Refresh</button>
+		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">Open</button>
     </div>
+   	::if hasParent::
     <div>
-	<ul style="list-style-type: none; padding: 0px; ">::foreach items::
-	  <li style=""><a href="#" id="itemBtn::id::" style="text-decoration: none; ">::name::</a><button style="position: absolute; right: 60px; " id="selectBtn::id::" type="button">Select</button></li>::end::
+    	<h2>::curItem.name::</h2>
+    	<p>created by: ::curItem.created_by_id::</p>
+    	<p>created on: ::curItem.created_on::</p>
+    	<p>updated on: ::curItem.updated_on::</p>
+    	<p>updated by: ::curItem.updated_by_id::</p>
+    </div>
+    ::else::
+    <div>
+    	<h2>::title::</h2>
+    </div>
+   	::end::
+    <div>
+	<ul style="list-style-type: none; text-align:right;margin:1em 0;padding:0">::foreach items::
+	  <li style="margin-bottom: 30px; border-bottom: medium groove gray; ">
+		  <p style="margin: 0; text-decoration: none; white-space:nowrap; float:left">::name::</p>
+		  <button style="display:inline;white-space:nowrap;" id="itemBtn::id::" type="button">See children</button>
+		  <button style="display:inline;white-space:nowrap;" id="selectBtn::id::" type="button">Select workspace</button>
+	  </li>::end::
 	</ul>
     </div>
   </div>

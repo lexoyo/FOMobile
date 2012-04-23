@@ -57,7 +57,7 @@ class HomeScreen {
 	}
 	public function _workspaceBtnCallback(e:Event){
 		// workaround no persistence
-		curWorkspace = {
+		AppState.getInstance().curWorkspace = {
 		    object_id:-1,
 		    id : 0, // to list only items in the root folder, -1 would list all workspaces 
 		    object_type_id : -1, 

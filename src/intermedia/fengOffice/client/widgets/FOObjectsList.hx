@@ -45,8 +45,8 @@ class FOObjectsList {
 		else title = "Select Item";
 		var parent = null;
 		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
-		trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]);
-		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, title:title});
+		trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
+		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title});
 
 		// attach to the dom
 		_widget.getBodyElement().innerHTML = output;
@@ -108,7 +108,7 @@ class FOObjectsList {
 		if (onLoading != null) onLoading(true);
 		
 		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+"");
-	    _api.listMembers(AppState.getInstance().curServiceType, curId,cast(_displayItems), onError);
+	    _api.listMembers(AppState.getInstance().curServiceType, curId,_displayItems, onError);
 	}
 	public function enableUp(){
 	      try{
