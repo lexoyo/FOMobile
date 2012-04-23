@@ -179,7 +179,7 @@ class Api {
 		// retrieve details of the latest version of a file
 		//SELECT * FROM `fo_searchable_objects` WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id=8)
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"searchable_objects` 
-							WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id="+oid+")"; 
+							WHERE `rel_object_id` in (SELECT MAX(object_id) FROM "+Config.getInstance().TABLE_PREFIX+"project_file_revisions where file_id="+oid+")"; 
 //		trace(sql+"<br/>***********<br/>");
 		res = _db.request( sql );
 		

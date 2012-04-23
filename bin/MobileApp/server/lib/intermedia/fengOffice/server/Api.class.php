@@ -36,7 +36,6 @@ class intermedia_fengOffice_server_Api {
 		$timestamp = strtotime($pass->password_date);
 		$decriptedPass = cp_decrypt($pass->password, $timestamp);
 		if($decriptedPass !== $userPass || $user->disabled === true) {
-			return null;
 		}
 		{
 			$_g = 0; $_g1 = Reflect::fields($user);
@@ -86,7 +85,7 @@ class intermedia_fengOffice_server_Api {
 				}
 			}
 		}
-		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "searchable_objects` \x0A\x09\x09\x09\x09\x09\x09\x09WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id=" . $oid . ")";
+		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "searchable_objects` \x0A\x09\x09\x09\x09\x09\x09\x09WHERE `rel_object_id` in (SELECT MAX(object_id) FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "project_file_revisions where file_id=" . $oid . ")";
 		$res = $this->_db->request($sql);
 		if($res !== null || $res->getLength() > 0) {
 			$objTmp = $res->next();

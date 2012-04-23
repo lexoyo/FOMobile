@@ -9,16 +9,16 @@ Tabs (skin is in widget.html):
 - filter
 
 
-ToDo:
-- login
-- demo mode (login to a public FO)
+ToDo for alpha:
+- better look
+- loadings
 - server error handling
+- demo mode (login to a public FO)
+
+ToDo for vbeta:
+- children: display a "+" when there are subtasks
 - config pannel in FO?
 - settings in the app
 - my account
 - admin?
 
-Other todos
-- hr ds les listes
-- bugs : auth, sous taches...
-- mise en page
