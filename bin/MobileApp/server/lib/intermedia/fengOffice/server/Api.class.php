@@ -36,6 +36,7 @@ class intermedia_fengOffice_server_Api {
 		$timestamp = strtotime($pass->password_date);
 		$decriptedPass = cp_decrypt($pass->password, $timestamp);
 		if($decriptedPass !== $userPass || $user->disabled === true) {
+			return null;
 		}
 		{
 			$_g = 0; $_g1 = Reflect::fields($user);
