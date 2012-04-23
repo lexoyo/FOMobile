@@ -56,6 +56,25 @@ class HomeScreen {
 		Lib.document.getElementById("contactsBtn").onclick = _contactsBtnCallback;
 	}
 	public function _workspaceBtnCallback(e:Event){
+		// workaround no persistence
+		curWorkspace = {
+		    object_id:-1,
+		    id : 0, // to list only items in the root folder, -1 would list all workspaces 
+		    object_type_id : -1, 
+		    name : "All Workspaces", 
+		
+		    created_on : "", 
+		    created_by_id : -1, 
+		
+		    updated_on : "", 
+		    updated_by_id : -1, 
+		
+		    trashed_on : "", 
+		    trashed_by_id : -1, 
+		
+		    archived_on : "", 
+		    archived_by_id : -1 
+		}		
 		if (onChange != null) 
 			onChange(ServiceTypes.WORKSPACES);
 	}
