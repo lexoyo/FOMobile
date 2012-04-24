@@ -1,17 +1,22 @@
   <div style="padding: 10px; ">
     <div>
     	<h2>::item.name::</h2>
-    	<p>udated on ::item.updated_on::</p>
-    	<p>created on ::item.created_on::</p>
+    	<p>created on: ::item.created_on::</p>
+    	<p>created by: ::item.created_by.username::</p>::if item.created_by.picture_file::<img src="::item.created_by.picture_file::" />::end::
+    	<p>updated on: ::item.updated_on::</p>
+    	<p>updated by: ::item.updated_by.username::</p>::if item.updated_by.picture_file::<img src="::item.updated_by.picture_file::" />::end::
+
     </div>
     <div>
-	  	<p>Start date: ::item.start_date::</p>
-	  	<p>Due date: ::item.start_date::</p>
-	  	<p>Assigned to: ::item.assigned_to_contact_id::</p>
-	  	<p>Assigned by: ::item.assigned_by_id::</p>
-	  	<p>Estimated time: ::item.time_estimate::</p>
-	  	<p>Completed: ::item.percent_completed::%</p>
-	  	<p>Completed on: ::item.completed_on::</p>
-	  	<p>Completed by: ::item.completed_by_id::</p>
+	  	<p>Start date: ::item.properties.start_date::</p>
+	  	<p>Due date: ::item.properties.start_date::</p>
+	  	<p>Assigned to: ::item.properties.assigned_to_contact_id::</p>
+	  	<p>Assigned by: ::item.properties.assigned_by_id::</p>
+	  	<p>Estimated time: ::item.properties.time_estimate::</p>
+	  	<p>Completed: ::item.properties.percent_completed::%</p>
+	  	<p>Completed on: ::item.properties.completed_on::</p>
+	  	<p>Completed by: ::item.properties.completed_by_id::</p>
     </div>
+	   	<hr />
+	  	<p>All data: ::item::</p>
   </div>

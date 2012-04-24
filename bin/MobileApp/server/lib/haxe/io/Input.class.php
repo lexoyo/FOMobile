@@ -173,17 +173,21 @@ class haxe_io_Input {
 		$ch2 = $this->readByte();
 		$ch3 = $this->readByte();
 		$ch4 = $this->readByte();
-		if((haxe_io_Input_5($this, $ch1, $ch2, $ch3, $ch4)) >= 64) {
+		if(((($this->bigEndian) ? $ch1 : $ch4)) >= 64) {
 			throw new HException(haxe_io_Error::$Overflow);
 		}
-		return haxe_io_Input_6($this, $ch1, $ch2, $ch3, $ch4);
+		return haxe_io_Input_5($this, $ch1, $ch2, $ch3, $ch4);
 	}
 	public function readInt32() {
 		$ch1 = $this->readByte();
 		$ch2 = $this->readByte();
 		$ch3 = $this->readByte();
 		$ch4 = $this->readByte();
-		return haxe_io_Input_7($this, $ch1, $ch2, $ch3, $ch4);
+		$i = haxe_io_Input_6($this, $ch1, $ch2, $ch3, $ch4);
+		if($i > 2147483647) {
+			$i -= 0x100000000;
+		}
+		return $i;
 	}
 	public function readString($len) {
 		$b = haxe_io_Bytes::alloc($len);
@@ -235,19 +239,12 @@ function haxe_io_Input_4(&$퍁his, &$ch1, &$ch2, &$ch3) {
 }
 function haxe_io_Input_5(&$퍁his, &$ch1, &$ch2, &$ch3, &$ch4) {
 	if($퍁his->bigEndian) {
-		return $ch1;
-	} else {
-		return $ch4;
-	}
-}
-function haxe_io_Input_6(&$퍁his, &$ch1, &$ch2, &$ch3, &$ch4) {
-	if($퍁his->bigEndian) {
 		return $ch4 | $ch3 << 8 | $ch2 << 16 | $ch1 << 24;
 	} else {
 		return $ch1 | $ch2 << 8 | $ch3 << 16 | $ch4 << 24;
 	}
 }
-function haxe_io_Input_7(&$퍁his, &$ch1, &$ch2, &$ch3, &$ch4) {
+function haxe_io_Input_6(&$퍁his, &$ch1, &$ch2, &$ch3, &$ch4) {
 	if($퍁his->bigEndian) {
 		return ($ch1 << 8 | $ch2) << 16 | ($ch3 << 8 | $ch4);
 	} else {

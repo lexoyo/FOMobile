@@ -59,9 +59,9 @@ class Application {
 		api.authenticate(userName, userPass, onAuth);
 	}
 	private function onAuth(user:User){
-		if (user == null){
+		if (user.error_msg != ""){
 			trace("authentication failed");
-			goAuthPage("wrong user name or password");
+			goAuthPage(user.error_msg);
 			return;
 		}
 		trace("authentication success "+user.token);

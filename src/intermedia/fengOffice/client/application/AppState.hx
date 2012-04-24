@@ -9,7 +9,7 @@ import js.Lib;
  * this is a singleton with app state and defaults
  */
 class AppState{
-	public var curWorkspace:Workspace;
+	public var curWorkspace:SafeObject;
 	public var curItem:Dynamic;
 	public var curServiceType:ServiceType;
 	public var curUser:User;
@@ -24,24 +24,7 @@ class AppState{
 	 */
 	private function new(){
 		curServiceType = "";
-		curWorkspace = {
-		    object_id:-1,
-		    id : 0, // to list only items in the root folder, -1 would list all workspaces 
-		    object_type_id : -1, 
-		    name : "All Workspaces", 
-		
-		    created_on : "", 
-		    created_by_id : -1, 
-		
-		    updated_on : "", 
-		    updated_by_id : -1, 
-		
-		    trashed_on : "", 
-		    trashed_by_id : -1, 
-		
-		    archived_on : "", 
-		    archived_by_id : -1 
-		}
+		curWorkspace = SafeObjectTools.createEmpty();
 /*		// get the template
 		var str = haxe.Resource.getString("loading");
 		var t = new haxe.Template(str);

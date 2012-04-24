@@ -1,16 +1,20 @@
   <div style="padding: 10px; ">
     <div>
     	<h2>::item.name::</h2>
-    	<p>udated on ::item.updated_on::</p>
-    	<p>created on ::item.created_on::</p>
+    	<p>created on: ::item.created_on::</p>
+    	<p>created by: ::item.created_by.username::</p>::if item.created_by.picture_file::<img src="::item.created_by.picture_file::" />::end::
+    	<p>updated on: ::item.updated_on::</p>
+    	<p>updated by: ::item.updated_by.username::</p>::if item.updated_by.picture_file::<img src="::item.updated_by.picture_file::" />::end::
+
     </div>
     <div>
-	  	<p>URL: <a href="::item.url::">::item.url::</a></p>
+	  	<p>URL: <a href="::item.url::">::item.properties.url::</a></p>
     </div>
     <div>
-	  	<iframe src="::item.url::" style="padding: 0px; width: 100%; height: 100%; " />
+	  	<iframe src="::item.properties.url::" style="padding: 0px; width: 100%; height: 100%; " />
     </div>
     <div>
+	   	<hr />
 	  	<p>All data: ::item::</p>
     </div>
   </div>

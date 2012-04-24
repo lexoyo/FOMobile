@@ -34,7 +34,7 @@ class MainPhp {
 /*		trace("************************<br />");
 		trace("auth<br />");
 		trace("************************<br />");
-		trace("____a: "+api.authenticate("lexa", "lexalexa"));
+		trace("____a: "+api.authenticate("a", "a"));
 		trace("<br />");
 		trace("____b: "+api.authenticate("test", "test"));
 		trace("<br />"); 
@@ -46,33 +46,37 @@ class MainPhp {
 			trace(workspace.name+"<br />");
 		}
 		trace("<br />");
-/*		trace("************************<br />");
+/*
+		trace("************************<br />");
 		trace("all Workspace<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
-		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES, 0, "a", "054af8831ee44863039ee5f00699ec8286dd8f2e")+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.WORKSPACES, 0, "a", "054af8831ee44863039ee5f00699ec8286dd8f2e")){
+		var token = api.authenticate("a", "a").token;
+		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES, 0, "a", token)+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.WORKSPACES, 4, "a", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
-			trace(workspace.name+ "<br />");
+			trace(workspace.name + " - "+workspace.id+ "<br />");
 		}
 		trace("<br />");
 /*		trace("************************<br />");
-		trace("Tasks<br />");
+		trace("Tasks, files, ...<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
-		trace("Tasks "+api.listMembers(ServiceTypes.PROJECT_TASKS, 0)+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.PROJECT_TASKS, 3)){
+		var token = api.authenticate("a", "a").token;
+		trace("Members: "+api.listMembers(ServiceTypes.PROJECT_FILES, 4, "a", token)+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.PROJECT_FILES, 4, "a", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 			trace(workspace.name+ "<br />");
 		}
 		trace("<br />");
 /*		trace("************************<br />");
-		trace("1st Workspace<br />");
+		trace("Objects<br />");
 		trace("************************<br />");
-		var oid:Int = 8;//api.getContextList().first().id;
+		var token = api.authenticate("a", "a").token;
+		var oid:Int =11;//api.getContextList().first().id;
 		trace("workspace with id "+oid+"<br />");
-		trace("name = "+api.getObject(oid).name+"<br />");
-		trace(api.getObject(oid)+"<br />");
+		trace("name = "+api.getObject(oid, "a", token).name+"<br />");
+		trace(api.getObject(oid, "a", token)+"<br />");
 /**/		// create an incoming connection and give access to the "instance" object 
 		var context = new Context(); 
 		context.addObject("api",api); 

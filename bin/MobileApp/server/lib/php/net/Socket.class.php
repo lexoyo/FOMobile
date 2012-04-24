@@ -48,7 +48,7 @@ class php_net_Socket {
 	public function shutdown($read, $write) {
 		$r = null;
 		if(function_exists("stream_socket_shutdown")) {
-			$rw = php_net_Socket_0($this, $r, $read, $write);
+			$rw = (($read && $write) ? 2 : (($write) ? 1 : (($read) ? 0 : 2)));
 			$r = stream_socket_shutdown($this->__s, $rw);
 		} else {
 			$r = fclose($this->__s);
@@ -58,7 +58,7 @@ class php_net_Socket {
 	public function bind($host, $port) {
 		$errs = null;
 		$errn = null;
-		$r = stream_socket_server($this->protocol . "://" . $host->_ip . ":" . $port, $errn, $errs, php_net_Socket_1($this, $errn, $errs, $host, $port));
+		$r = stream_socket_server($this->protocol . "://" . $host->_ip . ":" . $port, $errn, $errs, (($this->protocol === "udp") ? STREAM_SERVER_BIND : STREAM_SERVER_BIND | STREAM_SERVER_LISTEN));
 		php_net_Socket::checkError($r, $errn, $errs);
 		$this->__s = $r;
 		$this->assignHandler();
@@ -117,45 +117,16 @@ class php_net_Socket {
 		return $s;
 	}
 	static function checkError($r, $code, $msg) {
-		if(!$r === false) {
+		if(!($r === false)) {
 			return;
 		}
 		throw new HException(haxe_io_Error::Custom("Error [" . $code . "]: " . $msg));
 	}
 	static function getType($isUdp) {
-		return php_net_Socket_2($isUdp);
+		return (($isUdp) ? SOCK_DGRAM : SOCK_STREAM);
 	}
 	static function getProtocol($protocol) {
 		return getprotobyname($protocol);
 	}
 	function __toString() { return 'php.net.Socket'; }
-}
-function php_net_Socket_0(&$»this, &$r, &$read, &$write) {
-	if($read && $write) {
-		return 2;
-	} else {
-		if($write) {
-			return 1;
-		} else {
-			if($read) {
-				return 0;
-			} else {
-				return 2;
-			}
-		}
-	}
-}
-function php_net_Socket_1(&$»this, &$errn, &$errs, &$host, &$port) {
-	if($»this->protocol === "udp") {
-		return STREAM_SERVER_BIND;
-	} else {
-		return STREAM_SERVER_BIND | STREAM_SERVER_LISTEN;
-	}
-}
-function php_net_Socket_2(&$isUdp) {
-	if($isUdp) {
-		return SOCK_DGRAM;
-	} else {
-		return SOCK_STREAM;
-	}
 }

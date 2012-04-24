@@ -12,16 +12,16 @@ class php_io_File {
 		return file_put_contents($path, $content);
 	}
 	static function read($path, $binary) {
-		return new php_io_FileInput(fopen($path, php_io_File_0($binary, $path)));
+		return new php_io_FileInput(fopen($path, (($binary) ? "rb" : "r")));
 	}
 	static function write($path, $binary) {
-		return new php_io_FileOutput(fopen($path, php_io_File_1($binary, $path)));
+		return new php_io_FileOutput(fopen($path, (($binary) ? "wb" : "w")));
 	}
 	static function append($path, $binary) {
-		return new php_io_FileOutput(fopen($path, php_io_File_2($binary, $path)));
+		return new php_io_FileOutput(fopen($path, (($binary) ? "ab" : "a")));
 	}
 	static function copy($src, $dst) {
-		return copy($src, $dst);
+		copy($src, $dst);
 	}
 	static function stdin() {
 		return new php_io_FileInput(fopen("php://stdin", "r"));
@@ -40,25 +40,4 @@ class php_io_File {
 		return $v;
 	}
 	function __toString() { return 'php.io.File'; }
-}
-function php_io_File_0(&$binary, &$path) {
-	if($binary) {
-		return "rb";
-	} else {
-		return "r";
-	}
-}
-function php_io_File_1(&$binary, &$path) {
-	if($binary) {
-		return "wb";
-	} else {
-		return "w";
-	}
-}
-function php_io_File_2(&$binary, &$path) {
-	if($binary) {
-		return "ab";
-	} else {
-		return "a";
-	}
 }

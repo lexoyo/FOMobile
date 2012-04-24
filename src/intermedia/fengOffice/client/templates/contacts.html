@@ -5,12 +5,13 @@
     </div>
     <div>
     	<h2>::title::</h2>
+    	::if curItem.picture_file::<img src="::curItem.picture_file::" />::end::
 		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">Open details</button>
 	   	::if hasParent::
-	    	<p>created by: ::curItem.created_by_id::</p>
 	    	<p>created on: ::curItem.created_on::</p>
+	    	<p>created by: ::curItem.created_by.username::</p>::if curItem.created_by.picture_file::<img src="::curItem.created_by.picture_file::" />::end::
 	    	<p>updated on: ::curItem.updated_on::</p>
-	    	<p>updated by: ::curItem.updated_by_id::</p>
+	    	<p>updated by: ::curItem.updated_by.username::</p>::if curItem.updated_by.picture_file::<img src="::curItem.updated_by.picture_file::" />::end::
 	    ::end::
     </div>
     <div>
@@ -23,3 +24,4 @@
 	</ul>
     </div>
   </div>
+<!--   ::items::  -->

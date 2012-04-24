@@ -1,6 +1,6 @@
 <?php
 
-class php_db__Mysql_MysqlResultSet implements php_db_ResultSet{
+class php_db__Mysql_MysqlResultSet implements sys_db_ResultSet{
 	public function __construct($r, $c) {
 		if(!php_Boot::$skip_constructor) {
 		$this->__r = $r;
@@ -12,10 +12,10 @@ class php_db__Mysql_MysqlResultSet implements php_db_ResultSet{
 	public $__c;
 	public $cache;
 	public function getLength() {
-		if($this->__r === true) {
+		if(($this->__r === true)) {
 			return mysql_affected_rows($this->__c);
 		} else {
-			if($this->__r === false) {
+			if(($this->__r === false)) {
 				return 0;
 			}
 		}
@@ -72,7 +72,7 @@ class php_db__Mysql_MysqlResultSet implements php_db_ResultSet{
 	public $cRow;
 	public function fetchRow() {
 		$this->cRow = mysql_fetch_array($this->__r, MYSQL_NUM);
-		return !$this->cRow === false;
+		return !($this->cRow === false);
 	}
 	public function next() {
 		if(_hx_field($this, "cache") !== null) {
@@ -115,6 +115,18 @@ class php_db__Mysql_MysqlResultSet implements php_db_ResultSet{
 	}
 	public function getFloatResult($n) {
 		return floatval($this->getResult($n));
+	}
+	public function getFieldsNames() {
+		$fields = new _hx_array(array());
+		{
+			$_g1 = 0; $_g = $this->getNFields();
+			while($_g1 < $_g) {
+				$i = $_g1++;
+				$fields->push(mysql_field_name($this->__r, $i));
+				unset($i);
+			}
+		}
+		return $fields;
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))

@@ -36,24 +36,14 @@ StringTools.isSpace = function(s,pos) {
 StringTools.ltrim = function(s) {
 	var l = s.length;
 	var r = 0;
-	while(r < l && StringTools.isSpace(s,r)) {
-		r++;
-	}
-	if(r > 0) return s.substr(r,l - r);
-	else return s;
+	while(r < l && StringTools.isSpace(s,r)) r++;
+	if(r > 0) return s.substr(r,l - r); else return s;
 }
 StringTools.rtrim = function(s) {
 	var l = s.length;
 	var r = 0;
-	while(r < l && StringTools.isSpace(s,l - r - 1)) {
-		r++;
-	}
-	if(r > 0) {
-		return s.substr(0,l - r);
-	}
-	else {
-		return s;
-	}
+	while(r < l && StringTools.isSpace(s,l - r - 1)) r++;
+	if(r > 0) return s.substr(0,l - r); else return s;
 }
 StringTools.trim = function(s) {
 	return StringTools.ltrim(StringTools.rtrim(s));
@@ -61,15 +51,12 @@ StringTools.trim = function(s) {
 StringTools.rpad = function(s,c,l) {
 	var sl = s.length;
 	var cl = c.length;
-	while(sl < l) {
-		if(l - sl < cl) {
-			s += c.substr(0,l - sl);
-			sl = l;
-		}
-		else {
-			s += c;
-			sl += cl;
-		}
+	while(sl < l) if(l - sl < cl) {
+		s += c.substr(0,l - sl);
+		sl = l;
+	} else {
+		s += c;
+		sl += cl;
 	}
 	return s;
 }
@@ -78,15 +65,12 @@ StringTools.lpad = function(s,c,l) {
 	var sl = s.length;
 	if(sl >= l) return s;
 	var cl = c.length;
-	while(sl < l) {
-		if(l - sl < cl) {
-			ns += c.substr(0,l - sl);
-			sl = l;
-		}
-		else {
-			ns += c;
-			sl += cl;
-		}
+	while(sl < l) if(l - sl < cl) {
+		ns += c.substr(0,l - sl);
+		sl = l;
+	} else {
+		ns += c;
+		sl += cl;
 	}
 	return ns + s;
 }
@@ -113,13 +97,12 @@ StringTools.prototype.__class__ = StringTools;
 if(typeof intermedia=='undefined') intermedia = {}
 if(!intermedia.fengOffice) intermedia.fengOffice = {}
 if(!intermedia.fengOffice.client) intermedia.fengOffice.client = {}
-intermedia.fengOffice.client.Api = function(p) { if( p === $_ ) return; {
-	null;
-}}
+intermedia.fengOffice.client.Api = function(p) {
+}
 intermedia.fengOffice.client.Api.__name__ = ["intermedia","fengOffice","client","Api"];
 intermedia.fengOffice.client.Api.prototype._user = null;
 intermedia.fengOffice.client.Api.prototype.defaultOnError = function(err) {
-	haxe.Log.trace("Error : " + Std.string(err),{ fileName : "Api.hx", lineNumber : 26, className : "intermedia.fengOffice.client.Api", methodName : "defaultOnError"});
+	null;
 }
 intermedia.fengOffice.client.Api.prototype._checkAuth = function() {
 	if(this._user == null) throw "Not authenticated!";
@@ -127,33 +110,24 @@ intermedia.fengOffice.client.Api.prototype._checkAuth = function() {
 }
 intermedia.fengOffice.client.Api.prototype.authenticate = function(userName,userPass,onAuth,onError) {
 	var cnx = haxe.remoting.HttpAsyncConnection.urlConnect("." + "/indexPhp.php");
-	if(onError != null) cnx.setErrorHandler(onError);
-	else cnx.setErrorHandler($closure(this,"defaultOnError"));
+	if(onError != null) cnx.setErrorHandler(onError); else cnx.setErrorHandler($closure(this,"defaultOnError"));
 	var t = this;
 	cnx.resolve("api").resolve("authenticate").call([userName,userPass],function(user) {
-		if(user == null) {
-			haxe.Log.trace("authentication failed",{ fileName : "Api.hx", lineNumber : 56, className : "intermedia.fengOffice.client.Api", methodName : "authenticate"});
-		}
-		else {
-			haxe.Log.trace("authentication success",{ fileName : "Api.hx", lineNumber : 59, className : "intermedia.fengOffice.client.Api", methodName : "authenticate"});
-			t._user = user;
-		}
+		if(user == null) null; else t._user = user;
 		onAuth(user);
 	});
 }
 intermedia.fengOffice.client.Api.prototype.getObject = function(oid,onResult,onError) {
 	if(!this._checkAuth()) return;
 	var cnx = haxe.remoting.HttpAsyncConnection.urlConnect("." + "/indexPhp.php");
-	if(onError != null) cnx.setErrorHandler(onError);
-	else cnx.setErrorHandler($closure(this,"defaultOnError"));
+	if(onError != null) cnx.setErrorHandler(onError); else cnx.setErrorHandler($closure(this,"defaultOnError"));
 	cnx.resolve("api").resolve("getObject").call([oid,this._user.username,this._user.token],onResult);
 }
 intermedia.fengOffice.client.Api.prototype.listMembers = function(srv,parentId,onResult,onError) {
 	if(parentId == null) parentId = -1;
 	if(!this._checkAuth()) return;
 	var cnx = haxe.remoting.HttpAsyncConnection.urlConnect("." + "/indexPhp.php");
-	if(onError != null) cnx.setErrorHandler(onError);
-	else cnx.setErrorHandler($closure(this,"defaultOnError"));
+	if(onError != null) cnx.setErrorHandler(onError); else cnx.setErrorHandler($closure(this,"defaultOnError"));
 	cnx.resolve("api").resolve("listMembers").call([srv,parentId,this._user.username,this._user.token],onResult);
 }
 intermedia.fengOffice.client.Api.prototype.__class__ = intermedia.fengOffice.client.Api;
@@ -162,22 +136,18 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it0 = arr.iterator();
-	while( $it0.hasNext() ) { var t = $it0.next();
-	if(t == field) return true;
-	}}
+	var $it0 = arr.iterator();
+	while( $it0.hasNext() ) {
+		var t = $it0.next();
+		if(t == field) return true;
+	}
 	return false;
 }
 Reflect.field = function(o,field) {
 	var v = null;
 	try {
 		v = o[field];
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			null;
-		}
+	} catch( e ) {
 	}
 	return v;
 }
@@ -191,31 +161,16 @@ Reflect.fields = function(o) {
 	if(o == null) return new Array();
 	var a = new Array();
 	if(o.hasOwnProperty) {
-		
-				for(var i in o)
-					if( o.hasOwnProperty(i) )
-						a.push(i);
-			;
-	}
-	else {
+		for(var i in o) if( o.hasOwnProperty(i) ) a.push(i);
+	} else {
 		var t;
 		try {
 			t = o.__proto__;
-		}
-		catch( $e0 ) {
-			{
-				var e = $e0;
-				{
-					t = null;
-				}
-			}
+		} catch( e ) {
+			t = null;
 		}
 		if(t != null) o.__proto__ = null;
-		
-				for(var i in o)
-					if( i != "__proto__" )
-						a.push(i);
-			;
+		for(var i in o) if( i != "__proto__" ) a.push(i);
 		if(t != null) o.__proto__ = t;
 	}
 	return a;
@@ -243,28 +198,24 @@ Reflect.deleteField = function(o,f) {
 }
 Reflect.copy = function(o) {
 	var o2 = { };
-	{
-		var _g = 0, _g1 = Reflect.fields(o);
-		while(_g < _g1.length) {
-			var f = _g1[_g];
-			++_g;
-			o2[f] = Reflect.field(o,f);
-		}
+	var _g = 0, _g1 = Reflect.fields(o);
+	while(_g < _g1.length) {
+		var f = _g1[_g];
+		++_g;
+		o2[f] = Reflect.field(o,f);
 	}
 	return o2;
 }
 Reflect.makeVarArgs = function(f) {
 	return function() {
 		var a = new Array();
-		{
-			var _g1 = 0, _g = arguments.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				a.push(arguments[i]);
-			}
+		var _g1 = 0, _g = arguments.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			a.push(arguments[i]);
 		}
 		return f(a);
-	}
+	};
 }
 Reflect.prototype.__class__ = Reflect;
 if(!intermedia.fengOffice.client.application) intermedia.fengOffice.client.application = {}
@@ -272,13 +223,14 @@ intermedia.fengOffice.client.application.Config = function() { }
 intermedia.fengOffice.client.application.Config.__name__ = ["intermedia","fengOffice","client","application","Config"];
 intermedia.fengOffice.client.application.Config.prototype.__class__ = intermedia.fengOffice.client.application.Config;
 if(!intermedia.fengOffice.client.widgets) intermedia.fengOffice.client.widgets = {}
-intermedia.fengOffice.client.widgets.FOObjectDetail = function(api,widget,serviceType,item,parentItem) { if( api === $_ ) return; {
+intermedia.fengOffice.client.widgets.FOObjectDetail = function(api,widget,serviceType,item,parentItem) {
+	if( api === $_ ) return;
 	this._api = api;
 	this._widget = widget;
 	this._serviceType = serviceType;
 	this._item = item;
 	this.refresh();
-}}
+}
 intermedia.fengOffice.client.widgets.FOObjectDetail.__name__ = ["intermedia","fengOffice","client","widgets","FOObjectDetail"];
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype.onChange = null;
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype.onError = null;
@@ -292,17 +244,12 @@ intermedia.fengOffice.client.widgets.FOObjectDetail.prototype._serviceType = nul
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype._item = null;
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype._displayItem = function(itemDetail) {
 	if(this.onLoading != null) this.onLoading(false);
-	haxe.Log.trace("***********************<br/>",{ fileName : "FOObjectDetail.hx", lineNumber : 39, className : "intermedia.fengOffice.client.widgets.FOObjectDetail", methodName : "_displayItem"});
-	haxe.Log.trace("Details of " + this._item.name + ": " + itemDetail + "<br/>",{ fileName : "FOObjectDetail.hx", lineNumber : 40, className : "intermedia.fengOffice.client.widgets.FOObjectDetail", methodName : "_displayItem"});
-	{
-		var _g = 0, _g1 = Reflect.fields(itemDetail);
-		while(_g < _g1.length) {
-			var prop = _g1[_g];
-			++_g;
-			haxe.Log.trace(prop + " = " + Reflect.field(itemDetail,prop) + "<br/>",{ fileName : "FOObjectDetail.hx", lineNumber : 42, className : "intermedia.fengOffice.client.widgets.FOObjectDetail", methodName : "_displayItem"});
-		}
+	var _g = 0, _g1 = Reflect.fields(itemDetail);
+	while(_g < _g1.length) {
+		var prop = _g1[_g];
+		++_g;
+		null;
 	}
-	haxe.Log.trace("***********************<br/>",{ fileName : "FOObjectDetail.hx", lineNumber : 44, className : "intermedia.fengOffice.client.widgets.FOObjectDetail", methodName : "_displayItem"});
 	var str = haxe.Resource.getString(this._serviceType + "_detail");
 	var t = new haxe.Template(str);
 	var output = t.execute({ item : itemDetail});
@@ -316,7 +263,6 @@ intermedia.fengOffice.client.widgets.FOObjectDetail.prototype._displayItem = fun
 }
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype.refresh = function(event) {
 	if(this.onLoading != null) this.onLoading(true);
-	haxe.Log.trace("call getObject(" + this._item.id,{ fileName : "FOObjectDetail.hx", lineNumber : 79, className : "intermedia.fengOffice.client.widgets.FOObjectDetail", methodName : "refresh"});
 	this._api.getObject(this._item.id,$closure(this,"_displayItem"),this.onError);
 }
 intermedia.fengOffice.client.widgets.FOObjectDetail.prototype.__class__ = intermedia.fengOffice.client.widgets.FOObjectDetail;
@@ -329,16 +275,15 @@ haxe.Log.clear = function() {
 	js.Boot.__clear_trace();
 }
 haxe.Log.prototype.__class__ = haxe.Log;
-intermedia.fengOffice.client.application.AppState = function(p) { if( p === $_ ) return; {
+intermedia.fengOffice.client.application.AppState = function(p) {
+	if( p === $_ ) return;
 	this.curServiceType = "";
-	this.curWorkspace = { object_id : -1, id : 0, object_type_id : -1, name : "All Workspaces", created_on : "", created_by_id : -1, updated_on : "", updated_by_id : -1, trashed_on : "", trashed_by_id : -1, archived_on : "", archived_by_id : -1};
-}}
+	this.curWorkspace = intermedia.fengOffice.cross.SafeObjectTools.createEmpty();
+}
 intermedia.fengOffice.client.application.AppState.__name__ = ["intermedia","fengOffice","client","application","AppState"];
 intermedia.fengOffice.client.application.AppState._instance = null;
 intermedia.fengOffice.client.application.AppState.getInstance = function() {
-	if(intermedia.fengOffice.client.application.AppState._instance == null) {
-		intermedia.fengOffice.client.application.AppState._instance = new intermedia.fengOffice.client.application.AppState();
-	}
+	if(intermedia.fengOffice.client.application.AppState._instance == null) intermedia.fengOffice.client.application.AppState._instance = new intermedia.fengOffice.client.application.AppState();
 	return intermedia.fengOffice.client.application.AppState._instance;
 }
 intermedia.fengOffice.client.application.AppState.prototype.curWorkspace = null;
@@ -346,12 +291,13 @@ intermedia.fengOffice.client.application.AppState.prototype.curItem = null;
 intermedia.fengOffice.client.application.AppState.prototype.curServiceType = null;
 intermedia.fengOffice.client.application.AppState.prototype.curUser = null;
 intermedia.fengOffice.client.application.AppState.prototype.__class__ = intermedia.fengOffice.client.application.AppState;
-StringBuf = function(p) { if( p === $_ ) return; {
+StringBuf = function(p) {
+	if( p === $_ ) return;
 	this.b = new Array();
-}}
+}
 StringBuf.__name__ = ["StringBuf"];
 StringBuf.prototype.add = function(x) {
-	this.b[this.b.length] = x;
+	this.b[this.b.length] = x == null?"null":x;
 }
 StringBuf.prototype.addSub = function(s,pos,len) {
 	this.b[this.b.length] = s.substr(pos,len);
@@ -364,12 +310,13 @@ StringBuf.prototype.toString = function() {
 }
 StringBuf.prototype.b = null;
 StringBuf.prototype.__class__ = StringBuf;
-intermedia.fengOffice.client.widgets.FOObjectsList = function(api,widget) { if( api === $_ ) return; {
+intermedia.fengOffice.client.widgets.FOObjectsList = function(api,widget) {
+	if( api === $_ ) return;
 	this._api = api;
 	this._widget = widget;
 	this._prevItems = new Array();
 	this.refresh();
-}}
+}
 intermedia.fengOffice.client.widgets.FOObjectsList.__name__ = ["intermedia","fengOffice","client","widgets","FOObjectsList"];
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.onSelect = null;
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.onChange = null;
@@ -384,46 +331,41 @@ intermedia.fengOffice.client.widgets.FOObjectsList.prototype._prevItems = null;
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype._curItem = null;
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype._displayItems = function(items) {
 	if(this.onLoading != null) this.onLoading(false);
-	haxe.Log.trace("Items: " + items,{ fileName : "FOObjectsList.hx", lineNumber : 39, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "_displayItems"});
 	var str = haxe.Resource.getString(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType);
 	var t = new haxe.Template(str);
 	var title;
-	if(this._curItem != null) title = this._curItem.name;
-	else title = "Select Item";
+	if(this._curItem != null) title = this._curItem.name; else title = "Select Item";
 	var parent = null;
 	if(this._prevItems.length > 0) parent = this._prevItems[this._prevItems.length - 1];
 	var output = t.execute({ items : items, hasParent : this._prevItems.length > 0, parent : parent, curItem : this._curItem, title : title});
 	this._widget.getBodyElement().innerHTML = output;
 	var t1 = this;
-	{ var $it0 = items.iterator();
-	while( $it0.hasNext() ) { var $t1 = $it0.next();
-	{
-		var w = [$t1];
-		js.Lib.document.getElementById("itemBtn" + w[0].id).onclick = function(w) {
+	var $it0 = items.iterator();
+	while( $it0.hasNext() ) {
+		var w = $it0.next();
+		var w1 = [w];
+		js.Lib.document.getElementById("itemBtn" + w1[0].id).onclick = (function(w1) {
 			return function(e) {
-				t1.openItem(w[0]);
-			}
-		}(w);
-		js.Lib.document.getElementById("selectBtn" + w[0].id).onclick = function(w) {
+				t1.openItem(w1[0]);
+			};
+		})(w1);
+		js.Lib.document.getElementById("selectBtn" + w1[0].id).onclick = (function(w1) {
 			return function(e) {
-				t1.selectItem(w[0]);
-			}
-		}(w);
+				t1.selectItem(w1[0]);
+			};
+		})(w1);
 	}
-	}}
 	if(this.onChange != null) this.onChange(this._curItem);
-	if(this._prevItems.length <= 0) this.disableUp();
-	else this.enableUp();
+	if(this._prevItems.length <= 0) this.disableUp(); else this.enableUp();
 	js.Lib.document.getElementById("upBtn").onclick = $closure(this,"onUp");
 	js.Lib.document.getElementById("refreshBtn").onclick = $closure(this,"refresh");
 	js.Lib.document.getElementById("selectBtn").onclick = function(e) {
 		t1.selectItem(t1._curItem);
-	}
+	};
 	var str1 = haxe.Resource.getString("list_footer");
 	var t2 = new haxe.Template(str1);
 	var title1;
-	if(this._curItem != null) title1 = this._curItem.name;
-	else title1 = "Select Item";
+	if(this._curItem != null) title1 = this._curItem.name; else title1 = "Select Item";
 	var output1 = t2.execute({ items : items, title : title1, curItem : this._curItem});
 	this._widget.getFooterElement().innerHTML = output1;
 	this._widget.refresh();
@@ -444,32 +386,20 @@ intermedia.fengOffice.client.widgets.FOObjectsList.prototype.onUp = function(eve
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.refresh = function(event) {
 	var curId;
-	if(this._curItem != null) curId = this._curItem.id;
-	else curId = intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace.id;
+	if(this._curItem != null) curId = this._curItem.id; else curId = intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace.id;
 	if(this.onLoading != null) this.onLoading(true);
-	haxe.Log.trace("call listMembers(" + intermedia.fengOffice.client.application.AppState.getInstance().curServiceType + ", " + curId + "",{ fileName : "FOObjectsList.hx", lineNumber : 110, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "refresh"});
 	this._api.listMembers(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType,curId,$closure(this,"_displayItems"),this.onError);
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.enableUp = function() {
 	try {
-		(js.Lib.document.getElementById("upBtn")).disabled = false;
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			null;
-		}
+		js.Lib.document.getElementById("upBtn").disabled = false;
+	} catch( e ) {
 	}
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.disableUp = function() {
 	try {
-		(js.Lib.document.getElementById("upBtn")).disabled = true;
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			null;
-		}
+		js.Lib.document.getElementById("upBtn").disabled = true;
+	} catch( e ) {
 	}
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.__class__ = intermedia.fengOffice.client.widgets.FOObjectsList;
@@ -480,10 +410,11 @@ MainJs.main = function() {
 	new intermedia.fengOffice.client.application.Application();
 }
 MainJs.prototype.__class__ = MainJs;
-intermedia.fengOffice.client.widgets.HomeScreen = function(widget) { if( widget === $_ ) return; {
+intermedia.fengOffice.client.widgets.HomeScreen = function(widget) {
+	if( widget === $_ ) return;
 	this._widget = widget;
 	this.refresh();
-}}
+}
 intermedia.fengOffice.client.widgets.HomeScreen.__name__ = ["intermedia","fengOffice","client","widgets","HomeScreen"];
 intermedia.fengOffice.client.widgets.HomeScreen.prototype._widget = null;
 intermedia.fengOffice.client.widgets.HomeScreen.prototype._id = null;
@@ -505,7 +436,7 @@ intermedia.fengOffice.client.widgets.HomeScreen.prototype.refresh = function() {
 	js.Lib.document.getElementById("contactsBtn").onclick = $closure(this,"_contactsBtnCallback");
 }
 intermedia.fengOffice.client.widgets.HomeScreen.prototype._workspaceBtnCallback = function(e) {
-	intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace = { object_id : -1, id : 0, object_type_id : -1, name : "All Workspaces", created_on : "", created_by_id : -1, updated_on : "", updated_by_id : -1, trashed_on : "", trashed_by_id : -1, archived_on : "", archived_by_id : -1};
+	intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace = intermedia.fengOffice.cross.SafeObjectTools.createEmpty();
 	if(this.onChange != null) this.onChange("workspaces");
 }
 intermedia.fengOffice.client.widgets.HomeScreen.prototype._filesBtnCallback = function(e) {
@@ -530,10 +461,11 @@ intermedia.fengOffice.client.widgets.HomeScreen.prototype._contactsBtnCallback =
 	if(this.onChange != null) this.onChange("contacts");
 }
 intermedia.fengOffice.client.widgets.HomeScreen.prototype.__class__ = intermedia.fengOffice.client.widgets.HomeScreen;
-intermedia.fengOffice.client.application.Application = function(p) { if( p === $_ ) return; {
+intermedia.fengOffice.client.application.Application = function(p) {
+	if( p === $_ ) return;
 	this.api = new intermedia.fengOffice.client.Api();
 	this.goAuthPage();
-}}
+}
 intermedia.fengOffice.client.application.Application.__name__ = ["intermedia","fengOffice","client","application","Application"];
 intermedia.fengOffice.client.application.Application.prototype.api = null;
 intermedia.fengOffice.client.application.Application.prototype.widget = null;
@@ -547,12 +479,11 @@ intermedia.fengOffice.client.application.Application.prototype.goAuthPage = func
 	js.Lib.document.getElementById("submitBtn").onclick = $closure(this,"onSubmit");
 }
 intermedia.fengOffice.client.application.Application.prototype.onSubmit = function(event) {
-	var userName = (js.Lib.document.getElementById("userName")).value;
-	var userPass = (js.Lib.document.getElementById("userPass")).value;
+	var userName = js.Lib.document.getElementById("userName").value;
+	var userPass = js.Lib.document.getElementById("userPass").value;
 	this.api.authenticate(userName,userPass,$closure(this,"onAuth"));
 }
 intermedia.fengOffice.client.application.Application.prototype.startAuth = function(userName,userPass) {
-	haxe.Log.trace("authentication start",{ fileName : "Application.hx", lineNumber : 52, className : "intermedia.fengOffice.client.application.Application", methodName : "startAuth"});
 	var str = haxe.Resource.getString("loading");
 	var t = new haxe.Template(str);
 	var output = t.execute({ config : intermedia.fengOffice.client.application.Config, appState : this});
@@ -560,12 +491,10 @@ intermedia.fengOffice.client.application.Application.prototype.startAuth = funct
 	this.api.authenticate(userName,userPass,$closure(this,"onAuth"));
 }
 intermedia.fengOffice.client.application.Application.prototype.onAuth = function(user) {
-	if(user == null) {
-		haxe.Log.trace("authentication failed",{ fileName : "Application.hx", lineNumber : 63, className : "intermedia.fengOffice.client.application.Application", methodName : "onAuth"});
-		this.goAuthPage("wrong user name or password");
+	if(user.error_msg != "") {
+		this.goAuthPage(user.error_msg);
 		return;
 	}
-	haxe.Log.trace("authentication success " + user.token,{ fileName : "Application.hx", lineNumber : 67, className : "intermedia.fengOffice.client.application.Application", methodName : "onAuth"});
 	intermedia.fengOffice.client.application.AppState.getInstance().curUser = user;
 	this.goHome();
 }
@@ -574,7 +503,6 @@ intermedia.fengOffice.client.application.Application.prototype.goHome = function
 	homeScreen.onChange = $closure(this,"goList");
 }
 intermedia.fengOffice.client.application.Application.prototype.goList = function(srv) {
-	haxe.Log.trace("List selected " + srv,{ fileName : "Application.hx", lineNumber : 80, className : "intermedia.fengOffice.client.application.Application", methodName : "goList"});
 	intermedia.fengOffice.client.application.AppState.getInstance().curServiceType = srv;
 	var list;
 	list = new intermedia.fengOffice.client.widgets.FOObjectsList(this.api,this.widget);
@@ -582,23 +510,20 @@ intermedia.fengOffice.client.application.Application.prototype.goList = function
 	list.onSelect = $closure(this,"_onSelectItem");
 }
 intermedia.fengOffice.client.application.Application.prototype.goDetail = function(srv,item) {
-	haxe.Log.trace("Show detail of " + item,{ fileName : "Application.hx", lineNumber : 98, className : "intermedia.fengOffice.client.application.Application", methodName : "goDetail"});
 	intermedia.fengOffice.client.application.AppState.getInstance().curServiceType = srv;
 	intermedia.fengOffice.client.application.AppState.getInstance().curItem = item;
 	var detailView = new intermedia.fengOffice.client.widgets.FOObjectDetail(this.api,this.widget,srv,item,intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace);
 	detailView.onHome = $closure(this,"goHome");
 }
 intermedia.fengOffice.client.application.Application.prototype._onSelectItem = function(item) {
-	haxe.Log.trace("item selected: " + item,{ fileName : "Application.hx", lineNumber : 107, className : "intermedia.fengOffice.client.application.Application", methodName : "_onSelectItem"});
 	switch(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType) {
-	case "workspaces":{
+	case "workspaces":
 		intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace = item;
 		intermedia.fengOffice.client.application.AppState.getInstance().curItem = null;
 		this.goHome();
-	}break;
-	default:{
+		break;
+	default:
 		this.goDetail(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType,item);
-	}break;
 	}
 }
 intermedia.fengOffice.client.application.Application.prototype.__class__ = intermedia.fengOffice.client.application.Application;
@@ -611,10 +536,11 @@ haxe._Template.TemplateExpr.OpStr = function(str) { var $x = ["OpStr",3,str]; $x
 haxe._Template.TemplateExpr.OpBlock = function(l) { var $x = ["OpBlock",4,l]; $x.__enum__ = haxe._Template.TemplateExpr; $x.toString = $estr; return $x; }
 haxe._Template.TemplateExpr.OpForeach = function(expr,loop) { var $x = ["OpForeach",5,expr,loop]; $x.__enum__ = haxe._Template.TemplateExpr; $x.toString = $estr; return $x; }
 haxe._Template.TemplateExpr.OpMacro = function(name,params) { var $x = ["OpMacro",6,name,params]; $x.__enum__ = haxe._Template.TemplateExpr; $x.toString = $estr; return $x; }
-EReg = function(r,opt) { if( r === $_ ) return; {
+EReg = function(r,opt) {
+	if( r === $_ ) return;
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
-}}
+}
 EReg.__name__ = ["EReg"];
 EReg.prototype.r = null;
 EReg.prototype.match = function(s) {
@@ -659,19 +585,20 @@ EReg.prototype.customReplace = function(s,f) {
 	var buf = new StringBuf();
 	while(true) {
 		if(!this.match(s)) break;
-		buf.b[buf.b.length] = this.matchedLeft();
-		buf.b[buf.b.length] = f(this);
+		buf.add(this.matchedLeft());
+		buf.add(f(this));
 		s = this.matchedRight();
 	}
-	buf.b[buf.b.length] = s;
+	buf.b[buf.b.length] = s == null?"null":s;
 	return buf.b.join("");
 }
 EReg.prototype.__class__ = EReg;
-haxe.Template = function(str) { if( str === $_ ) return; {
+haxe.Template = function(str) {
+	if( str === $_ ) return;
 	var tokens = this.parseTokens(str);
 	this.expr = this.parseBlock(tokens);
 	if(!tokens.isEmpty()) throw "Unexpected '" + tokens.first().s + "'";
-}}
+}
 haxe.Template.__name__ = ["haxe","Template"];
 haxe.Template.prototype.expr = null;
 haxe.Template.prototype.context = null;
@@ -688,10 +615,11 @@ haxe.Template.prototype.execute = function(context,macros) {
 }
 haxe.Template.prototype.resolve = function(v) {
 	if(Reflect.hasField(this.context,v)) return Reflect.field(this.context,v);
-	{ var $it0 = this.stack.iterator();
-	while( $it0.hasNext() ) { var ctx = $it0.next();
-	if(Reflect.hasField(ctx,v)) return Reflect.field(ctx,v);
-	}}
+	var $it0 = this.stack.iterator();
+	while( $it0.hasNext() ) {
+		var ctx = $it0.next();
+		if(Reflect.hasField(ctx,v)) return Reflect.field(ctx,v);
+	}
 	if(v == "__current__") return this.context;
 	return Reflect.field(haxe.Template.globals,v);
 }
@@ -709,9 +637,7 @@ haxe.Template.prototype.parseTokens = function(data) {
 		var npar = 1;
 		while(npar > 0) {
 			var c = data.charCodeAt(parp);
-			if(c == 40) npar++;
-			else if(c == 41) npar--;
-			else if(c == null) throw "Unclosed macro parenthesis";
+			if(c == 40) npar++; else if(c == 41) npar--; else if(c == null) throw "Unclosed macro parenthesis";
 			parp++;
 		}
 		var params = data.substr(p.pos + p.len,parp - (p.pos + p.len) - 1).split(",");
@@ -738,13 +664,11 @@ haxe.Template.prototype.parse = function(tokens) {
 	if(t.s) return haxe._Template.TemplateExpr.OpStr(p);
 	if(t.l != null) {
 		var pe = new List();
-		{
-			var _g = 0, _g1 = t.l;
-			while(_g < _g1.length) {
-				var p1 = _g1[_g];
-				++_g;
-				pe.add(this.parseBlock(this.parseTokens(p1)));
-			}
+		var _g = 0, _g1 = t.l;
+		while(_g < _g1.length) {
+			var p1 = _g1[_g];
+			++_g;
+			pe.add(this.parseBlock(this.parseTokens(p1)));
 		}
 		return haxe._Template.TemplateExpr.OpMacro(p,pe);
 	}
@@ -758,14 +682,12 @@ haxe.Template.prototype.parse = function(tokens) {
 		if(t1.p == "end") {
 			tokens.pop();
 			eelse = null;
-		}
-		else if(t1.p == "else") {
+		} else if(t1.p == "else") {
 			tokens.pop();
 			eelse = this.parseBlock(tokens);
 			t1 = tokens.pop();
 			if(t1 == null || t1.p != "end") throw "Unclosed 'else'";
-		}
-		else {
+		} else {
 			t1.p = t1.p.substr(4,t1.p.length - 4);
 			eelse = this.parse(tokens);
 		}
@@ -798,28 +720,18 @@ haxe.Template.prototype.parseExpr = function(data) {
 	try {
 		e = this.makeExpr(l);
 		if(!l.isEmpty()) throw l.first().p;
-	}
-	catch( $e0 ) {
-		if( js.Boot.__instanceof($e0,String) ) {
-			var s = $e0;
-			{
-				throw "Unexpected '" + s + "' in " + expr;
-			}
-		} else throw($e0);
+	} catch( s ) {
+		if( js.Boot.__instanceof(s,String) ) {
+			throw "Unexpected '" + s + "' in " + expr;
+		} else throw(s);
 	}
 	return function() {
 		try {
 			return e();
+		} catch( exc ) {
+			throw "Error : " + Std.string(exc) + " in " + expr;
 		}
-		catch( $e1 ) {
-			{
-				var exc = $e1;
-				{
-					throw "Error : " + Std.string(exc) + " in " + expr;
-				}
-			}
-		}
-	}
+	};
 }
 haxe.Template.prototype.makeConst = function(v) {
 	haxe.Template.expr_trim.match(v);
@@ -828,24 +740,24 @@ haxe.Template.prototype.makeConst = function(v) {
 		var str = v.substr(1,v.length - 2);
 		return function() {
 			return str;
-		}
+		};
 	}
 	if(haxe.Template.expr_int.match(v)) {
 		var i = Std.parseInt(v);
 		return function() {
 			return i;
-		}
+		};
 	}
 	if(haxe.Template.expr_float.match(v)) {
 		var f = Std.parseFloat(v);
 		return function() {
 			return f;
-		}
+		};
 	}
 	var me = this;
 	return function() {
 		return me.resolve(v);
-	}
+	};
 }
 haxe.Template.prototype.makePath = function(e,l) {
 	var p = l.first();
@@ -868,7 +780,7 @@ haxe.Template.prototype.makeExpr2 = function(l) {
 	if(p == null) throw "<eof>";
 	if(p.s) return this.makeConst(p.p);
 	switch(p.p) {
-	case "(":{
+	case "(":
 		var e1 = this.makeExpr(l);
 		var p1 = l.pop();
 		if(p1 == null || p1.s) throw p1.p;
@@ -879,131 +791,121 @@ haxe.Template.prototype.makeExpr2 = function(l) {
 		return (function($this) {
 			var $r;
 			switch(p1.p) {
-			case "+":{
+			case "+":
 				$r = function() {
 					return e1() + e2();
-				}
-			}break;
-			case "-":{
+				};
+				break;
+			case "-":
 				$r = function() {
 					return e1() - e2();
-				}
-			}break;
-			case "*":{
+				};
+				break;
+			case "*":
 				$r = function() {
 					return e1() * e2();
-				}
-			}break;
-			case "/":{
+				};
+				break;
+			case "/":
 				$r = function() {
 					return e1() / e2();
-				}
-			}break;
-			case ">":{
+				};
+				break;
+			case ">":
 				$r = function() {
 					return e1() > e2();
-				}
-			}break;
-			case "<":{
+				};
+				break;
+			case "<":
 				$r = function() {
 					return e1() < e2();
-				}
-			}break;
-			case ">=":{
+				};
+				break;
+			case ">=":
 				$r = function() {
 					return e1() >= e2();
-				}
-			}break;
-			case "<=":{
+				};
+				break;
+			case "<=":
 				$r = function() {
 					return e1() <= e2();
-				}
-			}break;
-			case "==":{
+				};
+				break;
+			case "==":
 				$r = function() {
 					return e1() == e2();
-				}
-			}break;
-			case "!=":{
+				};
+				break;
+			case "!=":
 				$r = function() {
 					return e1() != e2();
-				}
-			}break;
-			case "&&":{
+				};
+				break;
+			case "&&":
 				$r = function() {
 					return e1() && e2();
-				}
-			}break;
-			case "||":{
+				};
+				break;
+			case "||":
 				$r = function() {
 					return e1() || e2();
-				}
-			}break;
-			default:{
+				};
+				break;
+			default:
 				$r = (function($this) {
 					var $r;
 					throw "Unknown operation " + p1.p;
 					return $r;
 				}($this));
-			}break;
 			}
 			return $r;
 		}(this));
-	}break;
-	case "!":{
+	case "!":
 		var e = this.makeExpr(l);
 		return function() {
 			var v = e();
 			return v == null || v == false;
-		}
-	}break;
-	case "-":{
+		};
+	case "-":
 		var e = this.makeExpr(l);
 		return function() {
 			return -e();
-		}
-	}break;
+		};
 	}
 	throw p.p;
 }
 haxe.Template.prototype.run = function(e) {
-	var $e = e;
+	var $e = (e);
 	switch( $e[1] ) {
 	case 0:
-	var v = $e[2];
-	{
+		var v = $e[2];
 		this.buf.add(Std.string(this.resolve(v)));
-	}break;
+		break;
 	case 1:
-	var e1 = $e[2];
-	{
+		var e1 = $e[2];
 		this.buf.add(Std.string(e1()));
-	}break;
+		break;
 	case 2:
-	var eelse = $e[4], eif = $e[3], e1 = $e[2];
-	{
+		var eelse = $e[4], eif = $e[3], e1 = $e[2];
 		var v = e1();
 		if(v == null || v == false) {
 			if(eelse != null) this.run(eelse);
-		}
-		else this.run(eif);
-	}break;
+		} else this.run(eif);
+		break;
 	case 3:
-	var str = $e[2];
-	{
+		var str = $e[2];
 		this.buf.add(str);
-	}break;
+		break;
 	case 4:
-	var l = $e[2];
-	{
-		{ var $it0 = l.iterator();
-		while( $it0.hasNext() ) { var e1 = $it0.next();
-		this.run(e1);
-		}}
-	}break;
+		var l = $e[2];
+		var $it0 = l.iterator();
+		while( $it0.hasNext() ) {
+			var e1 = $it0.next();
+			this.run(e1);
+		}
+		break;
 	case 5:
-	var loop = $e[3], e1 = $e[2];
-	{
+		var loop = $e[3], e1 = $e[2];
 		var v = e1();
 		try {
 			if(v.hasNext == null) {
@@ -1011,121 +913,93 @@ haxe.Template.prototype.run = function(e) {
 				if(x.hasNext == null) throw null;
 				v = x;
 			}
-		}
-		catch( $e1 ) {
-			{
-				var e2 = $e1;
-				{
-					throw "Cannot iter on " + v;
-				}
-			}
+		} catch( e2 ) {
+			throw "Cannot iter on " + v;
 		}
 		this.stack.push(this.context);
 		var v1 = v;
-		{ var $it2 = v1;
-		while( $it2.hasNext() ) { var ctx = $it2.next();
-		{
+		while( v1.hasNext() ) {
+			var ctx = v1.next();
 			this.context = ctx;
 			this.run(loop);
 		}
-		}}
 		this.context = this.stack.pop();
-	}break;
+		break;
 	case 6:
-	var params = $e[3], m = $e[2];
-	{
+		var params = $e[3], m = $e[2];
 		var v = Reflect.field(this.macros,m);
 		var pl = new Array();
 		var old = this.buf;
 		pl.push($closure(this,"resolve"));
-		{ var $it3 = params.iterator();
-		while( $it3.hasNext() ) { var p = $it3.next();
-		{
-			var $e = p;
+		var $it1 = params.iterator();
+		while( $it1.hasNext() ) {
+			var p = $it1.next();
+			var $e = (p);
 			switch( $e[1] ) {
 			case 0:
-			var v1 = $e[2];
-			{
+				var v1 = $e[2];
 				pl.push(this.resolve(v1));
-			}break;
-			default:{
+				break;
+			default:
 				this.buf = new StringBuf();
 				this.run(p);
 				pl.push(this.buf.b.join(""));
-			}break;
 			}
 		}
-		}}
 		this.buf = old;
 		try {
 			this.buf.add(Std.string(v.apply(this.macros,pl)));
-		}
-		catch( $e4 ) {
-			{
-				var e1 = $e4;
-				{
-					var plstr = (function($this) {
-						var $r;
-						try {
-							$r = pl.join(",");
-						}
-						catch( $e5 ) {
-							{
-								var e2 = $e5;
-								$r = "???";
-							}
-						}
-						return $r;
-					}(this));
-					var msg = "Macro call " + m + "(" + plstr + ") failed (" + Std.string(e1) + ")";
-					throw msg;
+		} catch( e1 ) {
+			var plstr = (function($this) {
+				var $r;
+				try {
+					$r = pl.join(",");
+				} catch( e2 ) {
+					$r = "???";
 				}
-			}
+				return $r;
+			}(this));
+			var msg = "Macro call " + m + "(" + plstr + ") failed (" + Std.string(e1) + ")";
+			throw msg;
 		}
-	}break;
+		break;
 	}
 }
 haxe.Template.prototype.__class__ = haxe.Template;
 if(!haxe.io) haxe.io = {}
-haxe.io.Bytes = function(length,b) { if( length === $_ ) return; {
+haxe.io.Bytes = function(length,b) {
+	if( length === $_ ) return;
 	this.length = length;
 	this.b = b;
-}}
+}
 haxe.io.Bytes.__name__ = ["haxe","io","Bytes"];
 haxe.io.Bytes.alloc = function(length) {
 	var a = new Array();
-	{
-		var _g = 0;
-		while(_g < length) {
-			var i = _g++;
-			a.push(0);
-		}
+	var _g = 0;
+	while(_g < length) {
+		var i = _g++;
+		a.push(0);
 	}
 	return new haxe.io.Bytes(length,a);
 }
 haxe.io.Bytes.ofString = function(s) {
 	var a = new Array();
-	{
-		var _g1 = 0, _g = s.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var c = s.cca(i);
-			if(c <= 127) a.push(c);
-			else if(c <= 2047) {
-				a.push(192 | c >> 6);
-				a.push(128 | c & 63);
-			}
-			else if(c <= 65535) {
-				a.push(224 | c >> 12);
-				a.push(128 | c >> 6 & 63);
-				a.push(128 | c & 63);
-			}
-			else {
-				a.push(240 | c >> 18);
-				a.push(128 | c >> 12 & 63);
-				a.push(128 | c >> 6 & 63);
-				a.push(128 | c & 63);
-			}
+	var _g1 = 0, _g = s.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var c = s.cca(i);
+		if(c <= 127) a.push(c); else if(c <= 2047) {
+			a.push(192 | c >> 6);
+			a.push(128 | c & 63);
+		} else if(c <= 65535) {
+			a.push(224 | c >> 12);
+			a.push(128 | c >> 6 & 63);
+			a.push(128 | c & 63);
+		} else {
+			a.push(240 | c >> 18);
+			a.push(128 | c >> 12 & 63);
+			a.push(128 | c >> 6 & 63);
+			a.push(128 | c & 63);
 		}
 	}
 	return new haxe.io.Bytes(a.length,a);
@@ -1153,12 +1027,10 @@ haxe.io.Bytes.prototype.blit = function(pos,src,srcpos,len) {
 		}
 		return;
 	}
-	{
-		var _g = 0;
-		while(_g < len) {
-			var i = _g++;
-			b1[i + pos] = b2[i + srcpos];
-		}
+	var _g = 0;
+	while(_g < len) {
+		var i = _g++;
+		b1[i + pos] = b2[i + srcpos];
 	}
 }
 haxe.io.Bytes.prototype.sub = function(pos,len) {
@@ -1169,12 +1041,10 @@ haxe.io.Bytes.prototype.compare = function(other) {
 	var b1 = this.b;
 	var b2 = other.b;
 	var len = this.length < other.length?this.length:other.length;
-	{
-		var _g = 0;
-		while(_g < len) {
-			var i = _g++;
-			if(b1[i] != b2[i]) return b1[i] - b2[i];
-		}
+	var _g = 0;
+	while(_g < len) {
+		var i = _g++;
+		if(b1[i] != b2[i]) return b1[i] - b2[i];
 	}
 	return this.length - other.length;
 }
@@ -1182,7 +1052,7 @@ haxe.io.Bytes.prototype.readString = function(pos,len) {
 	if(pos < 0 || len < 0 || pos + len > this.length) throw haxe.io.Error.OutsideBounds;
 	var s = "";
 	var b = this.b;
-	var fcc = $closure(String,"fromCharCode");
+	var fcc = String.fromCharCode;
 	var i = pos;
 	var max = pos + len;
 	while(i < max) {
@@ -1190,13 +1060,10 @@ haxe.io.Bytes.prototype.readString = function(pos,len) {
 		if(c < 128) {
 			if(c == 0) break;
 			s += fcc(c);
-		}
-		else if(c < 224) s += fcc((c & 63) << 6 | b[i++] & 127);
-		else if(c < 240) {
+		} else if(c < 224) s += fcc((c & 63) << 6 | b[i++] & 127); else if(c < 240) {
 			var c2 = b[i++];
 			s += fcc((c & 31) << 12 | (c2 & 127) << 6 | b[i++] & 127);
-		}
-		else {
+		} else {
 			var c2 = b[i++];
 			var c3 = b[i++];
 			s += fcc((c & 15) << 18 | (c2 & 127) << 12 | c3 << 6 & 127 | b[i++] & 127);
@@ -1207,6 +1074,24 @@ haxe.io.Bytes.prototype.readString = function(pos,len) {
 haxe.io.Bytes.prototype.toString = function() {
 	return this.readString(0,this.length);
 }
+haxe.io.Bytes.prototype.toHex = function() {
+	var s = new StringBuf();
+	var chars = [];
+	var str = "0123456789abcdef";
+	var _g1 = 0, _g = str.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		chars.push(str.charCodeAt(i));
+	}
+	var _g1 = 0, _g = this.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var c = this.b[i];
+		s.b[s.b.length] = String.fromCharCode(chars[c >> 4]);
+		s.b[s.b.length] = String.fromCharCode(chars[c & 15]);
+	}
+	return s.b.join("");
+}
 haxe.io.Bytes.prototype.getData = function() {
 	return this.b;
 }
@@ -1216,29 +1101,21 @@ haxe.Firebug.__name__ = ["haxe","Firebug"];
 haxe.Firebug.detect = function() {
 	try {
 		return console != null && console.error != null;
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			{
-				return false;
-			}
-		}
+	} catch( e ) {
+		return false;
 	}
 }
 haxe.Firebug.redirectTraces = function() {
-	haxe.Log.trace = $closure(haxe.Firebug,"trace");
-	js.Lib.setErrorHandler($closure(haxe.Firebug,"onError"));
+	haxe.Log.trace = haxe.Firebug.trace;
+	js.Lib.setErrorHandler(haxe.Firebug.onError);
 }
 haxe.Firebug.onError = function(err,stack) {
 	var buf = err + "\n";
-	{
-		var _g = 0;
-		while(_g < stack.length) {
-			var s = stack[_g];
-			++_g;
-			buf += "Called from " + s + "\n";
-		}
+	var _g = 0;
+	while(_g < stack.length) {
+		var s = stack[_g];
+		++_g;
+		buf += "Called from " + s + "\n";
 	}
 	haxe.Firebug.trace(buf,null);
 	return true;
@@ -1249,10 +1126,11 @@ haxe.Firebug.trace = function(v,inf) {
 	console[type]((inf == null?"":inf.fileName + ":" + inf.lineNumber + " : ") + Std.string(v));
 }
 haxe.Firebug.prototype.__class__ = haxe.Firebug;
-IntIter = function(min,max) { if( min === $_ ) return; {
+IntIter = function(min,max) {
+	if( min === $_ ) return;
 	this.min = min;
 	this.max = max;
-}}
+}
 IntIter.__name__ = ["IntIter"];
 IntIter.prototype.min = null;
 IntIter.prototype.max = null;
@@ -1274,10 +1152,11 @@ haxe.io.Error.OutsideBounds = ["OutsideBounds",2];
 haxe.io.Error.OutsideBounds.toString = $estr;
 haxe.io.Error.OutsideBounds.__enum__ = haxe.io.Error;
 haxe.io.Error.Custom = function(e) { var $x = ["Custom",3,e]; $x.__enum__ = haxe.io.Error; $x.toString = $estr; return $x; }
-haxe.remoting.HttpAsyncConnection = function(data,path) { if( data === $_ ) return; {
+haxe.remoting.HttpAsyncConnection = function(data,path) {
+	if( data === $_ ) return;
 	this.__data = data;
 	this.__path = path;
-}}
+}
 haxe.remoting.HttpAsyncConnection.__name__ = ["haxe","remoting","HttpAsyncConnection"];
 haxe.remoting.HttpAsyncConnection.urlConnect = function(url) {
 	return new haxe.remoting.HttpAsyncConnection({ url : url, error : function(e) {
@@ -1309,19 +1188,13 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 			if(response.substr(0,3) != "hxr") throw "Invalid response : '" + response + "'";
 			var s1 = new haxe.Unserializer(response.substr(3));
 			ret = s1.unserialize();
-		}
-		catch( $e0 ) {
-			{
-				var err = $e0;
-				{
-					ret = null;
-					ok = false;
-					error(err);
-				}
-			}
+		} catch( err ) {
+			ret = null;
+			ok = false;
+			error(err);
 		}
 		if(ok && onResult != null) onResult(ret);
-	}
+	};
 	h.onError = error;
 	h.request(true);
 }
@@ -1331,6 +1204,43 @@ if(!intermedia.fengOffice.cross) intermedia.fengOffice.cross = {}
 intermedia.fengOffice.cross.ServiceTypes = function() { }
 intermedia.fengOffice.cross.ServiceTypes.__name__ = ["intermedia","fengOffice","cross","ServiceTypes"];
 intermedia.fengOffice.cross.ServiceTypes.prototype.__class__ = intermedia.fengOffice.cross.ServiceTypes;
+intermedia.fengOffice.cross.SafeObjectTools = function() { }
+intermedia.fengOffice.cross.SafeObjectTools.__name__ = ["intermedia","fengOffice","cross","SafeObjectTools"];
+intermedia.fengOffice.cross.SafeObjectTools.fromError = function(msg) {
+	return { error_msg : msg, object_id : -1, id : -1, name : "", properties : null, object_type_id : -1, type : "", created_on : "", created_by_id : -1, created_by : null, updated_on : "", updated_by_id : -1, updated_by : null, trashed_on : "", trashed_by_id : -1, trashed_by : null, archived_on : "", archived_by_id : -1, archived_by : null};
+}
+intermedia.fengOffice.cross.SafeObjectTools.fromDynamic = function(obj) {
+	if(obj == null) return null;
+	var _g = 0, _g1 = Reflect.fields(obj);
+	while(_g < _g1.length) {
+		var prop = _g1[_g];
+		++_g;
+		var propValue = Reflect.field(obj,prop);
+		var $e = (Type["typeof"](propValue));
+		switch( $e[1] ) {
+		case 6:
+			var c = $e[2];
+			obj[prop] = "" + Std.string(propValue);
+			break;
+		default:
+		}
+	}
+	return { error_msg : "", object_id : obj.object_id, id : obj.id, name : obj.name, properties : obj.properties, object_type_id : obj.object_type_id, type : obj.object_type, created_on : obj.created_on, created_by_id : obj.created_by_id, created_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.created_by), updated_on : obj.updated_on, updated_by_id : obj.updated_by_id, updated_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.updated_by), trashed_on : obj.trashed_on, trashed_by_id : obj.trashed_by_id, trashed_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.trashed_by), archived_on : obj.archived_on, archived_by_id : obj.archived_by_id, archived_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.archived_by)};
+}
+intermedia.fengOffice.cross.SafeObjectTools.createEmpty = function() {
+	return { error_msg : "", object_id : -1, id : 0, name : "All Workspaces", properties : { }, object_type_id : -1, type : "", created_on : "", created_by_id : -1, updated_on : "", updated_by_id : -1, trashed_on : "", trashed_by_id : -1, archived_on : "", archived_by_id : -1, updated_by : null, created_by : null, trashed_by : null, archived_by : null};
+}
+intermedia.fengOffice.cross.SafeObjectTools.prototype.__class__ = intermedia.fengOffice.cross.SafeObjectTools;
+intermedia.fengOffice.cross.UserTools = function() { }
+intermedia.fengOffice.cross.UserTools.__name__ = ["intermedia","fengOffice","cross","UserTools"];
+intermedia.fengOffice.cross.UserTools.fromError = function(msg) {
+	return { error_msg : msg, object_id : -1, first_name : "", surname : "", is_company : false, company_id : -1, brand_colors : "", department : "", job_title : "", birthday : "", timezone : -1.0, user_type : -1, is_active_user : false, token : "", display_name : "", username : "", picture_file : "", avatar_file : "", comments : "", last_login : "", last_visit : "", last_activity : "", disabled : false};
+}
+intermedia.fengOffice.cross.UserTools.fromDynamic = function(obj) {
+	if(obj == null) return null;
+	return { error_msg : "", object_id : obj.object_id, first_name : obj.first_name, surname : obj.surname, is_company : obj.is_company, company_id : obj.company_id, brand_colors : obj.brand_colors, department : obj.department, job_title : obj.job_title, birthday : obj.birthday, timezone : obj.timezone, user_type : obj.user_type, is_active_user : obj.is_active_user, token : obj.token, display_name : obj.display_name, username : obj.username, picture_file : obj.picture_file, avatar_file : obj.avatar_file, comments : obj.comments, last_login : obj.last_login, last_visit : obj.last_visit, last_activity : obj.last_activity, disabled : false};
+}
+intermedia.fengOffice.cross.UserTools.prototype.__class__ = intermedia.fengOffice.cross.UserTools;
 Std = function() { }
 Std.__name__ = ["Std"];
 Std["is"] = function(v,t) {
@@ -1382,14 +1292,8 @@ Type.resolveClass = function(name) {
 	var cl;
 	try {
 		cl = eval(name);
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			{
-				cl = null;
-			}
-		}
+	} catch( e ) {
+		cl = null;
 	}
 	if(cl == null || cl.__name__ == null) return null;
 	return cl;
@@ -1398,14 +1302,8 @@ Type.resolveEnum = function(name) {
 	var e;
 	try {
 		e = eval(name);
-	}
-	catch( $e0 ) {
-		{
-			var err = $e0;
-			{
-				e = null;
-			}
-		}
+	} catch( err ) {
+		e = null;
 	}
 	if(e == null || e.__ename__ == null) return null;
 	return e;
@@ -1429,7 +1327,7 @@ Type.createEnum = function(e,constr,params) {
 	return f;
 }
 Type.createEnumIndex = function(e,index,params) {
-	var c = Type.getEnumConstructs(e)[index];
+	var c = e.__constructs__[index];
 	if(c == null) throw index + " is not a valid enum constructor index";
 	return Type.createEnum(e,c,params);
 }
@@ -1447,61 +1345,47 @@ Type.getClassFields = function(c) {
 	return a;
 }
 Type.getEnumConstructs = function(e) {
-	return e.__constructs__;
+	var a = e.__constructs__;
+	return a.copy();
 }
 Type["typeof"] = function(v) {
 	switch(typeof(v)) {
-	case "boolean":{
+	case "boolean":
 		return ValueType.TBool;
-	}break;
-	case "string":{
+	case "string":
 		return ValueType.TClass(String);
-	}break;
-	case "number":{
+	case "number":
 		if(Math.ceil(v) == v % 2147483648.0) return ValueType.TInt;
 		return ValueType.TFloat;
-	}break;
-	case "object":{
+	case "object":
 		if(v == null) return ValueType.TNull;
 		var e = v.__enum__;
 		if(e != null) return ValueType.TEnum(e);
 		var c = v.__class__;
 		if(c != null) return ValueType.TClass(c);
 		return ValueType.TObject;
-	}break;
-	case "function":{
+	case "function":
 		if(v.__name__ != null) return ValueType.TObject;
 		return ValueType.TFunction;
-	}break;
-	case "undefined":{
+	case "undefined":
 		return ValueType.TNull;
-	}break;
-	default:{
+	default:
 		return ValueType.TUnknown;
-	}break;
 	}
 }
 Type.enumEq = function(a,b) {
 	if(a == b) return true;
 	try {
 		if(a[0] != b[0]) return false;
-		{
-			var _g1 = 2, _g = a.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				if(!Type.enumEq(a[i],b[i])) return false;
-			}
+		var _g1 = 2, _g = a.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(!Type.enumEq(a[i],b[i])) return false;
 		}
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			{
-				return false;
-			}
-		}
+	} catch( e ) {
+		return false;
 	}
 	return true;
 }
@@ -1515,23 +1399,27 @@ Type.enumIndex = function(e) {
 	return e[1];
 }
 Type.prototype.__class__ = Type;
-haxe.Unserializer = function(buf) { if( buf === $_ ) return; {
+haxe.Unserializer = function(buf) {
+	if( buf === $_ ) return;
 	this.buf = buf;
 	this.length = buf.length;
 	this.pos = 0;
 	this.scache = new Array();
 	this.cache = new Array();
-	this.setResolver(haxe.Unserializer.DEFAULT_RESOLVER);
-}}
+	var r = haxe.Unserializer.DEFAULT_RESOLVER;
+	if(r == null) {
+		r = Type;
+		haxe.Unserializer.DEFAULT_RESOLVER = r;
+	}
+	this.setResolver(r);
+}
 haxe.Unserializer.__name__ = ["haxe","Unserializer"];
 haxe.Unserializer.initCodes = function() {
 	var codes = new Array();
-	{
-		var _g1 = 0, _g = haxe.Unserializer.BASE64.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			codes[haxe.Unserializer.BASE64.cca(i)] = i;
-		}
+	var _g1 = 0, _g = haxe.Unserializer.BASE64.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		codes[haxe.Unserializer.BASE64.cca(i)] = i;
 	}
 	return codes;
 }
@@ -1549,8 +1437,7 @@ haxe.Unserializer.prototype.setResolver = function(r) {
 		return null;
 	}, resolveEnum : function(_) {
 		return null;
-	}};
-	else this.resolver = r;
+	}}; else this.resolver = r;
 }
 haxe.Unserializer.prototype.getResolver = function() {
 	return this.resolver;
@@ -1609,31 +1496,24 @@ haxe.Unserializer.prototype.unserializeEnum = function(edecl,tag) {
 }
 haxe.Unserializer.prototype.unserialize = function() {
 	switch(this.buf.cca(this.pos++)) {
-	case 110:{
+	case 110:
 		return null;
-	}break;
-	case 116:{
+	case 116:
 		return true;
-	}break;
-	case 102:{
+	case 102:
 		return false;
-	}break;
-	case 122:{
+	case 122:
 		return 0;
-	}break;
-	case 105:{
+	case 105:
 		return this.readDigits();
-	}break;
-	case 100:{
+	case 100:
 		var p1 = this.pos;
 		while(true) {
 			var c = this.buf.cca(this.pos);
-			if(c >= 43 && c < 58 || c == 101 || c == 69) this.pos++;
-			else break;
+			if(c >= 43 && c < 58 || c == 101 || c == 69) this.pos++; else break;
 		}
 		return Std.parseFloat(this.buf.substr(p1,this.pos - p1));
-	}break;
-	case 121:{
+	case 121:
 		var len = this.readDigits();
 		if(this.buf.cca(this.pos++) != 58 || this.length - this.pos < len) throw "Invalid string length";
 		var s = this.buf.substr(this.pos,len);
@@ -1641,17 +1521,13 @@ haxe.Unserializer.prototype.unserialize = function() {
 		s = StringTools.urlDecode(s);
 		this.scache.push(s);
 		return s;
-	}break;
-	case 107:{
+	case 107:
 		return Math.NaN;
-	}break;
-	case 109:{
+	case 109:
 		return Math.NEGATIVE_INFINITY;
-	}break;
-	case 112:{
+	case 112:
 		return Math.POSITIVE_INFINITY;
-	}break;
-	case 97:{
+	case 97:
 		var buf = this.buf;
 		var a = new Array();
 		this.cache.push(a);
@@ -1665,31 +1541,26 @@ haxe.Unserializer.prototype.unserialize = function() {
 				this.pos++;
 				var n = this.readDigits();
 				a[a.length + n - 1] = null;
-			}
-			else a.push(this.unserialize());
+			} else a.push(this.unserialize());
 		}
 		return a;
-	}break;
-	case 111:{
+	case 111:
 		var o = { };
 		this.cache.push(o);
 		this.unserializeObject(o);
 		return o;
-	}break;
-	case 114:{
+	case 114:
 		var n = this.readDigits();
 		if(n < 0 || n >= this.cache.length) throw "Invalid reference";
 		return this.cache[n];
-	}break;
-	case 82:{
+	case 82:
 		var n = this.readDigits();
 		if(n < 0 || n >= this.scache.length) throw "Invalid string reference";
 		return this.scache[n];
-	}break;
-	case 120:{
+	case 120:
 		throw this.unserialize();
-	}break;
-	case 99:{
+		break;
+	case 99:
 		var name = this.unserialize();
 		var cl = this.resolver.resolveClass(name);
 		if(cl == null) throw "Class not found " + name;
@@ -1697,14 +1568,12 @@ haxe.Unserializer.prototype.unserialize = function() {
 		this.cache.push(o);
 		this.unserializeObject(o);
 		return o;
-	}break;
-	case 119:{
+	case 119:
 		var name = this.unserialize();
 		var edecl = this.resolver.resolveEnum(name);
 		if(edecl == null) throw "Enum not found " + name;
 		return this.unserializeEnum(edecl,this.unserialize());
-	}break;
-	case 106:{
+	case 106:
 		var name = this.unserialize();
 		var edecl = this.resolver.resolveEnum(name);
 		if(edecl == null) throw "Enum not found " + name;
@@ -1713,16 +1582,14 @@ haxe.Unserializer.prototype.unserialize = function() {
 		var tag = Type.getEnumConstructs(edecl)[index];
 		if(tag == null) throw "Unknown enum index " + name + "@" + index;
 		return this.unserializeEnum(edecl,tag);
-	}break;
-	case 108:{
+	case 108:
 		var l = new List();
 		this.cache.push(l);
 		var buf = this.buf;
 		while(this.buf.cca(this.pos) != 104) l.add(this.unserialize());
 		this.pos++;
 		return l;
-	}break;
-	case 98:{
+	case 98:
 		var h = new Hash();
 		this.cache.push(h);
 		var buf = this.buf;
@@ -1732,8 +1599,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 		}
 		this.pos++;
 		return h;
-	}break;
-	case 113:{
+	case 113:
 		var h = new IntHash();
 		this.cache.push(h);
 		var buf = this.buf;
@@ -1745,14 +1611,12 @@ haxe.Unserializer.prototype.unserialize = function() {
 		}
 		if(c != 104) throw "Invalid IntHash format";
 		return h;
-	}break;
-	case 118:{
+	case 118:
 		var d = Date.fromString(this.buf.substr(this.pos,19));
 		this.cache.push(d);
 		this.pos += 19;
 		return d;
-	}break;
-	case 115:{
+	case 115:
 		var len = this.readDigits();
 		var buf = this.buf;
 		if(this.buf.cca(this.pos++) != 58 || this.length - this.pos < len) throw "Invalid bytes length";
@@ -1788,8 +1652,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 		this.pos += len;
 		this.cache.push(bytes);
 		return bytes;
-	}break;
-	case 67:{
+	case 67:
 		var name = this.unserialize();
 		var cl = this.resolver.resolveClass(name);
 		if(cl == null) throw "Class not found " + name;
@@ -1798,23 +1661,21 @@ haxe.Unserializer.prototype.unserialize = function() {
 		o.hxUnserialize(this);
 		if(this.buf.cca(this.pos++) != 103) throw "Invalid custom data";
 		return o;
-	}break;
-	default:{
-		null;
-	}break;
+	default:
 	}
 	this.pos--;
 	throw "Invalid char " + this.buf.charAt(this.pos) + " at position " + this.pos;
 }
 haxe.Unserializer.prototype.__class__ = haxe.Unserializer;
-haxe.Serializer = function(p) { if( p === $_ ) return; {
+haxe.Serializer = function(p) {
+	if( p === $_ ) return;
 	this.buf = new StringBuf();
 	this.cache = new Array();
 	this.useCache = haxe.Serializer.USE_CACHE;
 	this.useEnumIndex = haxe.Serializer.USE_ENUM_INDEX;
 	this.shash = new Hash();
 	this.scount = 0;
-}}
+}
 haxe.Serializer.__name__ = ["haxe","Serializer"];
 haxe.Serializer.run = function(v) {
 	var s = new haxe.Serializer();
@@ -1846,142 +1707,125 @@ haxe.Serializer.prototype.serializeString = function(s) {
 }
 haxe.Serializer.prototype.serializeRef = function(v) {
 	var vt = typeof(v);
-	{
-		var _g1 = 0, _g = this.cache.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var ci = this.cache[i];
-			if(typeof(ci) == vt && ci == v) {
-				this.buf.add("r");
-				this.buf.add(i);
-				return true;
-			}
+	var _g1 = 0, _g = this.cache.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var ci = this.cache[i];
+		if(typeof(ci) == vt && ci == v) {
+			this.buf.add("r");
+			this.buf.add(i);
+			return true;
 		}
 	}
 	this.cache.push(v);
 	return false;
 }
 haxe.Serializer.prototype.serializeFields = function(v) {
-	{
-		var _g = 0, _g1 = Reflect.fields(v);
-		while(_g < _g1.length) {
-			var f = _g1[_g];
-			++_g;
-			this.serializeString(f);
-			this.serialize(Reflect.field(v,f));
-		}
+	var _g = 0, _g1 = Reflect.fields(v);
+	while(_g < _g1.length) {
+		var f = _g1[_g];
+		++_g;
+		this.serializeString(f);
+		this.serialize(Reflect.field(v,f));
 	}
 	this.buf.add("g");
 }
 haxe.Serializer.prototype.serialize = function(v) {
-	var $e = Type["typeof"](v);
+	var $e = (Type["typeof"](v));
 	switch( $e[1] ) {
 	case 0:
-	{
 		this.buf.add("n");
-	}break;
+		break;
 	case 1:
-	{
 		if(v == 0) {
 			this.buf.add("z");
 			return;
 		}
 		this.buf.add("i");
 		this.buf.add(v);
-	}break;
+		break;
 	case 2:
-	{
-		if(Math.isNaN(v)) this.buf.add("k");
-		else if(!Math.isFinite(v)) this.buf.add(v < 0?"m":"p");
-		else {
+		if(Math.isNaN(v)) this.buf.add("k"); else if(!Math.isFinite(v)) this.buf.add(v < 0?"m":"p"); else {
 			this.buf.add("d");
 			this.buf.add(v);
 		}
-	}break;
+		break;
 	case 3:
-	{
 		this.buf.add(v?"t":"f");
-	}break;
+		break;
 	case 6:
-	var c = $e[2];
-	{
+		var c = $e[2];
 		if(c == String) {
 			this.serializeString(v);
 			return;
 		}
 		if(this.useCache && this.serializeRef(v)) return;
 		switch(c) {
-		case Array:{
+		case Array:
 			var ucount = 0;
 			this.buf.add("a");
 			var l = v["length"];
-			{
-				var _g = 0;
-				while(_g < l) {
-					var i = _g++;
-					if(v[i] == null) ucount++;
-					else {
-						if(ucount > 0) {
-							if(ucount == 1) this.buf.add("n");
-							else {
-								this.buf.add("u");
-								this.buf.add(ucount);
-							}
-							ucount = 0;
+			var _g = 0;
+			while(_g < l) {
+				var i = _g++;
+				if(v[i] == null) ucount++; else {
+					if(ucount > 0) {
+						if(ucount == 1) this.buf.add("n"); else {
+							this.buf.add("u");
+							this.buf.add(ucount);
 						}
-						this.serialize(v[i]);
+						ucount = 0;
 					}
+					this.serialize(v[i]);
 				}
 			}
 			if(ucount > 0) {
-				if(ucount == 1) this.buf.add("n");
-				else {
+				if(ucount == 1) this.buf.add("n"); else {
 					this.buf.add("u");
 					this.buf.add(ucount);
 				}
 			}
 			this.buf.add("h");
-		}break;
-		case List:{
+			break;
+		case List:
 			this.buf.add("l");
 			var v1 = v;
-			{ var $it0 = v1.iterator();
-			while( $it0.hasNext() ) { var i = $it0.next();
-			this.serialize(i);
-			}}
+			var $it0 = v1.iterator();
+			while( $it0.hasNext() ) {
+				var i = $it0.next();
+				this.serialize(i);
+			}
 			this.buf.add("h");
-		}break;
-		case Date:{
+			break;
+		case Date:
 			var d = v;
 			this.buf.add("v");
 			this.buf.add(d.toString());
-		}break;
-		case Hash:{
+			break;
+		case Hash:
 			this.buf.add("b");
 			var v1 = v;
-			{ var $it1 = v1.keys();
-			while( $it1.hasNext() ) { var k = $it1.next();
-			{
+			var $it1 = v1.keys();
+			while( $it1.hasNext() ) {
+				var k = $it1.next();
 				this.serializeString(k);
 				this.serialize(v1.get(k));
 			}
-			}}
 			this.buf.add("h");
-		}break;
-		case IntHash:{
+			break;
+		case IntHash:
 			this.buf.add("q");
 			var v1 = v;
-			{ var $it2 = v1.keys();
-			while( $it2.hasNext() ) { var k = $it2.next();
-			{
+			var $it2 = v1.keys();
+			while( $it2.hasNext() ) {
+				var k = $it2.next();
 				this.buf.add(":");
 				this.buf.add(k);
 				this.serialize(v1.get(k));
 			}
-			}}
 			this.buf.add("h");
-		}break;
-		case haxe.io.Bytes:{
+			break;
+		case haxe.io.Bytes:
 			var v1 = v;
 			var i = 0;
 			var max = v1.length - 2;
@@ -1997,8 +1841,7 @@ haxe.Serializer.prototype.serialize = function(v) {
 				var b1 = v1.b[i++];
 				var b2 = v1.b[i++];
 				chars += b64.charAt(b1 >> 2) + b64.charAt((b1 << 4 | b2 >> 4) & 63) + b64.charAt(b2 << 2 & 63);
-			}
-			else if(i == max + 1) {
+			} else if(i == max + 1) {
 				var b1 = v1.b[i++];
 				chars += b64.charAt(b1 >> 2) + b64.charAt(b1 << 4 & 63);
 			}
@@ -2006,8 +1849,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 			this.buf.add(chars.length);
 			this.buf.add(":");
 			this.buf.add(chars);
-		}break;
-		default:{
+			break;
+		default:
 			this.cache.pop();
 			if(v.hxSerialize != null) {
 				this.buf.add("C");
@@ -2015,25 +1858,21 @@ haxe.Serializer.prototype.serialize = function(v) {
 				this.cache.push(v);
 				v.hxSerialize(this);
 				this.buf.add("g");
-			}
-			else {
+			} else {
 				this.buf.add("c");
 				this.serializeString(Type.getClassName(c));
 				this.cache.push(v);
 				this.serializeFields(v);
 			}
-		}break;
 		}
-	}break;
+		break;
 	case 4:
-	{
 		if(this.useCache && this.serializeRef(v)) return;
 		this.buf.add("o");
 		this.serializeFields(v);
-	}break;
+		break;
 	case 7:
-	var e = $e[2];
-	{
+		var e = $e[2];
 		if(this.useCache && this.serializeRef(v)) return;
 		this.cache.pop();
 		this.buf.add(this.useEnumIndex?"j":"w");
@@ -2041,27 +1880,22 @@ haxe.Serializer.prototype.serialize = function(v) {
 		if(this.useEnumIndex) {
 			this.buf.add(":");
 			this.buf.add(v[1]);
-		}
-		else this.serializeString(v[0]);
+		} else this.serializeString(v[0]);
 		this.buf.add(":");
 		var l = v["length"];
 		this.buf.add(l - 2);
-		{
-			var _g = 2;
-			while(_g < l) {
-				var i = _g++;
-				this.serialize(v[i]);
-			}
+		var _g = 2;
+		while(_g < l) {
+			var i = _g++;
+			this.serialize(v[i]);
 		}
 		this.cache.push(v);
-	}break;
+		break;
 	case 5:
-	{
 		throw "Cannot serialize function";
-	}break;
-	default:{
+		break;
+	default:
 		throw "Cannot serialize " + Std.string(v);
-	}break;
 	}
 }
 haxe.Serializer.prototype.serializeException = function(e) {
@@ -2069,17 +1903,17 @@ haxe.Serializer.prototype.serializeException = function(e) {
 	this.serialize(e);
 }
 haxe.Serializer.prototype.__class__ = haxe.Serializer;
-List = function(p) { if( p === $_ ) return; {
+List = function(p) {
+	if( p === $_ ) return;
 	this.length = 0;
-}}
+}
 List.__name__ = ["List"];
 List.prototype.h = null;
 List.prototype.q = null;
 List.prototype.length = null;
 List.prototype.add = function(item) {
 	var x = [item];
-	if(this.h == null) this.h = x;
-	else this.q[1] = x;
+	if(this.h == null) this.h = x; else this.q[1] = x;
 	this.q = x;
 	this.length++;
 }
@@ -2116,8 +1950,7 @@ List.prototype.remove = function(v) {
 	var l = this.h;
 	while(l != null) {
 		if(l[0] == v) {
-			if(prev == null) this.h = l[1];
-			else prev[1] = l[1];
+			if(prev == null) this.h = l[1]; else prev[1] = l[1];
 			if(this.q == l) this.q = prev;
 			this.length--;
 			return true;
@@ -2141,14 +1974,13 @@ List.prototype.toString = function() {
 	var s = new StringBuf();
 	var first = true;
 	var l = this.h;
-	s.b[s.b.length] = "{";
+	s.b[s.b.length] = "{" == null?"null":"{";
 	while(l != null) {
-		if(first) first = false;
-		else s.b[s.b.length] = ", ";
-		s.b[s.b.length] = Std.string(l[0]);
+		if(first) first = false; else s.b[s.b.length] = ", " == null?"null":", ";
+		s.add(Std.string(l[0]));
 		l = l[1];
 	}
-	s.b[s.b.length] = "}";
+	s.b[s.b.length] = "}" == null?"null":"}";
 	return s.b.join("");
 }
 List.prototype.join = function(sep) {
@@ -2156,9 +1988,8 @@ List.prototype.join = function(sep) {
 	var first = true;
 	var l = this.h;
 	while(l != null) {
-		if(first) first = false;
-		else s.b[s.b.length] = sep;
-		s.b[s.b.length] = l[0];
+		if(first) first = false; else s.b[s.b.length] = sep == null?"null":sep;
+		s.add(l[0]);
 		l = l[1];
 	}
 	return s.b.join("");
@@ -2184,12 +2015,13 @@ List.prototype.map = function(f) {
 	return b;
 }
 List.prototype.__class__ = List;
-haxe.Http = function(url) { if( url === $_ ) return; {
+haxe.Http = function(url) {
+	if( url === $_ ) return;
 	this.url = url;
 	this.headers = new Hash();
 	this.params = new Hash();
 	this.async = true;
-}}
+}
 haxe.Http.__name__ = ["haxe","Http"];
 haxe.Http.requestUrl = function(url) {
 	var h = new haxe.Http(url);
@@ -2197,10 +2029,10 @@ haxe.Http.requestUrl = function(url) {
 	var r = null;
 	h.onData = function(d) {
 		r = d;
-	}
+	};
 	h.onError = function(e) {
 		throw e;
-	}
+	};
 	h.request(false);
 	return r;
 }
@@ -2227,78 +2059,61 @@ haxe.Http.prototype.request = function(post) {
 			var $r;
 			try {
 				$r = r.status;
-			}
-			catch( $e0 ) {
-				{
-					var e = $e0;
-					$r = null;
-				}
+			} catch( e ) {
+				$r = null;
 			}
 			return $r;
 		}(this));
 		if(s == undefined) s = null;
 		if(s != null) me.onStatus(s);
-		if(s != null && s >= 200 && s < 400) me.onData(r.responseText);
-		else switch(s) {
-		case null: case undefined:{
+		if(s != null && s >= 200 && s < 400) me.onData(r.responseText); else switch(s) {
+		case null: case undefined:
 			me.onError("Failed to connect or resolve host");
-		}break;
-		case 12029:{
+			break;
+		case 12029:
 			me.onError("Failed to connect to host");
-		}break;
-		case 12007:{
+			break;
+		case 12007:
 			me.onError("Unknown host");
-		}break;
-		default:{
+			break;
+		default:
 			me.onError("Http Error #" + r.status);
-		}break;
 		}
-	}
+	};
 	if(this.async) r.onreadystatechange = onreadystatechange;
 	var uri = this.postData;
-	if(uri != null) post = true;
-	else { var $it1 = this.params.keys();
-	while( $it1.hasNext() ) { var p = $it1.next();
-	{
-		if(uri == null) uri = "";
-		else uri += "&";
-		uri += StringTools.urlDecode(p) + "=" + StringTools.urlEncode(this.params.get(p));
+	if(uri != null) post = true; else {
+		var $it0 = this.params.keys();
+		while( $it0.hasNext() ) {
+			var p = $it0.next();
+			if(uri == null) uri = ""; else uri += "&";
+			uri += StringTools.urlDecode(p) + "=" + StringTools.urlEncode(this.params.get(p));
+		}
 	}
-	}}
 	try {
-		if(post) r.open("POST",this.url,this.async);
-		else if(uri != null) {
+		if(post) r.open("POST",this.url,this.async); else if(uri != null) {
 			var question = this.url.split("?").length <= 1;
 			r.open("GET",this.url + (question?"?":"&") + uri,this.async);
 			uri = null;
-		}
-		else r.open("GET",this.url,this.async);
-	}
-	catch( $e2 ) {
-		{
-			var e = $e2;
-			{
-				this.onError(e.toString());
-				return;
-			}
-		}
+		} else r.open("GET",this.url,this.async);
+	} catch( e ) {
+		this.onError(e.toString());
+		return;
 	}
 	if(this.headers.get("Content-Type") == null && post && this.postData == null) r.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	{ var $it3 = this.headers.keys();
-	while( $it3.hasNext() ) { var h = $it3.next();
-	r.setRequestHeader(h,this.headers.get(h));
-	}}
+	var $it1 = this.headers.keys();
+	while( $it1.hasNext() ) {
+		var h = $it1.next();
+		r.setRequestHeader(h,this.headers.get(h));
+	}
 	r.send(uri);
 	if(!this.async) onreadystatechange();
 }
 haxe.Http.prototype.onData = function(data) {
-	null;
 }
 haxe.Http.prototype.onError = function(msg) {
-	null;
 }
 haxe.Http.prototype.onStatus = function(status) {
-	null;
 }
 haxe.Http.prototype.__class__ = haxe.Http;
 ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] }
@@ -2347,41 +2162,35 @@ haxe.Resource.__name__ = ["haxe","Resource"];
 haxe.Resource.content = null;
 haxe.Resource.listNames = function() {
 	var names = new Array();
-	{
-		var _g = 0, _g1 = haxe.Resource.content;
-		while(_g < _g1.length) {
-			var x = _g1[_g];
-			++_g;
-			names.push(x.name);
-		}
+	var _g = 0, _g1 = haxe.Resource.content;
+	while(_g < _g1.length) {
+		var x = _g1[_g];
+		++_g;
+		names.push(x.name);
 	}
 	return names;
 }
 haxe.Resource.getString = function(name) {
-	{
-		var _g = 0, _g1 = haxe.Resource.content;
-		while(_g < _g1.length) {
-			var x = _g1[_g];
-			++_g;
-			if(x.name == name) {
-				if(x.str != null) return x.str;
-				var b = haxe.Unserializer.run(x.data);
-				return b.toString();
-			}
+	var _g = 0, _g1 = haxe.Resource.content;
+	while(_g < _g1.length) {
+		var x = _g1[_g];
+		++_g;
+		if(x.name == name) {
+			if(x.str != null) return x.str;
+			var b = haxe.Unserializer.run(x.data);
+			return b.toString();
 		}
 	}
 	return null;
 }
 haxe.Resource.getBytes = function(name) {
-	{
-		var _g = 0, _g1 = haxe.Resource.content;
-		while(_g < _g1.length) {
-			var x = _g1[_g];
-			++_g;
-			if(x.name == name) {
-				if(x.str != null) return haxe.io.Bytes.ofString(x.str);
-				return haxe.Unserializer.run(x.data);
-			}
+	var _g = 0, _g1 = haxe.Resource.content;
+	while(_g < _g1.length) {
+		var x = _g1[_g];
+		++_g;
+		if(x.name == name) {
+			if(x.str != null) return haxe.io.Bytes.ofString(x.str);
+			return haxe.Unserializer.run(x.data);
 		}
 	}
 	return null;
@@ -2396,20 +2205,18 @@ js.Boot.__trace = function(v,i) {
 	var msg = i != null?i.fileName + ":" + i.lineNumber + ": ":"";
 	msg += js.Boot.__unhtml(js.Boot.__string_rec(v,"")) + "<br/>";
 	var d = document.getElementById("haxe:trace");
-	if(d == null) alert("No haxe:trace element defined\n" + msg);
-	else d.innerHTML += msg;
+	if(d == null) alert("No haxe:trace element defined\n" + msg); else d.innerHTML += msg;
 }
 js.Boot.__clear_trace = function() {
 	var d = document.getElementById("haxe:trace");
 	if(d != null) d.innerHTML = "";
-	else null;
 }
 js.Boot.__closure = function(o,f) {
 	var m = o[f];
 	if(m == null) return null;
 	var f1 = function() {
 		return m.apply(o,arguments);
-	}
+	};
 	f1.scope = o;
 	f1.method = m;
 	return f1;
@@ -2420,19 +2227,16 @@ js.Boot.__string_rec = function(o,s) {
 	var t = typeof(o);
 	if(t == "function" && (o.__name__ != null || o.__ename__ != null)) t = "object";
 	switch(t) {
-	case "object":{
+	case "object":
 		if(o instanceof Array) {
 			if(o.__enum__ != null) {
 				if(o.length == 2) return o[0];
 				var str = o[0] + "(";
 				s += "\t";
-				{
-					var _g1 = 2, _g = o.length;
-					while(_g1 < _g) {
-						var i = _g1++;
-						if(i != 2) str += "," + js.Boot.__string_rec(o[i],s);
-						else str += js.Boot.__string_rec(o[i],s);
-					}
+				var _g1 = 2, _g = o.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(i != 2) str += "," + js.Boot.__string_rec(o[i],s); else str += js.Boot.__string_rec(o[i],s);
 				}
 				return str + ")";
 			}
@@ -2440,12 +2244,10 @@ js.Boot.__string_rec = function(o,s) {
 			var i;
 			var str = "[";
 			s += "\t";
-			{
-				var _g = 0;
-				while(_g < l) {
-					var i1 = _g++;
-					str += (i1 > 0?",":"") + js.Boot.__string_rec(o[i1],s);
-				}
+			var _g = 0;
+			while(_g < l) {
+				var i1 = _g++;
+				str += (i1 > 0?",":"") + js.Boot.__string_rec(o[i1],s);
 			}
 			str += "]";
 			return str;
@@ -2453,14 +2255,8 @@ js.Boot.__string_rec = function(o,s) {
 		var tostr;
 		try {
 			tostr = o.toString;
-		}
-		catch( $e0 ) {
-			{
-				var e = $e0;
-				{
-					return "???";
-				}
-			}
+		} catch( e ) {
+			return "???";
 		}
 		if(tostr != null && tostr != Object.toString) {
 			var s2 = o.toString();
@@ -2471,24 +2267,24 @@ js.Boot.__string_rec = function(o,s) {
 		s += "\t";
 		var hasp = o.hasOwnProperty != null;
 		for( var k in o ) { ;
-		if(hasp && !o.hasOwnProperty(k)) continue;
-		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__") continue;
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__") {
+			continue;
+		}
 		if(str.length != 2) str += ", \n";
 		str += s + k + " : " + js.Boot.__string_rec(o[k],s);
 		}
 		s = s.substring(1);
 		str += "\n" + s + "}";
 		return str;
-	}break;
-	case "function":{
+	case "function":
 		return "<function>";
-	}break;
-	case "string":{
+	case "string":
 		return o;
-	}break;
-	default:{
+	default:
 		return String(o);
-	}break;
 	}
 }
 js.Boot.__interfLoop = function(cc,cl) {
@@ -2512,35 +2308,23 @@ js.Boot.__instanceof = function(o,cl) {
 			return true;
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			{
-				if(cl == null) return false;
-			}
-		}
+	} catch( e ) {
+		if(cl == null) return false;
 	}
 	switch(cl) {
-	case Int:{
+	case Int:
 		return Math.ceil(o%2147483648.0) === o;
-	}break;
-	case Float:{
+	case Float:
 		return typeof(o) == "number";
-	}break;
-	case Bool:{
+	case Bool:
 		return o === true || o === false;
-	}break;
-	case String:{
+	case String:
 		return typeof(o) == "string";
-	}break;
-	case Dynamic:{
+	case Dynamic:
 		return true;
-	}break;
-	default:{
+	default:
 		if(o == null) return false;
 		return o.__enum__ == cl || cl == Class && o.__name__ != null || cl == Enum && o.__ename__ != null;
-	}break;
 	}
 }
 js.Boot.__init = function() {
@@ -2549,7 +2333,7 @@ js.Boot.__init = function() {
 	Array.prototype.copy = Array.prototype.slice;
 	Array.prototype.insert = function(i,x) {
 		this.splice(i,0,x);
-	}
+	};
 	Array.prototype.remove = Array.prototype.indexOf?function(obj) {
 		var idx = this.indexOf(obj);
 		if(idx == -1) return false;
@@ -2566,20 +2350,20 @@ js.Boot.__init = function() {
 			i++;
 		}
 		return false;
-	}
+	};
 	Array.prototype.iterator = function() {
 		return { cur : 0, arr : this, hasNext : function() {
 			return this.cur < this.arr.length;
 		}, next : function() {
 			return this.arr[this.cur++];
 		}};
-	}
+	};
 	if(String.prototype.cca == null) String.prototype.cca = String.prototype.charCodeAt;
 	String.prototype.charCodeAt = function(i) {
 		var x = this.cca(i);
 		if(x != x) return null;
 		return x;
-	}
+	};
 	var oldsub = String.prototype.substr;
 	String.prototype.substr = function(pos,len) {
 		if(pos != null && pos != 0 && len != null && len < 0) return "";
@@ -2587,23 +2371,20 @@ js.Boot.__init = function() {
 		if(pos < 0) {
 			pos = this.length + pos;
 			if(pos < 0) pos = 0;
-		}
-		else if(len < 0) {
-			len = this.length + len - pos;
-		}
+		} else if(len < 0) len = this.length + len - pos;
 		return oldsub.apply(this,[pos,len]);
-	}
+	};
 	$closure = js.Boot.__closure;
 }
 js.Boot.prototype.__class__ = js.Boot;
-IntHash = function(p) { if( p === $_ ) return; {
+IntHash = function(p) {
+	if( p === $_ ) return;
 	this.h = {}
 	if(this.h.__proto__ != null) {
 		this.h.__proto__ = null;
 		delete(this.h.__proto__);
 	}
-	else null;
-}}
+}
 IntHash.__name__ = ["IntHash"];
 IntHash.prototype.h = null;
 IntHash.prototype.set = function(key,value) {
@@ -2622,10 +2403,7 @@ IntHash.prototype.remove = function(key) {
 }
 IntHash.prototype.keys = function() {
 	var a = new Array();
-	
-			for( x in this.h )
-				a.push(x);
-		;
+	for( x in this.h ) a.push(x);
 	return a.iterator();
 }
 IntHash.prototype.iterator = function() {
@@ -2638,22 +2416,21 @@ IntHash.prototype.iterator = function() {
 }
 IntHash.prototype.toString = function() {
 	var s = new StringBuf();
-	s.b[s.b.length] = "{";
+	s.b[s.b.length] = "{" == null?"null":"{";
 	var it = this.keys();
-	{ var $it0 = it;
-	while( $it0.hasNext() ) { var i = $it0.next();
-	{
-		s.b[s.b.length] = i;
-		s.b[s.b.length] = " => ";
-		s.b[s.b.length] = Std.string(this.get(i));
-		if(it.hasNext()) s.b[s.b.length] = ", ";
+	while( it.hasNext() ) {
+		var i = it.next();
+		s.b[s.b.length] = i == null?"null":i;
+		s.b[s.b.length] = " => " == null?"null":" => ";
+		s.add(Std.string(this.get(i)));
+		if(it.hasNext()) s.b[s.b.length] = ", " == null?"null":", ";
 	}
-	}}
-	s.b[s.b.length] = "}";
+	s.b[s.b.length] = "}" == null?"null":"}";
 	return s.b.join("");
 }
 IntHash.prototype.__class__ = IntHash;
-intermedia.fengOffice.client.widgets.Widget = function(id,title,container) { if( id === $_ ) return; {
+intermedia.fengOffice.client.widgets.Widget = function(id,title,container) {
+	if( id === $_ ) return;
 	this._container = container;
 	this._id = id;
 	var str = haxe.Resource.getString("widget");
@@ -2662,7 +2439,7 @@ intermedia.fengOffice.client.widgets.Widget = function(id,title,container) { if(
 	this._container.innerHTML = output;
 	js.Lib.window.onresize = $closure(this,"refresh");
 	this.refresh();
-}}
+}
 intermedia.fengOffice.client.widgets.Widget.__name__ = ["intermedia","fengOffice","client","widgets","Widget"];
 intermedia.fengOffice.client.widgets.Widget.prototype._container = null;
 intermedia.fengOffice.client.widgets.Widget.prototype._id = null;
@@ -2699,14 +2476,14 @@ intermedia.fengOffice.client.widgets.Widget.prototype.getFooter = function() {
 	return js.Lib.document.getElementById("WindowsId" + this._id + "Footer").innerHTML;
 }
 intermedia.fengOffice.client.widgets.Widget.prototype.__class__ = intermedia.fengOffice.client.widgets.Widget;
-Hash = function(p) { if( p === $_ ) return; {
+Hash = function(p) {
+	if( p === $_ ) return;
 	this.h = {}
 	if(this.h.__proto__ != null) {
 		this.h.__proto__ = null;
 		delete(this.h.__proto__);
 	}
-	else null;
-}}
+}
 Hash.__name__ = ["Hash"];
 Hash.prototype.h = null;
 Hash.prototype.set = function(key,value) {
@@ -2719,18 +2496,9 @@ Hash.prototype.exists = function(key) {
 	try {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
-	}
-	catch( $e0 ) {
-		{
-			var e = $e0;
-			{
-				
-				for(var i in this.h)
-					if( i == key ) return true;
-			;
-				return false;
-			}
-		}
+	} catch( e ) {
+		for(var i in this.h) if( i == key ) return true;
+		return false;
 	}
 }
 Hash.prototype.remove = function(key) {
@@ -2740,10 +2508,7 @@ Hash.prototype.remove = function(key) {
 }
 Hash.prototype.keys = function() {
 	var a = new Array();
-	
-			for(var i in this.h)
-				a.push(i.substr(1));
-		;
+	for(var i in this.h) a.push(i.substr(1));
 	return a.iterator();
 }
 Hash.prototype.iterator = function() {
@@ -2756,18 +2521,16 @@ Hash.prototype.iterator = function() {
 }
 Hash.prototype.toString = function() {
 	var s = new StringBuf();
-	s.b[s.b.length] = "{";
+	s.b[s.b.length] = "{" == null?"null":"{";
 	var it = this.keys();
-	{ var $it0 = it;
-	while( $it0.hasNext() ) { var i = $it0.next();
-	{
-		s.b[s.b.length] = i;
-		s.b[s.b.length] = " => ";
-		s.b[s.b.length] = Std.string(this.get(i));
-		if(it.hasNext()) s.b[s.b.length] = ", ";
+	while( it.hasNext() ) {
+		var i = it.next();
+		s.b[s.b.length] = i == null?"null":i;
+		s.b[s.b.length] = " => " == null?"null":" => ";
+		s.add(Std.string(this.get(i)));
+		if(it.hasNext()) s.b[s.b.length] = ", " == null?"null":", ";
 	}
-	}}
-	s.b[s.b.length] = "}";
+	s.b[s.b.length] = "}" == null?"null":"}";
 	return s.b.join("");
 }
 Hash.prototype.__class__ = Hash;
@@ -2778,15 +2541,15 @@ js.Boot.__init();
 	var d = Date;
 	d.now = function() {
 		return new Date();
-	}
+	};
 	d.fromTime = function(t) {
 		var d1 = new Date();
 		d1["setTime"](t);
 		return d1;
-	}
+	};
 	d.fromString = function(s) {
 		switch(s.length) {
-		case 8:{
+		case 8:
 			var k = s.split(":");
 			var d1 = new Date();
 			d1["setTime"](0);
@@ -2794,22 +2557,18 @@ js.Boot.__init();
 			d1["setUTCMinutes"](k[1]);
 			d1["setUTCSeconds"](k[2]);
 			return d1;
-		}break;
-		case 10:{
+		case 10:
 			var k = s.split("-");
 			return new Date(k[0],k[1] - 1,k[2],0,0,0);
-		}break;
-		case 19:{
+		case 19:
 			var k = s.split(" ");
 			var y = k[0].split("-");
 			var t = k[1].split(":");
 			return new Date(y[0],y[1] - 1,y[2],t[0],t[1],t[2]);
-		}break;
-		default:{
+		default:
 			throw "Invalid date format : " + s;
-		}break;
 		}
-	}
+	};
 	d.prototype["toString"] = function() {
 		var date = this;
 		var m = date.getMonth() + 1;
@@ -2818,7 +2577,7 @@ js.Boot.__init();
 		var mi = date.getMinutes();
 		var s = date.getSeconds();
 		return date.getFullYear() + "-" + (m < 10?"0" + m:"" + m) + "-" + (d1 < 10?"0" + d1:"" + d1) + " " + (h < 10?"0" + h:"" + h) + ":" + (mi < 10?"0" + mi:"" + mi) + ":" + (s < 10?"0" + s:"" + s);
-	}
+	};
 	d.prototype.__class__ = d;
 	d.__name__ = ["Date"];
 }
@@ -2843,10 +2602,10 @@ js.Boot.__init();
 	Math.POSITIVE_INFINITY = Number["POSITIVE_INFINITY"];
 	Math.isFinite = function(i) {
 		return isFinite(i);
-	}
+	};
 	Math.isNaN = function(i) {
 		return isNaN(i);
-	}
+	};
 }
 {
 	js.Lib.document = document;
@@ -2858,38 +2617,22 @@ js.Boot.__init();
 		return f(msg,[url+":"+line]);
 	}
 }
-{
-	haxe.Resource.content = [{ name : "list_footer", data : "s1084:IDxkaXYgaWQ9Imxpc3RGb290ZXIiIHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi9hc3NldHMvd2hpdGUtdG9wLWJvdHRvbS5naWYpOyBiYWNrZ3JvdW5kLXNpemU6IDEwMCU7IG1hcmdpbiA6IDBweDsgcGFkZGluZyA6IDFweDsgIj4NCgk8dWwgc3R5bGU9Im1hcmdpbjogMDsgcGFkZGluZzogMTA7IGxpc3Qtc3R5bGUtdHlwZTogbm9uZTsgYmFja2dyb3VuZC1jb2xvcjogIzAzNjsgIj4NCgkgICAgPGEgaWQ9Imxpc3RGb290ZXJIb21lQnRuIiBocmVmPSIjIj48bGkgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb3RoZXIvaWNfbWVudV9zbWFsbHRpbGVzLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KPCEtLSAgICAgPGEgaWQ9Imxpc3RGb290ZXJCYWNrQnRuIiBocmVmPSIjIj48bGkgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvbmF2aWdhdGlvbi9hcnJvd19sZWZ0LnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KCSAgICA8YSBpZD0ibGlzdEZvb3RlckZvcndhcmRCdG4iIGhyZWY9IiMiPjxsaSBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogdXJsKGFzc2V0cy9uYXZpZ2F0aW9uL2Fycm93X3JpZ2h0LnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KLS0%CTwvdWw%DQogIDwvZGl2Pg0K"},{ name : "widget", data : "s704:ICA8ZGl2IGlkPSJXaW5kb3dzSWQ6OmlkOjoiIHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi9hc3NldHMvd2hpdGUtdG9wLWJvdHRvbS5naWYpOyBiYWNrZ3JvdW5kLXNpemU6IDEwMCU7IG1hcmdpbiA6IDBweDsgcGFkZGluZyA6IDFweDsgaGVpZ2h0OjEwMCU7Ij4NCiAgICA8ZGl2IGlkPSJXaW5kb3dzSWQ6OmlkOjpCb2R5IiBzdHlsZT0icGFkZGluZzogMTBweDsgbWFyZ2luOiA1cHg7IG92ZXJmbG93OiBhdXRvOyBvdmVyZmxvdy14OiBoaWRkZW47IA0KCSAgICBwYWRkaW5nOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHdoaXRlOyBib3JkZXItcmFkaXVzOiAxMHB4OyAiPjwvZGl2Pg0KICAgIDxkaXYgaWQ9IldpbmRvd3NJZDo6aWQ6OkZvb3RlciIgPg0KICAgIDwvZGl2Pg0KICAgPHAgaWQ9IldpbmRvd3NJZDo6aWQ6OlRpdGxlIiBzdHlsZT0iZGlzcGxheTpub25lOyBtYXJnaW46MDsgZm9udC1mYW1pbHk6IFZlcmRhbmEsQXJpYWw7IHRleHQtYWxpZ246IHJpZ2h0OyI%Ojp0aXRsZTo6PC9wPiAgDQogIDwvZGl2Pg0K"},{ name : "mail_contents", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "home", data : "s4127:ICA8ZGl2IGlkPSJob21lU2NyZWVuIiBzdHlsZT0icGFkZGluZzogMTBweDsgIj4NCjwhLS0gaG9tZSBzY3JlZW4gPSBjdXJyZW50IHNlbGVjdGlvbiAod29ya3NwYWNlLCB0YWdzLCBmaWx0ZXIpICsgdGFicyAoZG9jcywgZW1haWxzLCBjb250YWN0Li4uKSAgLS0%DQoJPHVsIHN0eWxlPSJtYXJnaW46IDIwOyBwYWRkaW5nOiAwOyBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyAiPg0KCSAgICA8YSBpZD0id29ya3NwYWNlQnRuIiBocmVmPSIjIj4NCgkJCTxsaSBzdHlsZT0ibWFyZ2luIDogMHB4OyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7ICI%DQoJCQkJPGRpdiBzdHlsZT0id2lkdGg6NjYlOyBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgIiA%DQoJCQkJCTxwIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246IG5vbmU7IG1hcmdpbjogMDsgcGFkZGluZzogMDsgIj5DdXJyZW50IHdvcmtzcGFjZTo8L3A%DQoJCQkJCTxzdHJvbmcgc3R5bGU9InRleHQtZGVjb3JhdGlvbjogbm9uZTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyAiPjo6YXBwU3RhdGUuY3VyV29ya3NwYWNlLm5hbWU6Ojwvc3Ryb25nPg0KCQkJCTwvZGl2Pg0KCQkJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybCguL2Fzc2V0cy9maWx0ZXJzL3dvcmtzcGFjZS5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj48L2Rpdj4NCgkJCTwvbGk%DQoJICAgIDwvYT4NCgk8L3VsPg0KCTx1bCBzdHlsZT0ibWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyAiPg0KCSAgICA8YSBpZD0iZmlsZXNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9maWxlcy5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPmZpbGVzPC9wPg0KCSAgICAJPC9saT4NCgkgICAgPC9hPg0KCSAgICA8YSBpZD0idGFza3NCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy90YXNrcy5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPnRhc2tzPC9wPg0KCSAgICAJPC9saT4NCgkgICAgPC9hPg0KCSAgICA8YSBpZD0ibm90ZXNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9ub3RlLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgIj48L2Rpdj4NCgkgICAgCQk8cCBzdHlsZT0ibWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgdGV4dC1hbGlnbjpjZW50ZXI7ICI%bm90ZXM8L3A%DQoJICAgIAk8L2xpPg0KCSAgICA8L2E%DQoJICAgIDxhIGlkPSJlbWFpbHNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9lbWFpbC5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPmVtYWlsczwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDxhIGlkPSJsaW5rc0J0biIgaHJlZj0iIyI%DQoJICAgIAk8bGkgIHN0eWxlPSJtYXJnaW4gOiAyMHB4OyBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7ICI%DQoJICAgIAkJPGRpdiBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogdXJsKGFzc2V0cy9vYmplY3RzL3dlYmxpbmsucG5nKTsgbWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgaGVpZ2h0OiA1MHB4OyAiPjwvZGl2Pg0KCSAgICAJCTxwIHN0eWxlPSJtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyB0ZXh0LWFsaWduOmNlbnRlcjsgIj5saW5rczwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDwvYT4NCgkgICAgPGEgaWQ9ImNhbGVuZGFyQnRuIiBocmVmPSIjIj4NCgkgICAgCTxsaSAgc3R5bGU9Im1hcmdpbiA6IDIwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj4NCgkgICAgCQk8ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoYXNzZXRzL29iamVjdHMvdmlld19jYWxlbmRhcl9kYXkucG5nKTsgbWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgaGVpZ2h0OiA1MHB4OyAiPjwvZGl2Pg0KCSAgICAJCTxwIHN0eWxlPSJtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyB0ZXh0LWFsaWduOmNlbnRlcjsgIj5jYWxlbmRhcjwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDwvYT4NCgkgICAgPGEgaWQ9ImNvbnRhY3RzQnRuIiBocmVmPSIjIj4NCgkgICAgCTxsaSAgc3R5bGU9Im1hcmdpbiA6IDIwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj4NCgkgICAgCQk8ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoYXNzZXRzL29iamVjdHMvZ3JvdXBzLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgIj48L2Rpdj4NCgkgICAgCQk8cCBzdHlsZT0ibWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgdGV4dC1hbGlnbjpjZW50ZXI7ICI%Y29udGFjdHM8L3A%DQoJICAgIAk8L2xpPg0KCSAgICA8L2E%DQoJPC91bD4NCiAgPC9kaXY%DQo"},{ name : "contacts_detail", data : "s312:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPkFsbCBkYXRhOiA6Oml0ZW06OjwvcD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%"},{ name : "project_files", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "loading", data : "s171:ICA8ZGl2IGlkPSJ3aWRnZXRzIiBzdHlsZT0ibWFyZ2luOiBhdXRvOyB3aWR0aDogNDBweDsgaGVpZ2h0OiA0MHB4OyI%DQogIAkJPGltZyBzcmM9ImFzc2V0cy9uYXZpZ2F0aW9uL2xvYWRpbmcuZ2lmIiAvPg0KICA8L2Rpdj4"},{ name : "contacts", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_tasks", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_webpages", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_messages_detail", data : "s378:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPjo6aXRlbS50ZXh0Ojo8L3A%DQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgIAk8cD5BbGwgZGF0YTogOjppdGVtOjo8L3A%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_events", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_events_detail", data : "s312:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPkFsbCBkYXRhOiA6Oml0ZW06OjwvcD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%"},{ name : "workspaces", data : "s1488:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%U2VsZWN0IFdvcmtzcGFjZTwvYnV0dG9uPg0KCSAgIAk6OmlmIGhhc1BhcmVudDo6DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieV9pZDo6PC9wPg0KCSAgICAJPHA%Y3JlYXRlZCBvbjogOjpjdXJJdGVtLmNyZWF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieV9pZDo6PC9wPg0KCSAgICA6OmVuZDo6DQogICAgPC9kaXY%DQogICAgPGRpdj4NCgk8dWwgc3R5bGU9Imxpc3Qtc3R5bGUtdHlwZTogbm9uZTsgdGV4dC1hbGlnbjpyaWdodDttYXJnaW46MWVtIDA7cGFkZGluZzowIj46OmZvcmVhY2ggaXRlbXM6Og0KCSAgPGxpIHN0eWxlPSJtYXJnaW4tYm90dG9tOiAzMHB4OyBib3JkZXItYm90dG9tOiBtZWRpdW0gZ3Jvb3ZlIGdyYXk7ICI%DQoJCSAgPHAgc3R5bGU9Im1hcmdpbjogMDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyB3aGl0ZS1zcGFjZTpub3dyYXA7IGZsb2F0OmxlZnQiPjo6bmFtZTo6PC9wPg0KCQkgIDxidXR0b24gc3R5bGU9ImRpc3BsYXk6aW5saW5lO3doaXRlLXNwYWNlOm5vd3JhcDsiIGlkPSJpdGVtQnRuOjppZDo6IiB0eXBlPSJidXR0b24iPlNlZSBjaGlsZHJlbjwvYnV0dG9uPg0KCQkgIDxidXR0b24gc3R5bGU9ImRpc3BsYXk6aW5saW5lO3doaXRlLXNwYWNlOm5vd3JhcDsiIGlkPSJzZWxlY3RCdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VsZWN0IHdvcmtzcGFjZTwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%"},{ name : "mail_contents_detail", data : "s312:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPkFsbCBkYXRhOiA6Oml0ZW06OjwvcD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%"},{ name : "project_webpages_detail", data : "s563:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPlVSTDogPGEgaHJlZj0iOjppdGVtLnVybDo6Ij46Oml0ZW0udXJsOjo8L2E%PC9wPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJICAJPGlmcmFtZSBzcmM9Ijo6aXRlbS51cmw6OiIgc3R5bGU9InBhZGRpbmc6IDBweDsgd2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgIiAvPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_tasks_detail", data : "s795:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%dWRhdGVkIG9uIDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPmNyZWF0ZWQgb24gOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPlN0YXJ0IGRhdGU6IDo6aXRlbS5zdGFydF9kYXRlOjo8L3A%DQoJICAJPHA%RHVlIGRhdGU6IDo6aXRlbS5zdGFydF9kYXRlOjo8L3A%DQoJICAJPHA%QXNzaWduZWQgdG86IDo6aXRlbS5hc3NpZ25lZF90b19jb250YWN0X2lkOjo8L3A%DQoJICAJPHA%QXNzaWduZWQgYnk6IDo6aXRlbS5hc3NpZ25lZF9ieV9pZDo6PC9wPg0KCSAgCTxwPkVzdGltYXRlZCB0aW1lOiA6Oml0ZW0udGltZV9lc3RpbWF0ZTo6PC9wPg0KCSAgCTxwPkNvbXBsZXRlZDogOjppdGVtLnBlcmNlbnRfY29tcGxldGVkOjolPC9wPg0KCSAgCTxwPkNvbXBsZXRlZCBvbjogOjppdGVtLmNvbXBsZXRlZF9vbjo6PC9wPg0KCSAgCTxwPkNvbXBsZXRlZCBieTogOjppdGVtLmNvbXBsZXRlZF9ieV9pZDo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_files_detail", data : "s238:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%OjppdGVtLnVwZGF0ZWRfb246OjwvcD4NCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCSAgCTxwPjo6aXRlbS5jb250ZW50Ojo8L3A%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "project_messages", data : "s1478:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgYnk6IDo6Y3VySXRlbS5jcmVhdGVkX2J5X2lkOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBvbjogOjpjdXJJdGVtLnVwZGF0ZWRfb246OjwvcD4NCgkgICAgCTxwPnVwZGF0ZWQgYnk6IDo6Y3VySXRlbS51cGRhdGVkX2J5X2lkOjo8L3A%DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg"},{ name : "login", data : "s940:PGRpdiBpZD0ibG9naW4iIHN0eWxlPSJtYXJnaW46IGF1dG87IHdpZHRoOiAxMDAlOyBtYXgtd2lkdGg6IDIwMHB4OyBoZWlnaHQ6IDEwMCVweDsgbWF4LWhlaWdodDogMjAwcHg7IG1hcmdpbi10b3A6IDIwcHg7ICI%DQoJPGRpdiBpZD0ibG9naW5Vc2VybmFtZURpdiIgc3R5bGU9IndpZHRoOiAxMDAlOyAiPg0KCQk8bGFiZWwgZm9yPSJ1c2VyTmFtZSI%RW1haWwgb3IgdXNlcm5hbWU6PC9sYWJlbD48YnIgLz4NCgkJPGlucHV0IGlkPSJ1c2VyTmFtZSIgdmFsdWU9IiIgdHlwZT0idGV4dCIgc3R5bGU9IndpZHRoOiAxMDAlOyAiIC8%DQoJPC9kaXY%DQoJPGRpdiBpZD0ibG9naW5QYXNzd29yZERpdiIgc3R5bGU9IndpZHRoOiAxMDAlOyAiID4NCgkgICAgPGxhYmVsIGZvcj0idXNlclBhc3MiIHN0eWxlPSJ3aWR0aDogMTAwJTsgIj5QYXNzd29yZDo8L2xhYmVsPjxiciAvPg0KCSAgICA8aW5wdXQgaWQ9InVzZXJQYXNzIiBjbGFzcz0ibWVkaXVtIiB2YWx1ZT0iIiB0eXBlPSJwYXNzd29yZCIgc3R5bGU9IndpZHRoOiAxMDAlOyAiIC8%DQoJPC9kaXY%DQoJPGJ1dHRvbiBpZD0ic3VibWl0QnRuIiB0eXBlPSJzdWJtaXQiIHN0eWxlPSJ3aWR0aDogMTAwJTsgIj5Mb2dpbjwvYnV0dG9uPg0KCTxkaXY%DQoJCTo6aWYgaXNFcnJvcjo6PHAgc3R5bGU9ImNvbG9yOiBvcmFuZ2U7Ij46OmVycm9yOjo8L3A%OjplbmQ6Og0KCTwvZGl2Pg0KPC9kaXY%"}];
-}
-{
-	js["XMLHttpRequest"] = window.XMLHttpRequest?XMLHttpRequest:window.ActiveXObject?function() {
+haxe.Resource.content = [{ name : "list_footer", data : "s1084:IDxkaXYgaWQ9Imxpc3RGb290ZXIiIHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi9hc3NldHMvd2hpdGUtdG9wLWJvdHRvbS5naWYpOyBiYWNrZ3JvdW5kLXNpemU6IDEwMCU7IG1hcmdpbiA6IDBweDsgcGFkZGluZyA6IDFweDsgIj4NCgk8dWwgc3R5bGU9Im1hcmdpbjogMDsgcGFkZGluZzogMTA7IGxpc3Qtc3R5bGUtdHlwZTogbm9uZTsgYmFja2dyb3VuZC1jb2xvcjogIzAzNjsgIj4NCgkgICAgPGEgaWQ9Imxpc3RGb290ZXJIb21lQnRuIiBocmVmPSIjIj48bGkgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb3RoZXIvaWNfbWVudV9zbWFsbHRpbGVzLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KPCEtLSAgICAgPGEgaWQ9Imxpc3RGb290ZXJCYWNrQnRuIiBocmVmPSIjIj48bGkgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvbmF2aWdhdGlvbi9hcnJvd19sZWZ0LnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KCSAgICA8YSBpZD0ibGlzdEZvb3RlckZvcndhcmRCdG4iIGhyZWY9IiMiPjxsaSBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogdXJsKGFzc2V0cy9uYXZpZ2F0aW9uL2Fycm93X3JpZ2h0LnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPjwvbGk%PC9hPg0KLS0%CTwvdWw%DQogIDwvZGl2Pg0K"},{ name : "widget", data : "s704:ICA8ZGl2IGlkPSJXaW5kb3dzSWQ6OmlkOjoiIHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoLi9hc3NldHMvd2hpdGUtdG9wLWJvdHRvbS5naWYpOyBiYWNrZ3JvdW5kLXNpemU6IDEwMCU7IG1hcmdpbiA6IDBweDsgcGFkZGluZyA6IDFweDsgaGVpZ2h0OjEwMCU7Ij4NCiAgICA8ZGl2IGlkPSJXaW5kb3dzSWQ6OmlkOjpCb2R5IiBzdHlsZT0icGFkZGluZzogMTBweDsgbWFyZ2luOiA1cHg7IG92ZXJmbG93OiBhdXRvOyBvdmVyZmxvdy14OiBoaWRkZW47IA0KCSAgICBwYWRkaW5nOiAwcHg7IGJhY2tncm91bmQtY29sb3I6IHdoaXRlOyBib3JkZXItcmFkaXVzOiAxMHB4OyAiPjwvZGl2Pg0KICAgIDxkaXYgaWQ9IldpbmRvd3NJZDo6aWQ6OkZvb3RlciIgPg0KICAgIDwvZGl2Pg0KICAgPHAgaWQ9IldpbmRvd3NJZDo6aWQ6OlRpdGxlIiBzdHlsZT0iZGlzcGxheTpub25lOyBtYXJnaW46MDsgZm9udC1mYW1pbHk6IFZlcmRhbmEsQXJpYWw7IHRleHQtYWxpZ246IHJpZ2h0OyI%Ojp0aXRsZTo6PC9wPiAgDQogIDwvZGl2Pg0K"},{ name : "mail_contents", data : "s1775:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4"},{ name : "home", data : "s4127:ICA8ZGl2IGlkPSJob21lU2NyZWVuIiBzdHlsZT0icGFkZGluZzogMTBweDsgIj4NCjwhLS0gaG9tZSBzY3JlZW4gPSBjdXJyZW50IHNlbGVjdGlvbiAod29ya3NwYWNlLCB0YWdzLCBmaWx0ZXIpICsgdGFicyAoZG9jcywgZW1haWxzLCBjb250YWN0Li4uKSAgLS0%DQoJPHVsIHN0eWxlPSJtYXJnaW46IDIwOyBwYWRkaW5nOiAwOyBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyAiPg0KCSAgICA8YSBpZD0id29ya3NwYWNlQnRuIiBocmVmPSIjIj4NCgkJCTxsaSBzdHlsZT0ibWFyZ2luIDogMHB4OyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7ICI%DQoJCQkJPGRpdiBzdHlsZT0id2lkdGg6NjYlOyBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgIiA%DQoJCQkJCTxwIHN0eWxlPSJ0ZXh0LWRlY29yYXRpb246IG5vbmU7IG1hcmdpbjogMDsgcGFkZGluZzogMDsgIj5DdXJyZW50IHdvcmtzcGFjZTo8L3A%DQoJCQkJCTxzdHJvbmcgc3R5bGU9InRleHQtZGVjb3JhdGlvbjogbm9uZTsgbWFyZ2luOiAwOyBwYWRkaW5nOiAwOyAiPjo6YXBwU3RhdGUuY3VyV29ya3NwYWNlLm5hbWU6Ojwvc3Ryb25nPg0KCQkJCTwvZGl2Pg0KCQkJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybCguL2Fzc2V0cy9maWx0ZXJzL3dvcmtzcGFjZS5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj48L2Rpdj4NCgkJCTwvbGk%DQoJICAgIDwvYT4NCgk8L3VsPg0KCTx1bCBzdHlsZT0ibWFyZ2luOiAwOyBwYWRkaW5nOiAwOyBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50OyAiPg0KCSAgICA8YSBpZD0iZmlsZXNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9maWxlcy5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPmZpbGVzPC9wPg0KCSAgICAJPC9saT4NCgkgICAgPC9hPg0KCSAgICA8YSBpZD0idGFza3NCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy90YXNrcy5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPnRhc2tzPC9wPg0KCSAgICAJPC9saT4NCgkgICAgPC9hPg0KCSAgICA8YSBpZD0ibm90ZXNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9ub3RlLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgIj48L2Rpdj4NCgkgICAgCQk8cCBzdHlsZT0ibWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgdGV4dC1hbGlnbjpjZW50ZXI7ICI%bm90ZXM8L3A%DQoJICAgIAk8L2xpPg0KCSAgICA8L2E%DQoJICAgIDxhIGlkPSJlbWFpbHNCdG4iIGhyZWY9IiMiPg0KCSAgICAJPGxpICBzdHlsZT0ibWFyZ2luIDogMjBweDsgZGlzcGxheTogaW5saW5lLWJsb2NrOyAiPg0KCSAgICAJCTxkaXYgc3R5bGU9ImJhY2tncm91bmQtaW1hZ2U6IHVybChhc3NldHMvb2JqZWN0cy9lbWFpbC5wbmcpOyBtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyBoZWlnaHQ6IDUwcHg7ICI%PC9kaXY%DQoJICAgIAkJPHAgc3R5bGU9Im1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IHRleHQtYWxpZ246Y2VudGVyOyAiPmVtYWlsczwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDxhIGlkPSJsaW5rc0J0biIgaHJlZj0iIyI%DQoJICAgIAk8bGkgIHN0eWxlPSJtYXJnaW4gOiAyMHB4OyBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7ICI%DQoJICAgIAkJPGRpdiBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogdXJsKGFzc2V0cy9vYmplY3RzL3dlYmxpbmsucG5nKTsgbWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgaGVpZ2h0OiA1MHB4OyAiPjwvZGl2Pg0KCSAgICAJCTxwIHN0eWxlPSJtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyB0ZXh0LWFsaWduOmNlbnRlcjsgIj5saW5rczwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDwvYT4NCgkgICAgPGEgaWQ9ImNhbGVuZGFyQnRuIiBocmVmPSIjIj4NCgkgICAgCTxsaSAgc3R5bGU9Im1hcmdpbiA6IDIwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj4NCgkgICAgCQk8ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoYXNzZXRzL29iamVjdHMvdmlld19jYWxlbmRhcl9kYXkucG5nKTsgbWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgaGVpZ2h0OiA1MHB4OyAiPjwvZGl2Pg0KCSAgICAJCTxwIHN0eWxlPSJtYXJnaW4gOiAwcHg7IHdpZHRoOiA1MHB4OyB0ZXh0LWFsaWduOmNlbnRlcjsgIj5jYWxlbmRhcjwvcD4NCgkgICAgCTwvbGk%DQoJICAgIDwvYT4NCgkgICAgPGEgaWQ9ImNvbnRhY3RzQnRuIiBocmVmPSIjIj4NCgkgICAgCTxsaSAgc3R5bGU9Im1hcmdpbiA6IDIwcHg7IGRpc3BsYXk6IGlubGluZS1ibG9jazsgIj4NCgkgICAgCQk8ZGl2IHN0eWxlPSJiYWNrZ3JvdW5kLWltYWdlOiB1cmwoYXNzZXRzL29iamVjdHMvZ3JvdXBzLnBuZyk7IG1hcmdpbiA6IDBweDsgd2lkdGg6IDUwcHg7IGhlaWdodDogNTBweDsgIj48L2Rpdj4NCgkgICAgCQk8cCBzdHlsZT0ibWFyZ2luIDogMHB4OyB3aWR0aDogNTBweDsgdGV4dC1hbGlnbjpjZW50ZXI7ICI%Y29udGFjdHM8L3A%DQoJICAgIAk8L2xpPg0KCSAgICA8L2E%DQoJPC91bD4NCiAgPC9kaXY%DQo"},{ name : "contacts_detail", data : "s715:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgICAJPGhyIC8%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_files", data : "s1790:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4NCjo6aXRlbXM6Og"},{ name : "loading", data : "s171:ICA8ZGl2IGlkPSJ3aWRnZXRzIiBzdHlsZT0ibWFyZ2luOiBhdXRvOyB3aWR0aDogNDBweDsgaGVpZ2h0OiA0MHB4OyI%DQogIAkJPGltZyBzcmM9ImFzc2V0cy9uYXZpZ2F0aW9uL2xvYWRpbmcuZ2lmIiAvPg0KICA8L2Rpdj4"},{ name : "contacts", data : "s1880:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KICAgIAk6OmlmIGN1ckl0ZW0ucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjpjdXJJdGVtLnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkJPGJ1dHRvbiBpZD0ic2VsZWN0QnRuIiBzdHlsZT0iOjppZiBoYXNQYXJlbnQ6Ojo6ZWxzZTo6ZGlzcGxheTpub25lOyA6OmVuZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgIAk6OmlmIGhhc1BhcmVudDo6DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%Y3JlYXRlZCBieTogOjpjdXJJdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGN1ckl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6OmN1ckl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQoJICAgIAk8cD51cGRhdGVkIG9uOiA6OmN1ckl0ZW0udXBkYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBieTogOjpjdXJJdGVtLnVwZGF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGN1ckl0ZW0udXBkYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6OmN1ckl0ZW0udXBkYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5PcGVuIGRldGFpbHM8L2J1dHRvbj4NCgkgIDwvbGk%OjplbmQ6Og0KCTwvdWw%DQogICAgPC9kaXY%DQogIDwvZGl2Pg0KPCEtLSAgIDo6aXRlbXM6OiAgLS0%"},{ name : "project_tasks", data : "s1775:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4"},{ name : "project_webpages", data : "s1775:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4"},{ name : "project_messages_detail", data : "s795:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgIAk8cD46Oml0ZW0ucHJvcGVydGllcy50ZXh0Ojo8L3A%DQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgICAJPGhyIC8%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_events", data : "s1775:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4"},{ name : "project_events_detail", data : "s715:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCiAgICAJPGhyIC8%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "workspaces", data : "s1755:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%U2VsZWN0IFdvcmtzcGFjZTwvYnV0dG9uPg0KCSAgIAk6OmlmIGhhc1BhcmVudDo6DQoJICAgIAk8cD5jcmVhdGVkIG9uOiA6OmN1ckl0ZW0uY3JlYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%Y3JlYXRlZCBieTogOjpjdXJJdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGN1ckl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6OmN1ckl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQoJICAgIAk8cD51cGRhdGVkIG9uOiA6OmN1ckl0ZW0udXBkYXRlZF9vbjo6PC9wPg0KCSAgICAJPHA%dXBkYXRlZCBieTogOjpjdXJJdGVtLnVwZGF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGN1ckl0ZW0udXBkYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6OmN1ckl0ZW0udXBkYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQoJICAgIDo6ZW5kOjoNCiAgICA8L2Rpdj4NCiAgICA8ZGl2Pg0KCTx1bCBzdHlsZT0ibGlzdC1zdHlsZS10eXBlOiBub25lOyB0ZXh0LWFsaWduOnJpZ2h0O21hcmdpbjoxZW0gMDtwYWRkaW5nOjAiPjo6Zm9yZWFjaCBpdGVtczo6DQoJICA8bGkgc3R5bGU9Im1hcmdpbi1ib3R0b206IDMwcHg7IGJvcmRlci1ib3R0b206IG1lZGl1bSBncm9vdmUgZ3JheTsgIj4NCgkJICA8cCBzdHlsZT0ibWFyZ2luOiAwOyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IHdoaXRlLXNwYWNlOm5vd3JhcDsgZmxvYXQ6bGVmdCI%OjpuYW1lOjo8L3A%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9Iml0ZW1CdG46OmlkOjoiIHR5cGU9ImJ1dHRvbiI%U2VlIGNoaWxkcmVuPC9idXR0b24%DQoJCSAgPGJ1dHRvbiBzdHlsZT0iZGlzcGxheTppbmxpbmU7d2hpdGUtc3BhY2U6bm93cmFwOyIgaWQ9InNlbGVjdEJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWxlY3Qgd29ya3NwYWNlPC9idXR0b24%DQoJICA8L2xpPjo6ZW5kOjoNCgk8L3VsPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "mail_contents_detail", data : "s715:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgICAJPGhyIC8%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_webpages_detail", data : "s995:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgIAk8cD5VUkw6IDxhIGhyZWY9Ijo6aXRlbS51cmw6OiI%OjppdGVtLnByb3BlcnRpZXMudXJsOjo8L2E%PC9wPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJICAJPGlmcmFtZSBzcmM9Ijo6aXRlbS5wcm9wZXJ0aWVzLnVybDo6IiBzdHlsZT0icGFkZGluZzogMHB4OyB3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyAiIC8%DQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgICAJPGhyIC8%DQoJICAJPHA%QWxsIGRhdGE6IDo6aXRlbTo6PC9wPg0KICAgIDwvZGl2Pg0KICA8L2Rpdj4"},{ name : "project_tasks_detail", data : "s1356:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KDQogICAgPC9kaXY%DQogICAgPGRpdj4NCgkgIAk8cD5TdGFydCBkYXRlOiA6Oml0ZW0ucHJvcGVydGllcy5zdGFydF9kYXRlOjo8L3A%DQoJICAJPHA%RHVlIGRhdGU6IDo6aXRlbS5wcm9wZXJ0aWVzLnN0YXJ0X2RhdGU6OjwvcD4NCgkgIAk8cD5Bc3NpZ25lZCB0bzogOjppdGVtLnByb3BlcnRpZXMuYXNzaWduZWRfdG9fY29udGFjdF9pZDo6PC9wPg0KCSAgCTxwPkFzc2lnbmVkIGJ5OiA6Oml0ZW0ucHJvcGVydGllcy5hc3NpZ25lZF9ieV9pZDo6PC9wPg0KCSAgCTxwPkVzdGltYXRlZCB0aW1lOiA6Oml0ZW0ucHJvcGVydGllcy50aW1lX2VzdGltYXRlOjo8L3A%DQoJICAJPHA%Q29tcGxldGVkOiA6Oml0ZW0ucHJvcGVydGllcy5wZXJjZW50X2NvbXBsZXRlZDo6JTwvcD4NCgkgIAk8cD5Db21wbGV0ZWQgb246IDo6aXRlbS5wcm9wZXJ0aWVzLmNvbXBsZXRlZF9vbjo6PC9wPg0KCSAgCTxwPkNvbXBsZXRlZCBieTogOjppdGVtLnByb3BlcnRpZXMuY29tcGxldGVkX2J5X2lkOjo8L3A%DQogICAgPC9kaXY%DQoJICAgCTxociAvPg0KCSAgCTxwPkFsbCBkYXRhOiA6Oml0ZW06OjwvcD4NCiAgPC9kaXY%"},{ name : "project_files_detail", data : "s806:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQogICAgCTxoMj46Oml0ZW0ubmFtZTo6PC9oMj4NCiAgICAJPHA%Y3JlYXRlZCBvbjogOjppdGVtLmNyZWF0ZWRfb246OjwvcD4NCiAgICAJPHA%Y3JlYXRlZCBieTogOjppdGVtLmNyZWF0ZWRfYnkudXNlcm5hbWU6OjwvcD46OmlmIGl0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OjxpbWcgc3JjPSI6Oml0ZW0uY3JlYXRlZF9ieS5waWN0dXJlX2ZpbGU6OiIgLz46OmVuZDo6DQogICAgCTxwPnVwZGF0ZWQgb246IDo6aXRlbS51cGRhdGVkX29uOjo8L3A%DQogICAgCTxwPnVwZGF0ZWQgYnk6IDo6aXRlbS51cGRhdGVkX2J5LnVzZXJuYW1lOjo8L3A%OjppZiBpdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjo8aW1nIHNyYz0iOjppdGVtLnVwZGF0ZWRfYnkucGljdHVyZV9maWxlOjoiIC8%OjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJICAJPHA%OjppdGVtLnByb3BlcnRpZXMuaHRtbENvbnRlbnQ6OjwvcD4NCiAgICA8L2Rpdj4NCiAgICAgPGRpdj4NCiAgICAJPGhyPg0KCSAgCTxwPkFsbCBkYXRhOiA6Oml0ZW06OjwvcD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQogIA"},{ name : "project_messages", data : "s1775:ICA8ZGl2IHN0eWxlPSJwYWRkaW5nOiAxMHB4OyAiPg0KICAgIDxkaXY%DQoJCTxidXR0b24gaWQ9InVwQnRuIiB0eXBlPSJidXR0b24iPlVwPC9idXR0b24%DQoJCTxidXR0b24gaWQ9InJlZnJlc2hCdG4iIHR5cGU9ImJ1dHRvbiI%UmVmcmVzaDwvYnV0dG9uPg0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQogICAgCTxoMj46OnRpdGxlOjo8L2gyPg0KCQk8YnV0dG9uIGlkPSJzZWxlY3RCdG4iIHN0eWxlPSI6OmlmIGhhc1BhcmVudDo6OjplbHNlOjpkaXNwbGF5Om5vbmU7IDo6ZW5kOjoiIHR5cGU9ImJ1dHRvbiI%T3BlbiBkZXRhaWxzPC9idXR0b24%DQoJICAgCTo6aWYgaGFzUGFyZW50OjoNCgkgICAgCTxwPmNyZWF0ZWQgb246IDo6Y3VySXRlbS5jcmVhdGVkX29uOjo8L3A%DQoJICAgIAk8cD5jcmVhdGVkIGJ5OiA6OmN1ckl0ZW0uY3JlYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS5jcmVhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgCTxwPnVwZGF0ZWQgb246IDo6Y3VySXRlbS51cGRhdGVkX29uOjo8L3A%DQoJICAgIAk8cD51cGRhdGVkIGJ5OiA6OmN1ckl0ZW0udXBkYXRlZF9ieS51c2VybmFtZTo6PC9wPjo6aWYgY3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6PGltZyBzcmM9Ijo6Y3VySXRlbS51cGRhdGVkX2J5LnBpY3R1cmVfZmlsZTo6IiAvPjo6ZW5kOjoNCgkgICAgOjplbmQ6Og0KICAgIDwvZGl2Pg0KICAgIDxkaXY%DQoJPHVsIHN0eWxlPSJsaXN0LXN0eWxlLXR5cGU6IG5vbmU7IHRleHQtYWxpZ246cmlnaHQ7bWFyZ2luOjFlbSAwO3BhZGRpbmc6MCI%Ojpmb3JlYWNoIGl0ZW1zOjoNCgkgIDxsaSBzdHlsZT0ibWFyZ2luLWJvdHRvbTogMzBweDsgYm9yZGVyLWJvdHRvbTogbWVkaXVtIGdyb292ZSBncmF5OyAiPg0KCQkgIDxwIHN0eWxlPSJtYXJnaW46IDA7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgd2hpdGUtc3BhY2U6bm93cmFwOyBmbG9hdDpsZWZ0Ij46Om5hbWU6OjwvcD4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0iaXRlbUJ0bjo6aWQ6OiIgdHlwZT0iYnV0dG9uIj5TZWUgY2hpbGRyZW48L2J1dHRvbj4NCgkJICA8YnV0dG9uIHN0eWxlPSJkaXNwbGF5OmlubGluZTt3aGl0ZS1zcGFjZTpub3dyYXA7IiBpZD0ic2VsZWN0QnRuOjppZDo6IiB0eXBlPSJidXR0b24iPk9wZW4gZGV0YWlsczwvYnV0dG9uPg0KCSAgPC9saT46OmVuZDo6DQoJPC91bD4NCiAgICA8L2Rpdj4NCiAgPC9kaXY%DQo8IS0tICAgOjppdGVtczo6ICAtLT4"},{ name : "login", data : "s1024:PGRpdiBpZD0ibG9naW4iIHN0eWxlPSJtYXJnaW46IGF1dG87IHdpZHRoOiAxMDAlOyBtYXgtd2lkdGg6IDIwMHB4OyBoZWlnaHQ6IDEwMCVweDsgbWF4LWhlaWdodDogMjAwcHg7IG1hcmdpbi10b3A6IDIwcHg7ICI%DQo8IS0tIAk8Zm9ybSBhY3Rpb249IiMiPiAgLS0%DQoJCTxkaXYgaWQ9ImxvZ2luVXNlcm5hbWVEaXYiIHN0eWxlPSJ3aWR0aDogMTAwJTsgIj4NCgkJCTxsYWJlbCBmb3I9InVzZXJOYW1lIj5FbWFpbCBvciB1c2VybmFtZTo8L2xhYmVsPjxiciAvPg0KCQkJPGlucHV0IGlkPSJ1c2VyTmFtZSIgdmFsdWU9IiIgdHlwZT0idGV4dCIgc3R5bGU9IndpZHRoOiAxMDAlOyAiIC8%DQoJCTwvZGl2Pg0KCQk8ZGl2IGlkPSJsb2dpblBhc3N3b3JkRGl2IiBzdHlsZT0id2lkdGg6IDEwMCU7ICIgPg0KCQkgICAgPGxhYmVsIGZvcj0idXNlclBhc3MiIHN0eWxlPSJ3aWR0aDogMTAwJTsgIj5QYXNzd29yZDo8L2xhYmVsPjxiciAvPg0KCQkgICAgPGlucHV0IGlkPSJ1c2VyUGFzcyIgY2xhc3M9Im1lZGl1bSIgdmFsdWU9IiIgdHlwZT0icGFzc3dvcmQiIHN0eWxlPSJ3aWR0aDogMTAwJTsgIiAvPg0KCQk8L2Rpdj4NCgkJPGRpdj4NCgkJCTxidXR0b24gaWQ9InN1Ym1pdEJ0biIgdHlwZT0ic3VibWl0IiBzdHlsZT0id2lkdGg6IDEwMCU7ICI%TG9naW48L2J1dHRvbj4NCgkJCQk6OmlmIGlzRXJyb3I6OjxwIHN0eWxlPSJjb2xvcjogb3JhbmdlOyI%OjplcnJvcjo6PC9wPjo6ZW5kOjoNCgkJPC9kaXY%DQo8IS0tIAk8L2Zvcm0%IC0tPg0KPC9kaXY%"}];
+js["XMLHttpRequest"] = window.XMLHttpRequest?XMLHttpRequest:window.ActiveXObject?function() {
+	try {
+		return new ActiveXObject("Msxml2.XMLHTTP");
+	} catch( e ) {
 		try {
-			return new ActiveXObject("Msxml2.XMLHTTP");
+			return new ActiveXObject("Microsoft.XMLHTTP");
+		} catch( e1 ) {
+			throw "Unable to create XMLHttpRequest object.";
 		}
-		catch( $e1 ) {
-			{
-				var e = $e1;
-				{
-					try {
-						return new ActiveXObject("Microsoft.XMLHTTP");
-					}
-					catch( $e2 ) {
-						{
-							var e1 = $e2;
-							{
-								throw "Unable to create XMLHttpRequest object.";
-							}
-						}
-					}
-				}
-			}
-		}
-	}:(function($this) {
-		var $r;
-		throw "Unable to create XMLHttpRequest object.";
-		return $r;
-	}(this));
-}
+	}
+}:(function($this) {
+	var $r;
+	throw "Unable to create XMLHttpRequest object.";
+	return $r;
+}(this));
 intermedia.fengOffice.client.application.Config.PLUGIN_NAME = "MobileApp";
 intermedia.fengOffice.client.application.Config.SERVER_URL = ".";
 intermedia.fengOffice.client.application.Config.GATEWAY_URL = "." + "/indexPhp.php";

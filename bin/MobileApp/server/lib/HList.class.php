@@ -62,7 +62,7 @@ class HList implements IteratorAggregate{
 				} else {
 					$prev[1] =& $l[1];
 				}
-				if($this->q === $l) {
+				if(($this->q === $l)) {
 					$this->q =& $prev;
 				}
 				$this->length--;

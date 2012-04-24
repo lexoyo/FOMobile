@@ -40,7 +40,7 @@ class Api {
 	 * authenticate the user and returns his token 
 	 * @param	userName	the user name - required
 	 * @param	userPass	the user password - required
-	 * @param	onAuth		takes a User as paramw hen success or null when disconnected
+	 * @param	onAuth		takes a User as param, and the user.error_msg will be "" when success or an error message otherwise
 	 */
 	public function authenticate(userName:String, userPass:String, onAuth:User->Void, onError:Dynamic->Void = null):Void {
 		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);

@@ -28,6 +28,9 @@ class haxe_Http {
 	public function setParameter($param, $value) {
 		$this->params->set($param, $value);
 	}
+	public function setPostData($data) {
+		$this->postData = $data;
+	}
 	public function request($post) {
 		$me = $this;
 		$me1 = $this;
@@ -51,7 +54,11 @@ class haxe_Http {
 		}
 		$secure = $url_regexp->matched(1) === "https://";
 		if($sock === null) {
-			$sock = haxe_Http_4($this, $api, $method, $post, $secure, $sock, $url_regexp);
+			if($secure) {
+				$sock = php_net_Socket::newSslSocket();
+			} else {
+				$sock = new php_net_Socket(null);
+			}
 		}
 		$host = $url_regexp->matched(2);
 		$portString = $url_regexp->matched(3);
@@ -59,7 +66,7 @@ class haxe_Http {
 		if($request === "") {
 			$request = "/";
 		}
-		$port = haxe_Http_5($this, $api, $host, $method, $portString, $post, $request, $secure, $sock, $url_regexp);
+		$port = (($portString === null || $portString === "") ? (($secure) ? 443 : 80) : Std::parseInt(_hx_substr($portString, 1, strlen($portString) - 1)));
 		$data = null;
 		$multipart = _hx_field($this, "file") !== null;
 		$boundary = null;
@@ -75,27 +82,237 @@ class haxe_Http {
 			$»it = $this->params->keys();
 			while($»it->hasNext()) {
 				$p = $»it->next();
-				$b->b .= "--";
-				$b->b .= $boundary;
-				$b->b .= "\x0D\x0A";
-				$b->b .= "Content-Disposition: form-data; name=\"";
-				$b->b .= $p;
-				$b->b .= "\"";
-				$b->b .= "\x0D\x0A";
-				$b->b .= "\x0D\x0A";
-				$b->b .= $this->params->get($p);
-				$b->b .= "\x0D\x0A";
+				{
+					$x = "--";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = $boundary;
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "\x0D\x0A";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "Content-Disposition: form-data; name=\"";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = $p;
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "\"";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "\x0D\x0A";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "\x0D\x0A";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = $this->params->get($p);
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
+				{
+					$x = "\x0D\x0A";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+					unset($x);
+				}
 			}
-			$b->b .= "--";
-			$b->b .= $boundary;
-			$b->b .= "\x0D\x0A";
-			$b->b .= "Content-Disposition: form-data; name=\"";
-			$b->b .= $this->file->param;
-			$b->b .= "\"; filename=\"";
-			$b->b .= $this->file->filename;
-			$b->b .= "\"";
-			$b->b .= "\x0D\x0A";
-			$b->b .= "Content-Type: " . "application/octet-stream" . "\x0D\x0A" . "\x0D\x0A";
+			{
+				$x = "--";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = $boundary;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "Content-Disposition: form-data; name=\"";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = $this->file->param;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "\"; filename=\"";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = $this->file->filename;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "\"";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = "Content-Type: " . "application/octet-stream" . "\x0D\x0A" . "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
 			$uri = $b->b;
 		} else {
 			if(null == $this->params) throw new HException('null iterable');
@@ -112,66 +329,332 @@ class haxe_Http {
 		}
 		$b = new StringBuf();
 		if($method !== null) {
-			$b->b .= $method;
-			$b->b .= " ";
+			{
+				$x = $method;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = " ";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
 		} else {
 			if($post) {
-				$b->b .= "POST ";
+				$x = "POST ";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			} else {
-				$b->b .= "GET ";
+				$x = "GET ";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			}
 		}
 		if(_hx_field(_hx_qtype("haxe.Http"), "PROXY") !== null) {
-			$b->b .= "http://";
-			$b->b .= $host;
+			{
+				$x = "http://";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
+			{
+				$x = $host;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
 			if($port !== 80) {
-				$b->b .= ":";
-				$b->b .= $port;
+				{
+					$x = ":";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+				}
+				{
+					$x = $port;
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+				}
 			}
 		}
-		$b->b .= $request;
+		{
+			$x = $request;
+			if(is_null($x)) {
+				$x = "null";
+			} else {
+				if(is_bool($x)) {
+					$x = (($x) ? "true" : "false");
+				}
+			}
+			$b->b .= $x;
+		}
 		if(!$post && $uri !== null) {
 			if(_hx_index_of($request, "?", 0) >= 0) {
-				$b->b .= "&";
+				$x = "&";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			} else {
-				$b->b .= "?";
+				$x = "?";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			}
-			$b->b .= $uri;
+			{
+				$x = $uri;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
 		}
-		$b->b .= " HTTP/1.1\x0D\x0AHost: " . $host . "\x0D\x0A";
+		{
+			$x = " HTTP/1.1\x0D\x0AHost: " . $host . "\x0D\x0A";
+			if(is_null($x)) {
+				$x = "null";
+			} else {
+				if(is_bool($x)) {
+					$x = (($x) ? "true" : "false");
+				}
+			}
+			$b->b .= $x;
+		}
 		if($this->postData === null && $post && $uri !== null) {
 			if($multipart || $this->headers->get("Content-Type") === null) {
-				$b->b .= "Content-Type: ";
-				if($multipart) {
-					$b->b .= "multipart/form-data";
-					$b->b .= "; boundary=";
-					$b->b .= $boundary;
-				} else {
-					$b->b .= "application/x-www-form-urlencoded";
+				{
+					$x = "Content-Type: ";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
 				}
-				$b->b .= "\x0D\x0A";
+				if($multipart) {
+					{
+						$x = "multipart/form-data";
+						if(is_null($x)) {
+							$x = "null";
+						} else {
+							if(is_bool($x)) {
+								$x = (($x) ? "true" : "false");
+							}
+						}
+						$b->b .= $x;
+					}
+					{
+						$x = "; boundary=";
+						if(is_null($x)) {
+							$x = "null";
+						} else {
+							if(is_bool($x)) {
+								$x = (($x) ? "true" : "false");
+							}
+						}
+						$b->b .= $x;
+					}
+					{
+						$x = $boundary;
+						if(is_null($x)) {
+							$x = "null";
+						} else {
+							if(is_bool($x)) {
+								$x = (($x) ? "true" : "false");
+							}
+						}
+						$b->b .= $x;
+					}
+				} else {
+					$x = "application/x-www-form-urlencoded";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+				}
+				{
+					$x = "\x0D\x0A";
+					if(is_null($x)) {
+						$x = "null";
+					} else {
+						if(is_bool($x)) {
+							$x = (($x) ? "true" : "false");
+						}
+					}
+					$b->b .= $x;
+				}
 			}
 			if($multipart) {
-				$b->b .= "Content-Length: " . (strlen($uri) + $this->file->size + strlen($boundary) + 6) . "\x0D\x0A";
+				$x = "Content-Length: " . (strlen($uri) + $this->file->size + strlen($boundary) + 6) . "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			} else {
-				$b->b .= "Content-Length: " . strlen($uri) . "\x0D\x0A";
+				$x = "Content-Length: " . strlen($uri) . "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			}
 		}
 		if(null == $this->headers) throw new HException('null iterable');
 		$»it = $this->headers->keys();
 		while($»it->hasNext()) {
 			$h = $»it->next();
-			$b->b .= $h;
-			$b->b .= ": ";
-			$b->b .= $this->headers->get($h);
-			$b->b .= "\x0D\x0A";
+			{
+				$x = $h;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+				unset($x);
+			}
+			{
+				$x = ": ";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+				unset($x);
+			}
+			{
+				$x = $this->headers->get($h);
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+				unset($x);
+			}
+			{
+				$x = "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+				unset($x);
+			}
 		}
 		if($this->postData !== null) {
-			$b->b .= $this->postData;
+			$x = $this->postData;
+			if(is_null($x)) {
+				$x = "null";
+			} else {
+				if(is_bool($x)) {
+					$x = (($x) ? "true" : "false");
+				}
+			}
+			$b->b .= $x;
 		} else {
-			$b->b .= "\x0D\x0A";
+			{
+				$x = "\x0D\x0A";
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
+			}
 			if($post && $uri !== null) {
-				$b->b .= $uri;
+				$x = $uri;
+				if(is_null($x)) {
+					$x = "null";
+				} else {
+					if(is_bool($x)) {
+						$x = (($x) ? "true" : "false");
+					}
+				}
+				$b->b .= $x;
 			}
 		}
 		try {
@@ -185,7 +668,7 @@ class haxe_Http {
 				$bufsize = 4096;
 				$buf = haxe_io_Bytes::alloc($bufsize);
 				while($this->file->size > 0) {
-					$size = haxe_Http_6($this, $api, $b, $boundary, $buf, $bufsize, $data, $host, $method, $multipart, $port, $portString, $post, $request, $secure, $sock, $uri, $url_regexp);
+					$size = haxe_Http_4($this, $api, $b, $boundary, $buf, $bufsize, $data, $host, $method, $multipart, $port, $portString, $post, $request, $secure, $sock, $uri, $url_regexp);
 					$len = 0;
 					try {
 						$len = $this->file->io->readBytes($buf, 0, $size);
@@ -332,7 +815,7 @@ class haxe_Http {
 				++$_g;
 				$a = _hx_explode(": ", $hline);
 				$hname = $a->shift();
-				$hval = haxe_Http_7($this, $_g, $a, $api, $b, $headers, $hline, $hname, $k, $response, $rp, $s, $size, $sock, $status);
+				$hval = haxe_Http_5($this, $_g, $a, $api, $b, $headers, $hline, $hname, $k, $response, $rp, $s, $size, $sock, $status);
 				$this->responseHeaders->set($hname, $hval);
 				if(strtolower($hname) === "content-length") {
 					$size = Std::parseInt($hval);
@@ -372,7 +855,7 @@ class haxe_Http {
 			$api->prepare($size);
 			try {
 				while($size > 0) {
-					$len = $sock->input->readBytes($buf, 0, haxe_Http_8($this, $api, $b, $buf, $bufsize, $chunk_re, $chunked, $headers, $k, $response, $rp, $s, $size, $sock, $status));
+					$len = $sock->input->readBytes($buf, 0, (($size > $bufsize) ? $bufsize : $size));
 					if($chunked) {
 						if(!$this->readChunk($chunk_re, $api, $buf, $len)) {
 							break;
@@ -477,8 +960,8 @@ class haxe_Http {
 	static function requestUrl($url) {
 		$h = new haxe_Http($url);
 		$r = null;
-		$h->onData = array(new _hx_lambda(array(&$h, &$r, &$url), "haxe_Http_9"), 'execute');
-		$h->onError = array(new _hx_lambda(array(&$h, &$r, &$url), "haxe_Http_10"), 'execute');
+		$h->onData = array(new _hx_lambda(array(&$h, &$r, &$url), "haxe_Http_6"), 'execute');
+		$h->onError = array(new _hx_lambda(array(&$h, &$r, &$url), "haxe_Http_7"), 'execute');
 		$h->request(false);
 		return $r;
 	}
@@ -502,51 +985,26 @@ function haxe_Http_3(&$err, &$me, &$me1, &$old, &$output, &$post, $e) {
 		call_user_func_array($old, array($e));
 	}
 }
-function haxe_Http_4(&$»this, &$api, &$method, &$post, &$secure, &$sock, &$url_regexp) {
-	if($secure) {
-		return php_net_Socket::newSslSocket();
-	} else {
-		return new php_net_Socket(null);
-	}
-}
-function haxe_Http_5(&$»this, &$api, &$host, &$method, &$portString, &$post, &$request, &$secure, &$sock, &$url_regexp) {
-	if($portString === null || $portString === "") {
-		if(!$secure) {
-			return 80;
-		} else {
-			return 443;
-		}
-	} else {
-		return Std::parseInt(_hx_substr($portString, 1, strlen($portString) - 1));
-	}
-}
-function haxe_Http_6(&$»this, &$api, &$b, &$boundary, &$buf, &$bufsize, &$data, &$host, &$method, &$multipart, &$port, &$portString, &$post, &$request, &$secure, &$sock, &$uri, &$url_regexp) {
+function haxe_Http_4(&$»this, &$api, &$b, &$boundary, &$buf, &$bufsize, &$data, &$host, &$method, &$multipart, &$port, &$portString, &$post, &$request, &$secure, &$sock, &$uri, &$url_regexp) {
 	if($»this->file->size > $bufsize) {
 		return $bufsize;
 	} else {
 		return $»this->file->size;
 	}
 }
-function haxe_Http_7(&$»this, &$_g, &$a, &$api, &$b, &$headers, &$hline, &$hname, &$k, &$response, &$rp, &$s, &$size, &$sock, &$status) {
+function haxe_Http_5(&$»this, &$_g, &$a, &$api, &$b, &$headers, &$hline, &$hname, &$k, &$response, &$rp, &$s, &$size, &$sock, &$status) {
 	if($a->length === 1) {
 		return $a[0];
 	} else {
 		return $a->join(": ");
 	}
 }
-function haxe_Http_8(&$»this, &$api, &$b, &$buf, &$bufsize, &$chunk_re, &$chunked, &$headers, &$k, &$response, &$rp, &$s, &$size, &$sock, &$status) {
-	if($size > $bufsize) {
-		return $bufsize;
-	} else {
-		return $size;
-	}
-}
-function haxe_Http_9(&$h, &$r, &$url, $d) {
+function haxe_Http_6(&$h, &$r, &$url, $d) {
 	{
 		$r = $d;
 	}
 }
-function haxe_Http_10(&$h, &$r, &$url, $e) {
+function haxe_Http_7(&$h, &$r, &$url, $e) {
 	{
 		throw new HException($e);
 	}

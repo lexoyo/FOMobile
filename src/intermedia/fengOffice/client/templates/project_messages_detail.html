@@ -1,13 +1,17 @@
   <div style="padding: 10px; ">
     <div>
     	<h2>::item.name::</h2>
-    	<p>udated on ::item.updated_on::</p>
-    	<p>created on ::item.created_on::</p>
+    	<p>created on: ::item.created_on::</p>
+    	<p>created by: ::item.created_by.username::</p>::if item.created_by.picture_file::<img src="::item.created_by.picture_file::" />::end::
+    	<p>updated on: ::item.updated_on::</p>
+    	<p>updated by: ::item.updated_by.username::</p>::if item.updated_by.picture_file::<img src="::item.updated_by.picture_file::" />::end::
+
     </div>
     <div>
-	  	<p>::item.text::</p>
+	  	<p>::item.properties.text::</p>
     </div>
     <div>
+	   	<hr />
 	  	<p>All data: ::item::</p>
     </div>
   </div>

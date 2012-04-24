@@ -25,26 +25,11 @@ class ServiceTypes {
 	public static inline var TIMESLOTS:String = "timeslots";
 	public static inline var MAIL_CONTENTS:String = "mail_contents";
 }
-typedef Workspace = {
-    object_id:Int,
-    id : Int, 
-    object_type_id : Int, 
-    name : String, 
-
-    created_on : String, 
-    created_by_id : Int, 
-
-    updated_on : String, 
-    updated_by_id : Int, 
-
-    trashed_on : String, 
-    trashed_by_id : Int, 
-
-    archived_on : String, 
-    archived_by_id : Int 
-}
-
+/**
+ * a user object transfered to the client
+ */
 typedef User = {
+	error_msg:String,
     object_id:Int,
     first_name:String,
     surname:String,
@@ -66,6 +51,212 @@ typedef User = {
     last_login:String,
     last_visit:String,
     last_activity:String,
-    disabled:Bool,
+    disabled:Bool
+}
+/**
+ * contains properties which can be transfered to the client
+ */
+typedef SafeObject = {
+	error_msg:String,
+
+    object_id:Int,
+    id : Int, 
+    name : String, 
+
+	// specific properties, for file, task, link...
+	properties:Null<Dynamic>,
+	
+    object_type_id : Int, 
+	type : String,
+
+    created_on : String, 
+    created_by_id : Int, 
+
+    updated_on : String, 
+    updated_by_id : Int, 
+
+    trashed_on : String, 
+    trashed_by_id : Int, 
+
+    archived_on : String, 
+    archived_by_id : Int, 
+	
+	// attributes resolved from the contacts table
+	created_by : Null<User>,
+	updated_by : Null<User>,
+	trashed_by : Null<User>,
+	archived_by : Null<User>
+
+}
+/**
+ * helper class for SafeObject manipulation 
+ */
+class SafeObjectTools{
+	public static function fromError(msg:String):SafeObject{
+		return {
+			error_msg:msg,
+		    object_id:-1,
+		    id : -1, 
+		    name : "", 
+
+			properties : null,
+						
+		    object_type_id : -1, 
+			type : "",
+		
+		    created_on : "", 
+		    created_by_id : -1, 
+		    created_by : null, 
+		
+		    updated_on : "", 
+		    updated_by_id : -1, 
+			updated_by : null,
+		
+		    trashed_on : "", 
+		    trashed_by_id : -1, 
+			trashed_by : null,
+		
+		    archived_on : "", 
+		    archived_by_id : -1, 
+			archived_by : null
+		};
+	}
+	public static function fromDynamic(obj:Dynamic):SafeObject{
+		// input check
+		if (obj == null)
+			return null;
+		
+		//////////////////////////////
+		// Convert dates to string
+	    for (prop in Reflect.fields(obj)){
+			var propValue = Reflect.field(obj, prop);
+			switch (Type.typeof(propValue)){
+			    case TClass(c):
+					Reflect.setField(obj, prop, ""+Std.string(propValue));
+			    default:
+			}
+		}
+		// returns only the safe fields
+		return {
+			error_msg:"",
+		    object_id:obj.object_id,
+		    id : obj.id, 
+		    name : obj.name, 
+			
+			properties: obj.properties,
+			
+			object_type_id : obj.object_type_id, 
+			type : obj.object_type, 
+		
+		    created_on : obj.created_on, 
+		    created_by_id : obj.created_by_id, 
+		    created_by : UserTools.fromDynamic(obj.created_by), 
+		
+		    updated_on : obj.updated_on, 
+		    updated_by_id : obj.updated_by_id, 
+		    updated_by : UserTools.fromDynamic(obj.updated_by), 
+		
+		    trashed_on : obj.trashed_on, 
+		    trashed_by_id : obj.trashed_by_id, 
+		    trashed_by : UserTools.fromDynamic(obj.trashed_by), 
+		
+		    archived_on : obj.archived_on, 
+		    archived_by_id : obj.archived_by_id,
+		    archived_by : UserTools.fromDynamic(obj.archived_by) 
+		};
+	}
+	public static function createEmpty():SafeObject{
+		return {
+			error_msg: "",
+		    object_id:-1,
+		    id : 0, // to list only items in the root folder, -1 would list all workspaces 
+		    name : "All Workspaces", 
+			
+			properties : {},
+			
+		    object_type_id : -1,
+			type:"", 
+		
+		    created_on : "", 
+		    created_by_id : -1, 
+		
+		    updated_on : "", 
+		    updated_by_id : -1, 
+		
+		    trashed_on : "", 
+		    trashed_by_id : -1, 
+		
+		    archived_on : "", 
+		    archived_by_id : -1,
+
+			updated_by : null,
+			created_by : null,
+			trashed_by : null,
+			archived_by : null
+		};
+	}
 }
 
+/**
+ * helper class for User manipulation 
+ */
+class UserTools{
+	public static function fromError(msg:String):User{
+		return {
+			error_msg:msg,
+		    object_id:-1,
+		    first_name:"",
+		    surname:"",
+		    is_company:false,
+		    company_id:-1,
+		    brand_colors:"",
+		    department:"",
+		    job_title:"",
+		    birthday:"",
+		    timezone:-1.0,
+		    user_type:-1,
+		    is_active_user:false,
+		    token:"",
+		    display_name:"",
+		    username:"",
+		    picture_file:"",
+		    avatar_file:"",
+		    comments:"",
+		    last_login:"",
+		    last_visit:"",
+		    last_activity:"",
+		    disabled:false
+		};
+	}
+	public static function fromDynamic(obj:Dynamic):User{
+		// input check
+		if (obj == null)
+			return null;
+			
+		return {
+			error_msg:"",
+		    object_id:obj.object_id,
+		    first_name:obj.first_name,
+		    surname:obj.surname,
+		    is_company:obj.is_company,
+		    company_id:obj.company_id,
+		    brand_colors:obj.brand_colors,
+		    department:obj.department,
+		    job_title:obj.job_title,
+		    birthday:obj.birthday,
+		    timezone:obj.timezone,
+		    user_type:obj.user_type,
+		    is_active_user:obj.is_active_user,
+		    token:obj.token,
+		    display_name:obj.display_name,
+		    username:obj.username,
+		    picture_file:obj.picture_file,
+		    avatar_file:obj.avatar_file,
+		    comments:obj.comments,
+		    last_login:obj.last_login,
+		    last_visit:obj.last_visit,
+		    last_activity:obj.last_activity,
+		    disabled:false
+		};
+	}
+}
