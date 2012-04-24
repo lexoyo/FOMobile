@@ -19,6 +19,7 @@ lexoyo posts
 
 ToDo for alpha:
 - bugs
+  . !!!! do not transmit token with created_by data
   . root workspace, no files??
   . accented chars in contexts
 - UIs

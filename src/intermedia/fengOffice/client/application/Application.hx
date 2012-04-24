@@ -35,17 +35,19 @@ class Application {
 		goAuthPage();
 	}
 	private function goAuthPage(errorMsg:String=""){
-		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		// get the template
 		var str = haxe.Resource.getString("login");
 		var t = new haxe.Template(str);
 		var output = t.execute({config:Config, appState:this, error:errorMsg, isError:(errorMsg!="")});
-		widget.setBody(output);
+		//widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
+		//widget.setBody(output);
+		Lib.document.getElementById("main").innerHTML = output;
 		Lib.document.getElementById("submitBtn").onclick = onSubmit;
 	}
 	private function onSubmit(event:Event){
 		var userName = cast(Lib.document.getElementById("userName")).value;
 		var userPass = cast(Lib.document.getElementById("userPass")).value;
+		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		api.authenticate(userName, userPass, onAuth);
 	}
 	private function startAuth(userName:String, userPass:String){
@@ -72,7 +74,6 @@ class Application {
 	 * callback from the view
 	 */
 	private function goHome(e:Event = null){
-
 		var homeScreen = new HomeScreen(widget);
 		homeScreen.onChange = goList;
 	}

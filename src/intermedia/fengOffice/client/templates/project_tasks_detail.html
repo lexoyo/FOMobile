@@ -1,11 +1,14 @@
   <div style="padding: 10px; ">
     <div>
-    	<h2>::item.name::</h2>
-    	<p>created on: ::item.created_on::</p>
-    	<p>created by: ::item.created_by.username::</p>::if item.created_by.picture_file::<img src="::item.created_by.picture_file::" />::end::
-    	<p>updated on: ::item.updated_on::</p>
-    	<p>updated by: ::item.updated_by.username::</p>::if item.updated_by.picture_file::<img src="::item.updated_by.picture_file::" />::end::
-
+    	<h3>::item.name::</h3>
+    	<small>
+		   	<ul>
+		    	<li>created on: ::item.created_on::</li>
+		    	<li>created by: ::item.created_by.username::::if item.created_by.avatar_file::<img src="::item.created_by.avatar_file::" />::end::</li>
+		    	<li>updated on: ::item.updated_on::</li>
+		    	<li>updated by: ::item.updated_by.username::::if item.updated_by.avatar_file::<img src="::item.updated_by.avatar_file::" />::end::</li>
+		    </ul>
+	    </small>
     </div>
     <div>
 	  	<p>Start date: ::item.properties.start_date::</p>
@@ -17,6 +20,8 @@
 	  	<p>Completed on: ::item.properties.completed_on::</p>
 	  	<p>Completed by: ::item.properties.completed_by_id::</p>
     </div>
-	   	<hr />
-	  	<p>All data: ::item::</p>
+	<!--   ::items::  -->   
+	<br /><br /><br /><br /><br /><br /><br /><br /><hr />
+	Debug:
+	<small>::items::</small>  
   </div>
