@@ -42,6 +42,7 @@ class Widget {
 	      _container = container;
 	      _id = id;
 		  oldBody = null;
+		  opacity = 0;
 		  
 		// render the template
 		var str = haxe.Resource.getString("widget");
@@ -63,7 +64,7 @@ class Widget {
 	      var body = getBodyElement();
 	      body.style.height = desiredBodyHeight + "px";
 		  
-		  if (oldBody != null){
+		  if (oldBody != null && opacity==0){
 			opacity = 1;
 			// start the transition
 			body.parentNode.style.left =  "50px";//_container.clientWidth + "px";
@@ -81,6 +82,8 @@ class Widget {
 	 */
 	public function startTransition(){
 		refresh();		
+		if (oldBody != null)
+			return;
 		
 		// create a new body so that the old one will disappear with an animation
 		oldBody = getBodyElement();
@@ -110,6 +113,7 @@ class Widget {
 		// remove the old body with a transition animation
 		oldBody.parentNode.parentNode.removeChild(oldBody.parentNode);
 		oldBody = null;
+		opacity = 0;
 		refresh();
     }		
 	var opacity:Float;

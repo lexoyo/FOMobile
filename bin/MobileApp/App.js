@@ -2807,6 +2807,7 @@ intermedia.fengOffice.client.widgets.Widget = function(id,title,container) {
 	this._container = container;
 	this._id = id;
 	this.oldBody = null;
+	this.opacity = 0;
 	var str = haxe.Resource.getString("widget");
 	var t = new haxe.Template(str);
 	var output = t.execute({ id : id, title : title});
@@ -2821,7 +2822,7 @@ intermedia.fengOffice.client.widgets.Widget.prototype.refresh = function(e) {
 	var desiredBodyHeight = js.Lib.document.body.clientHeight - (this.getTitleElement().clientHeight + this.getFooterElement().clientHeight);
 	var body = this.getBodyElement();
 	body.style.height = desiredBodyHeight + "px";
-	if(this.oldBody != null) {
+	if(this.oldBody != null && this.opacity == 0) {
 		this.opacity = 1;
 		body.parentNode.style.left = "50px";
 		var tween = new feffects.Tween(this._container.clientWidth,0,250,feffects.easing.Quart.easeOut);
@@ -2832,6 +2833,7 @@ intermedia.fengOffice.client.widgets.Widget.prototype.refresh = function(e) {
 intermedia.fengOffice.client.widgets.Widget.prototype.oldBody = null;
 intermedia.fengOffice.client.widgets.Widget.prototype.startTransition = function() {
 	this.refresh();
+	if(this.oldBody != null) return;
 	this.oldBody = this.getBodyElement();
 	var animContainer = js.Lib.document.createElement("div");
 	var newBody = js.Lib.document.createElement("div");
@@ -2851,11 +2853,12 @@ intermedia.fengOffice.client.widgets.Widget.prototype.startTransition = function
 	newBody.id = tmpId;
 }
 intermedia.fengOffice.client.widgets.Widget.prototype.finished = function(e) {
-	haxe.Log.trace("tween finished",{ fileName : "Widget.hx", lineNumber : 107, className : "intermedia.fengOffice.client.widgets.Widget", methodName : "finished"});
+	haxe.Log.trace("tween finished",{ fileName : "Widget.hx", lineNumber : 110, className : "intermedia.fengOffice.client.widgets.Widget", methodName : "finished"});
 	this.oldBody.style["opacity"] = 0;
 	this.getBodyElement().style["opacity"] = 1;
 	this.oldBody.parentNode.parentNode.removeChild(this.oldBody.parentNode);
 	this.oldBody = null;
+	this.opacity = 0;
 	this.refresh();
 }
 intermedia.fengOffice.client.widgets.Widget.prototype.opacity = null;
