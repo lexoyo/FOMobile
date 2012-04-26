@@ -1,15 +1,17 @@
-<div id="login" style="border-radius: 10px; background-color: white; padding: 20px; margin: auto; width: 100%; max-width: 200px; height: 100%; max-height: 200px; margin-top: 20px; ">
+<div id="login" style="border-radius: 10px; background-color: white; padding: 20px; margin: auto; 
+	max-width: 200px; max-height: 200px; margin-top: 20px; 
+	 min-height: 100px; min-width: 100px;">
 <!-- 	<form action="#">  -->
-		<div id="loginUsernameDiv" style="width: 100%; ">
-			<label for="userName">Email or username:</label><br />
+		<div id="loginUsernameDiv" style="">
+			<label for="userName">::Lang.USERNAME_LABEL::</label><br />
 			<input id="userName" value="" type="text" style="width: 100%; " />
 		</div>
-		<div id="loginPasswordDiv" style="width: 100%; " >
-		    <label for="userPass" style="width: 100%; ">Password:</label><br />
+		<div id="loginPasswordDiv" style="" >
+		    <label for="userPass" style="width: 100%; ">::Lang.PASS_LABEL::</label><br />
 		    <input id="userPass" class="medium" value="" type="password" style="width: 100%; " />
 		</div>
 		<div>
-			<button id="submitBtn" type="submit" style="width: 100%; ">Login</button>
+			<button id="submitBtn" type="submit" style="width: 100%; ">::Lang.LOGIN_BTN::</button>
 				::if isError::<p style="color: orange;">::error::</p>::end::
 		</div>
 <!-- 	</form> -->

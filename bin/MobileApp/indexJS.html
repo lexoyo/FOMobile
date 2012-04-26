@@ -3,7 +3,9 @@
 		<title>Feng Office</title>
 		<link href="../../favicon.ico" rel="shortcut icon" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="Viewport" content="width=device-width">
+		<meta name="Viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=1;">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<style type="text/css">
 			body{
 				font-family:Arial, Verdana;
@@ -13,6 +15,46 @@
 				 color: grey; 
 			}
 		</style>
+		<script type="text/javascript">
+		/*
+		  * Normalized hide address bar for iOS & Android
+		  * (c) Scott Jehl, scottjehl.com
+		  * MIT License
+		*/
+		(function( win ){
+			var doc = win.document;
+
+			// If there's a hash, or addEventListener is undefined, stop here
+			if( !location.hash && win.addEventListener ){
+
+				//scroll to 1
+				window.scrollTo( 0, 1 );
+				var scrollTop = 1,
+					getScrollTop = function(){
+						return win.pageYOffset || doc.compatMode === "CSS1Compat" && doc.documentElement.scrollTop || doc.body.scrollTop || 0;
+					},
+
+					//reset to 0 on bodyready, if needed
+					bodycheck = setInterval(function(){
+						if( doc.body ){
+							clearInterval( bodycheck );
+							scrollTop = getScrollTop();
+							win.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
+						}	
+					}, 15 );
+
+				win.addEventListener( "load", function(){
+					setTimeout(function(){
+						//at load, if user hasn't scrolled more than 20 or so...
+						if( getScrollTop() < 20 ){
+							//reset to hide addr bar at onload
+							win.scrollTo( 0, scrollTop === 1 ? 0 : 1 );
+						}
+					}, 0);
+				} );
+			}
+		})( this );
+		</script>
 	</head>
 	<body style="margin : 0px; padding : 0px; background-color: black; overflow: hidden;"> 
 		<div id="main" style="width: 100%; height: 100%;"></div>

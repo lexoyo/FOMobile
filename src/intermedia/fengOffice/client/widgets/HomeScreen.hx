@@ -4,6 +4,7 @@ import js.Lib;
 import js.Dom;
 import intermedia.fengOffice.client.application.Config;
 import intermedia.fengOffice.client.application.AppState;
+import intermedia.fengOffice.client.application.Lang;
 import intermedia.fengOffice.cross.Data;
 
 /**
@@ -35,7 +36,7 @@ class HomeScreen {
 		// render the template
 		var str = haxe.Resource.getString("home");
 		var t = new haxe.Template(str);
-		var output = t.execute({config:Config, appState:AppState.getInstance()});
+		var output = t.execute({config:Config, appState:AppState.getInstance(), Lang:Lang, Config:Config});
 		
 		// body
 		_widget.getBodyElement().innerHTML = output;

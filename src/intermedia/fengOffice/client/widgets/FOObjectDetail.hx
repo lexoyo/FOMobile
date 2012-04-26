@@ -41,8 +41,11 @@ class FOObjectDetail {
 	    for (prop in Reflect.fields(itemDetail)){
 			trace(prop+" = "+Reflect.field(itemDetail, prop)+"<br/>");
 		}
+		trace("*********************** properties:<br/>");
+	    for (prop in Reflect.fields(itemDetail.properties)){
+			trace(prop+" = "+Reflect.field(itemDetail.properties, prop)+"<br/>");
+		}
 		trace("***********************<br/>");
-
 		// render the template
 		var str = haxe.Resource.getString(_serviceType+"_detail");
 		var t = new haxe.Template(str);

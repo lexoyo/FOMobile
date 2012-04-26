@@ -29,29 +29,13 @@ class intermedia_fengOffice_server_Api {
 		if(_hx_equal($user->disabled, 1)) {
 			return intermedia_fengOffice_cross_UserTools::fromError("User is disabled");
 		}
-		if(!_hx_equal(haxe_SHA1::encode($user->salt . $userPass), $user->token)) {
+		$token = $user->token;
+		if(sha1($user->salt . $userPass) !== $token) {
 			return intermedia_fengOffice_cross_UserTools::fromError("Wrong user name or password");
 		}
-		{
-			$_g = 0; $_g1 = Reflect::fields($user);
-			while($_g < $_g1->length) {
-				$prop = $_g1[$_g];
-				++$_g;
-				$propValue = Reflect::field($user, $prop);
-				$»t = (Type::typeof($propValue));
-				switch($»t->index) {
-				case 6:
-				$c = $»t->params[0];
-				{
-					$user->{$prop} = "" . Std::string($propValue);
-				}break;
-				default:{
-				}break;
-				}
-				unset($propValue,$prop);
-			}
-		}
-		return intermedia_fengOffice_cross_UserTools::fromDynamic($user);
+		$user = intermedia_fengOffice_cross_UserTools::fromDynamic($user);
+		$user->token = $token;
+		return $user;
 	}
 	public function _getDetails($obj) {
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->created_by_id;
@@ -74,6 +58,19 @@ class intermedia_fengOffice_server_Api {
 		if($res !== null && $res->getLength() > 0) {
 			$obj->archived_by = $res->next();
 		}
+		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
+		$res = $this->_db->request($sql);
+		$objTmp = $res->next();
+		$obj->type = $objTmp->type;
+		$obj->icon = $objTmp->icon;
+		$obj->table_name = $objTmp->table_name;
+		$sql = "SELECT COUNT(id) FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $obj->table_name . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $obj->table_name . ")" . " AND (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members WHERE `member_id`  in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq1 WHERE memberRq1.`object_id`=" . $obj->id . "))" . " OR " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members WHERE `parent_member_id` in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq2 WHERE memberRq2.`object_id`=" . $obj->id . ")))";
+		$res1 = $this->_db->request($sql);
+		if($res1 !== null && $res1->getLength() > 0) {
+			$obj->numChildren = Reflect::field($res1->next(), "COUNT(id)");
+		} else {
+			$obj->numChildren = 0;
+		}
 		return $obj;
 	}
 	public function getObject($oid, $user, $token) {
@@ -86,45 +83,48 @@ class intermedia_fengOffice_server_Api {
 			return intermedia_fengOffice_cross_SafeObjectTools::fromError("Object not found");
 		}
 		$obj = $res->next();
-		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
-		$res = $this->_db->request($sql);
-		$objTmp = $res->next();
-		$obj->type = $objTmp->type;
-		$detailTableName = $objTmp->table_name;
+		$obj = $this->_getDetails($obj);
+		$detailTableName = $obj->table_name;
 		$sql1 = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $detailTableName . "` WHERE `object_id`=" . $obj->id;
 		$res1 = $this->_db->request($sql1);
 		$obj->properties = _hx_anonymous(array());
 		if($res1 !== null || $res1->getLength() > 0) {
-			$objTmp1 = $res1->next();
+			$objTmp = $res1->next();
 			{
-				$_g = 0; $_g1 = Reflect::fields($objTmp1);
+				$_g = 0; $_g1 = Reflect::fields($objTmp);
 				while($_g < $_g1->length) {
 					$prop = $_g1[$_g];
 					++$_g;
-					$obj->properties->{$prop} = Reflect::field($objTmp1, $prop);
+					$obj->properties->{$prop} = Reflect::field($objTmp, $prop);
 					unset($prop);
 				}
 			}
 		}
-		$obj = $this->_getDetails($obj);
 		$sql1 = "SELECT repository_id, type_string, filesize, revision_number FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "project_file_revisions where file_id=" . $oid . " ORDER BY revision_number DESC LIMIT 1";
 		$res1 = $this->_db->request($sql1);
 		if($res1 !== null && $res1->getLength() > 0) {
-			$objTmp1 = $res1->next();
-			$path = "/upload/" . _hx_string_call($objTmp1->repository_id, "substr", array(0, 3)) . "/" . _hx_string_call($objTmp1->repository_id, "substr", array(3, 3)) . "/" . _hx_string_call($objTmp1->repository_id, "substr", array(6, 3)) . "/" . _hx_string_call($objTmp1->repository_id, "substr", array(9));
-			if(_hx_equal($objTmp1->type_string, "text/html")) {
+			$objTmp = $res1->next();
+			$path = "/upload/" . _hx_string_call($objTmp->repository_id, "substr", array(0, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(3, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(6, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(9));
+			if(_hx_equal($objTmp->type_string, "text/html")) {
 				$content = php_io_File::getContent(intermedia_fengOffice_server_Config::getInstance()->FO_ROOT_PATH . $path);
 				$obj->properties->htmlContent = $content;
 			} else {
-				if(StringTools::startsWith($objTmp1->type_string, "image")) {
+				if(StringTools::startsWith($objTmp->type_string, "image")) {
 					$obj->properties->htmlContent = "<img src='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "' />";
 				} else {
-					$obj->properties->htmlContent = "<a href='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "'>" . $path . "</a> (" . $objTmp1->type_string . ")";
+					if(StringTools::startsWith($objTmp->type_string, "video")) {
+						$str = haxe_Resource::getString("embed_file_video");
+						$t = new haxe_Template($str);
+						$output = $t->execute(_hx_anonymous(array("config" => _hx_qtype("intermedia.fengOffice.server.Config"), "src" => intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path, "mime_type" => $objTmp->type_string)), null);
+						$obj->properties->htmlContent = $output;
+					} else {
+						$obj->properties->htmlContent = "<a href='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "'>" . $path . "</a> (" . $objTmp->type_string . ")";
+					}
 				}
 			}
 			$obj->properties->url = intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path;
-			$obj->properties->filesize = $objTmp1->filesize;
-			$obj->properties->revision_number = $objTmp1->revision_number;
+			$obj->properties->filesize = $objTmp->filesize;
+			$obj->properties->revision_number = $objTmp->revision_number;
 		}
 		return intermedia_fengOffice_cross_SafeObjectTools::fromDynamic($obj);
 	}

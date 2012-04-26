@@ -74,7 +74,7 @@ class haxe_SHA1 {
 			while($_g1 < $_g) {
 				$i = $_g1++;
 				$p = $i >> 2;
-				$c = _hx_char_code_at($s, $i);
+				$c = haxe_SHA1_6($_g, $_g1, $blks, $i, $nblk, $p, $s);
 				$blks[$p] = $blks[$p] | $c << 24 - $i % 4 * 8;
 				unset($p,$i,$c);
 			}
@@ -107,15 +107,15 @@ class haxe_SHA1 {
 	}
 	static function kt($t) {
 		if($t - 20 < 0) {
-			return haxe_SHA1_6($t);
-		}
-		if($t - 40 < 0) {
 			return haxe_SHA1_7($t);
 		}
-		if($t - 60 < 0) {
+		if($t - 40 < 0) {
 			return haxe_SHA1_8($t);
 		}
-		return haxe_SHA1_9($t);
+		if($t - 60 < 0) {
+			return haxe_SHA1_9($t);
+		}
+		return haxe_SHA1_10($t);
 	}
 	function __toString() { return 'haxe.SHA1'; }
 }
@@ -163,28 +163,34 @@ function haxe_SHA1_5(&$j, &$num, &$str) {
 		return $x & -1;
 	}
 }
-function haxe_SHA1_6(&$t) {
+function haxe_SHA1_6(&$_g, &$_g1, &$blks, &$i, &$nblk, &$p, &$s) {
+	{
+		$x = _hx_char_code_at($s, $i);
+		return $x;
+	}
+}
+function haxe_SHA1_7(&$t) {
 	{
 		$result = 23170;
 		$result = $result << 16;
 		return $result + 31129;
 	}
 }
-function haxe_SHA1_7(&$t) {
+function haxe_SHA1_8(&$t) {
 	{
 		$result = 28377;
 		$result = $result << 16;
 		return $result + 60321;
 	}
 }
-function haxe_SHA1_8(&$t) {
+function haxe_SHA1_9(&$t) {
 	{
 		$result = 36635;
 		$result = $result << 16;
 		return $result + 48348;
 	}
 }
-function haxe_SHA1_9(&$t) {
+function haxe_SHA1_10(&$t) {
 	{
 		$result = 51810;
 		$result = $result << 16;

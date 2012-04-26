@@ -2,9 +2,6 @@ package intermedia.fengOffice.cross;
 
 typedef ServiceType = String;
 
-// todo: structures
-typedef Tab = Dynamic;
-typedef Task = Dynamic;
 
 class ServiceTypes {
 	public static inline var WORKSPACES:String = "workspaces";
@@ -65,9 +62,13 @@ typedef SafeObject = {
 
 	// specific properties, for file, task, link...
 	properties:Null<Dynamic>,
+	numChildren:Int,
 	
+	// from object_types table
     object_type_id : Int, 
 	type : String,
+	icon : String,
+	table_name : String,
 
     created_on : String, 
     created_by_id : Int, 
@@ -100,9 +101,12 @@ class SafeObjectTools{
 		    name : "", 
 
 			properties : null,
+			numChildren : 0,
 						
 		    object_type_id : -1, 
 			type : "",
+			icon : "",
+			table_name : "",
 		
 		    created_on : "", 
 		    created_by_id : -1, 
@@ -136,6 +140,14 @@ class SafeObjectTools{
 			    default:
 			}
 		}
+	    for (prop in Reflect.fields(obj.properties)){
+			var propValue = Reflect.field(obj.properties, prop);
+			switch (Type.typeof(propValue)){
+			    case TClass(c):
+					Reflect.setField(obj.properties, prop, ""+Std.string(propValue));
+			    default:
+			}
+		}
 		// returns only the safe fields
 		return {
 			error_msg:"",
@@ -144,9 +156,12 @@ class SafeObjectTools{
 		    name : obj.name, 
 			
 			properties: obj.properties,
+			numChildren: obj.numChildren,
 			
 			object_type_id : obj.object_type_id, 
-			type : obj.object_type, 
+			type : obj.type, 
+			icon : obj.icon, 
+			table_name : obj.table_name, 
 		
 		    created_on : obj.created_on, 
 		    created_by_id : obj.created_by_id, 
@@ -173,9 +188,12 @@ class SafeObjectTools{
 		    name : "All Workspaces", 
 			
 			properties : {},
+			numChildren : 0,
 			
 		    object_type_id : -1,
 			type:"", 
+			icon:"", 
+			table_name:"", 
 		
 		    created_on : "", 
 		    created_by_id : -1, 
@@ -233,6 +251,17 @@ class UserTools{
 		if (obj == null)
 			return null;
 			
+		//////////////////////////////
+		// Convert dates to string
+	    for (prop in Reflect.fields(obj)){
+			var propValue = Reflect.field(obj, prop);
+			switch (Type.typeof(propValue)){
+			    case TClass(c):
+					Reflect.setField(obj, prop, ""+Std.string(propValue));
+			    default:
+			}
+		}
+		// returns only the safe fields
 		return {
 			error_msg:"",
 		    object_id:obj.object_id,
@@ -247,7 +276,7 @@ class UserTools{
 		    timezone:obj.timezone,
 		    user_type:obj.user_type,
 		    is_active_user:obj.is_active_user,
-		    token:obj.token,
+		    token:"", //obj.token,
 		    display_name:obj.display_name,
 		    username:obj.username,
 		    picture_file:obj.picture_file,

@@ -62,7 +62,7 @@ class Widget {
 	 */
 	public function refresh(e:Event = null):Void {
 	      var desiredBodyHeight = Lib.document.body.clientHeight - (getTitleElement().clientHeight + getFooterElement().clientHeight);
-	      desiredBodyHeight -= 10;//65;
+	      //desiredBodyHeight -= 10;//65;
 	      getBodyElement().style.height = desiredBodyHeight + "px";
 	}
 	/**

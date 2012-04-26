@@ -24,27 +24,6 @@ class Api {
             throw("Error: Plugin is not activated yet, check <a href='http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_plugin_engine'>this article about activation</a>");
 	}
 	/**
-	 * get workspaces 
-	 * if a parent is given, then select only the children of that parent 
-	 * @param	parentId	the parent id or null
-	 * @return	a list of workspaces
-	 */
-/*    public function getContextList(parentId:String = null):List<Workspace>{
-
-		if (parentId != null)
-			throw ("not implemented");
-			
-        var sql = "SELECT * FROM `"+Config.TABLE_PREFIX+"objects` 
-						WHERE "+Config.TABLE_PREFIX+"objects.id in (SELECT "+Config.TABLE_PREFIX+"workspaces.object_id 
-						FROM "+Config.TABLE_PREFIX+"workspaces)"; 
-
-        var res = _db.request( sql );
-        if(res == null || res.length == 0) { 
-            return new List();
-        }
-        return cast(res.results());
-    }
-	/**
 	 * after authentication, the userName and token are used to check the authentication status 
 	 * @param	userName	the user name
 	 * @param	userPass	the token returned by authenticate
@@ -85,62 +64,21 @@ class Api {
 		if(user.disabled == 1)
 			return UserTools.fromError("User is disabled");
 
-		//////////////////////////////
-		// Retrieve the pass object
-/*        sql = "SELECT id, contact_id, password_date, password FROM "+Config.getInstance().TABLE_PREFIX+"contact_passwords
-		  		WHERE `contact_id`="+user.object_id; 
-		//trace("-------------------<br/>"+sql+"<br/>-------------------<br/>");
-        var res = _db.request( sql );
-        if(res == null || res.length == 0) { 
-            return null;
-        }
-		var pass:Dynamic = res.results().last();
-*/
+		var token:String = user.token;
 		//////////////////////////////
 		// check user and pass
-		//trace(haxe.SHA1.encode(user.salt + userPass) + " = "+user.token);
-		if(haxe.SHA1.encode(user.salt + userPass) != user.token)
+		//trace(haxe.SHA1.encode(user.salt + userPass) + " = "+token);
+//		if(haxe.SHA1.encode(user.salt + userPass) != token)
+		if(untyped __call__("sha1", user.salt + userPass) != token)
 			return UserTools.fromError("Wrong user name or password");
-/*
 
-//trace(pass+" - "+userPass+"<br/>");
-	untyped __call__ ("include_once", Config.getInstance().FO_ROOT_PATH+"/application/functions.php");
-	//untyped __call__ ("include_once", Config.getInstance().FO_ROOT_PATH+"/config/config.php");
-	//untyped __call__("define", "SEED", user.salt);
-	//var timestamp = untyped __call__("mktime", pass.password_date("H"), pass.password_date("i"), pass.password_date("s"), pass.password_date("m"), pass.password_date("d"), pass.password_date("y")); 
-//	var timestamp = untyped __call__("strtotime", pass.password_date); 
-	var timestamp = Date.fromString(pass.password_date).getTime(); 
-	var decriptedPass = untyped __call__("cp_decrypt", pass.password, timestamp);
-
-//var encriptedPass = untyped __call__("cp_decrypt", userPass, timestamp);
-//trace("pass in db="+pass.password+" - userPass="+userPass+" - pass decrypted="+decriptedPass+" - pass encrypted="+encriptedPass+"<br/>");
-
-trace("<br/><br/>********** AUTH "+userName+", "+userPass+"********** <br/><br/>");
-trace("date="+Date.fromString(pass.password_date)+" - timestamp="+Date.fromString(pass.password_date).getTime()+" - date="+Date.fromTime(Date.fromString(pass.password_date).getTime())+"<br/>");
-trace("pass in db="+pass.password+" - userPass="+userPass+" - pass decrypted="+decriptedPass+"<br/>");
-if (user.disabled) trace("USER DISABLED !!!<br />");
-if (decriptedPass == userPass && user.disabled == false)
-	trace("Auth result: TRUE<br/><br/>");
-else
-	trace("Auth result: FALSE<br/><br/>");
-
-        if(decriptedPass != userPass || user.disabled == true) { 
-            return null;
-        }
-*/
-
-		//////////////////////////////
-		// Convert dates to string
-	    for (prop in Reflect.fields(user)){
-			var propValue = Reflect.field(user, prop);
-			switch (Type.typeof(propValue)){
-			    case TClass(c):
-					Reflect.setField(user, prop, ""+Std.string(propValue));
-			    default:
-			}
-		}
-
-        return UserTools.fromDynamic(user);
+		// safe fields only
+		user = UserTools.fromDynamic(user);
+		
+		// force the token since we really want to send it 
+		user.token = token;
+		
+        return user;
     }
 	/**
 	 * add details to the object
@@ -167,6 +105,31 @@ else
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
 			obj.archived_by = res.next();
+			
+		//////////////////////////////
+		// find the object detail table
+		// SELECT * FROM `fo_object_types` WHERE id=4
+		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
+		res = _db.request( sql );
+		var objTmp:Dynamic = res.next();
+		
+		// keep several props
+		obj.type = objTmp.type;
+		obj.icon = objTmp.icon;
+		obj.table_name = objTmp.table_name;
+		
+		// ***
+		// compute number of children
+		sql = "SELECT COUNT(id) FROM "+Config.getInstance().TABLE_PREFIX+"objects 
+							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+obj.table_name+".`object_id` 
+							FROM "+Config.getInstance().TABLE_PREFIX+obj.table_name+")" 
+							+ " AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`  in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq1 WHERE memberRq1.`object_id`="+obj.id+"))"
+							+ " OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id` in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq2 WHERE memberRq2.`object_id`="+obj.id+")))";
+		
+		var res = _db.request( sql );
+		if(res != null && res.length > 0)
+			obj.numChildren = Reflect.field(res.next(), "COUNT(id)");
+		else obj.numChildren = 0;
 
 		return obj;
 	}
@@ -191,13 +154,11 @@ else
 		// trace("<br />----- retrieve the object <br />"+sql+"<br />--"+obj+"---<br />");
 
 		//////////////////////////////
-		// find the object detail table
-		// SELECT * FROM `fo_object_types` WHERE id=4
-		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
-		res = _db.request( sql );
-		var objTmp:Dynamic = res.next();
-		obj.type = objTmp.type;
-		var detailTableName = objTmp.table_name;
+		// retrieve details of the object in the object detail table
+		obj = _getDetails(obj);
+		
+		// store the name of the table containing the object details
+		var detailTableName = obj.table_name;
 		// trace("<br />----- find the object detail table <br />"+sql+"<br />--"+detailTableName+"---<br />");
 
 		// retrieve details of the object in the object detail table
@@ -215,27 +176,8 @@ else
 			}
 		}
 		
-		//////////////////////////////
-		// retrieve details of the object in the object detail table
-		obj = _getDetails(obj);
-		
 		
 		//////////////////////////////
-		// retrieve details of the latest version of a file
-/*		//SELECT * FROM `fo_searchable_objects` WHERE `rel_object_id` in (SELECT MAX(object_id) FROM fo_project_file_revisions where file_id=8)
-		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"searchable_objects` 
-							WHERE `rel_object_id` in (SELECT MAX(object_id) FROM "+Config.getInstance().TABLE_PREFIX+"project_file_revisions where file_id="+oid+")"; 
-//		trace(sql+"<br/>***********<br/>");
-		res = _db.request( sql );
-		
-		// add details to the object
-		if(res != null || res.length > 0) { 
-			var objTmp:Dynamic = res.next();
-		    for (prop in Reflect.fields(objTmp)){
-				Reflect.setField(obj, prop, Reflect.field(objTmp, prop));
-			}
-		}
-*/		//////////////////////////////
 		// retrieve content of a file
 		// SELECT repository_id, type_string FROM test3_project_file_revisions where file_id=11 ORDER BY revision_number DESC LIMIT 1
 		sql = "SELECT repository_id, type_string, filesize, revision_number FROM "+Config.getInstance().TABLE_PREFIX+"project_file_revisions where file_id="+oid+" ORDER BY revision_number DESC LIMIT 1"; 
@@ -266,6 +208,17 @@ else
 			else if (StringTools.startsWith(objTmp.type_string,"image")){
 				// add html content to the object
 				obj.properties.htmlContent = "<img src='"+Config.getInstance().ROOT_URL+path+"' />"; 
+				// trace("<br />----- case of an image <br />"+obj.properties.htmlContent+"<br />-----<br />");
+			}
+			// case of a video
+			else if (StringTools.startsWith(objTmp.type_string,"video")){
+				// get the template
+				var str = haxe.Resource.getString("embed_file_video");
+				var t = new haxe.Template(str);
+				var output = t.execute({config:Config, src: Config.getInstance().ROOT_URL+path, mime_type:objTmp.type_string});
+				
+				// add html content to the object
+				obj.properties.htmlContent = output; 
 				// trace("<br />----- case of an image <br />"+obj.properties.htmlContent+"<br />-----<br />");
 			}
 			// other file tyes

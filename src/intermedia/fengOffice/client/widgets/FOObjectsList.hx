@@ -1,6 +1,8 @@
 package intermedia.fengOffice.client.widgets; 
 
 import intermedia.fengOffice.client.application.AppState; 
+import intermedia.fengOffice.client.application.Lang; 
+import intermedia.fengOffice.client.application.Config; 
 import intermedia.fengOffice.cross.Data;
 import js.Lib;
 import js.Dom;
@@ -46,7 +48,7 @@ class FOObjectsList {
 		var parent = null;
 		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
 		//trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
-		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title});
+		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title, Lang:Lang, Config:Config});
 
 		// attach to the dom
 		_widget.getBodyElement().innerHTML = output;

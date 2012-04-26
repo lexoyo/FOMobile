@@ -1,6 +1,8 @@
 package intermedia.fengOffice.client.application;
 
 import intermedia.fengOffice.client.Api;
+import intermedia.fengOffice.client.DeeplinkManager;
+import intermedia.fengOffice.client.Input;
 import intermedia.fengOffice.client.application.Config;
 import intermedia.fengOffice.client.application.AppState;
 import intermedia.fengOffice.cross.Data;
@@ -30,15 +32,14 @@ class Application {
 	 */
 	public function new(){
 		api = new Api();
-		//objectLists = new Hash();
-		
 		goAuthPage();
 	}
 	private function goAuthPage(errorMsg:String=""){
+		DeeplinkManager.getInstance().setDeeplink("auth", function (deeplink:String) { goAuthPage(errorMsg); } );
 		// get the template
 		var str = haxe.Resource.getString("login");
 		var t = new haxe.Template(str);
-		var output = t.execute({config:Config, appState:this, error:errorMsg, isError:(errorMsg!="")});
+		var output = t.execute({config:Config, appState:this, error:errorMsg, isError:(errorMsg!=""), Lang:Lang});
 		//widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		//widget.setBody(output);
 		Lib.document.getElementById("main").innerHTML = output;
@@ -55,7 +56,7 @@ class Application {
 		// get the template
 		var str = haxe.Resource.getString("loading");
 		var t = new haxe.Template(str);
-		var output = t.execute({config:Config, appState:this});
+		var output = t.execute({config:Config, appState:this, Lang:Lang});
 		widget.setBody(output);
 		
 		api.authenticate(userName, userPass, onAuth);
@@ -66,6 +67,7 @@ class Application {
 			goAuthPage(user.error_msg);
 			return;
 		}
+		Input.initPhoneGap();
 		trace("authentication success "+user.token);
 		AppState.getInstance().curUser = user;
 		goHome();
@@ -74,11 +76,16 @@ class Application {
 	 * callback from the view
 	 */
 	private function goHome(e:Event = null){
+		DeeplinkManager.getInstance().setDeeplink("home", function (deeplink:String) { goHome(e); } );
 		var homeScreen = new HomeScreen(widget);
 		homeScreen.onChange = goList;
 	}
 	private function goList(srv:ServiceType){
+		DeeplinkManager.getInstance().setDeeplink("list", function (deeplink:String) { goListNoDeeplink(srv); });
 		trace("List selected "+srv);
+		goListNoDeeplink(srv);
+	}
+	private function goListNoDeeplink(srv:ServiceType){
 		AppState.getInstance().curServiceType = srv;
 		
 		var list : FOObjectsList;
@@ -96,6 +103,7 @@ class Application {
 		list.onSelect = _onSelectItem;
 	}
 	private function goDetail(srv:ServiceType, item:Dynamic){
+		DeeplinkManager.getInstance().setDeeplink("detail", function (deeplink:String) { goDetail(srv, item); } );
 		trace("Show detail of "+item);
 		AppState.getInstance().curServiceType = srv;
 		AppState.getInstance().curItem = item;

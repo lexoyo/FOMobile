@@ -9,7 +9,26 @@ class intermedia_fengOffice_cross_UserTools {
 		if($obj === null) {
 			return null;
 		}
-		return _hx_anonymous(array("error_msg" => "", "object_id" => $obj->object_id, "first_name" => $obj->first_name, "surname" => $obj->surname, "is_company" => $obj->is_company, "company_id" => $obj->company_id, "brand_colors" => $obj->brand_colors, "department" => $obj->department, "job_title" => $obj->job_title, "birthday" => $obj->birthday, "timezone" => $obj->timezone, "user_type" => $obj->user_type, "is_active_user" => $obj->is_active_user, "token" => $obj->token, "display_name" => $obj->display_name, "username" => $obj->username, "picture_file" => $obj->picture_file, "avatar_file" => $obj->avatar_file, "comments" => $obj->comments, "last_login" => $obj->last_login, "last_visit" => $obj->last_visit, "last_activity" => $obj->last_activity, "disabled" => false));
+		{
+			$_g = 0; $_g1 = Reflect::fields($obj);
+			while($_g < $_g1->length) {
+				$prop = $_g1[$_g];
+				++$_g;
+				$propValue = Reflect::field($obj, $prop);
+				$»t = (Type::typeof($propValue));
+				switch($»t->index) {
+				case 6:
+				$c = $»t->params[0];
+				{
+					$obj->{$prop} = "" . Std::string($propValue);
+				}break;
+				default:{
+				}break;
+				}
+				unset($propValue,$prop);
+			}
+		}
+		return _hx_anonymous(array("error_msg" => "", "object_id" => $obj->object_id, "first_name" => $obj->first_name, "surname" => $obj->surname, "is_company" => $obj->is_company, "company_id" => $obj->company_id, "brand_colors" => $obj->brand_colors, "department" => $obj->department, "job_title" => $obj->job_title, "birthday" => $obj->birthday, "timezone" => $obj->timezone, "user_type" => $obj->user_type, "is_active_user" => $obj->is_active_user, "token" => "", "display_name" => $obj->display_name, "username" => $obj->username, "picture_file" => $obj->picture_file, "avatar_file" => $obj->avatar_file, "comments" => $obj->comments, "last_login" => $obj->last_login, "last_visit" => $obj->last_visit, "last_activity" => $obj->last_activity, "disabled" => false));
 	}
 	function __toString() { return 'intermedia.fengOffice.cross.UserTools'; }
 }
