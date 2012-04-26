@@ -49,16 +49,7 @@ class Application {
 		var userName = cast(Lib.document.getElementById("userName")).value;
 		var userPass = cast(Lib.document.getElementById("userPass")).value;
 		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
-		api.authenticate(userName, userPass, onAuth);
-	}
-	private function startAuth(userName:String, userPass:String){
-		trace("authentication start");
-		// get the template
-		var str = haxe.Resource.getString("loading");
-		var t = new haxe.Template(str);
-		var output = t.execute({config:Config, appState:this, Lang:Lang});
-		widget.setBody(output);
-		
+		widget.setState(loading);
 		api.authenticate(userName, userPass, onAuth);
 	}
 	private function onAuth(user:User){
@@ -77,6 +68,9 @@ class Application {
 	 */
 	private function goHome(e:Event = null){
 		DeeplinkManager.getInstance().setDeeplink("home", function (deeplink:String) { goHome(e); } );
+		
+		widget.startTransition();
+		
 		var homeScreen = new HomeScreen(widget);
 		homeScreen.onChange = goList;
 	}
@@ -98,7 +92,7 @@ class Application {
 			objectLists.set(srv, list);
 		}
 */		
-			list = new FOObjectsList(api, widget);
+		list = new FOObjectsList(api, widget);
 		list.onHome = goHome;
 		list.onSelect = _onSelectItem;
 	}

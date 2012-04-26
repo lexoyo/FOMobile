@@ -1,8 +1,8 @@
   <div style="padding: 0px; ">
     <div>
-		<button id="upBtn" type="button">::Lang.UP::</button>
-		<button id="refreshBtn" type="button">::Lang.REFRESH::</button>
-		<button id="selectBtn" style="::if hasParent::::else::display:none; ::end::" type="button">::Lang.WORKSPACE_SELECT::</button>
+		<button id="upBtn::idList::" type="button">::Lang.UP::</button>
+		<button id="refreshBtn::idList::" type="button">::Lang.REFRESH::</button>
+		<button id="selectBtn::idList::" style="::if hasParent::::else::display:none; ::end::" type="button">::Lang.WORKSPACE_SELECT::</button>
     </div>
     <div style="height:30px; display:block; height:100px; ">
     	<!--  <h2>::title::</h2> -->
@@ -28,11 +28,11 @@
 	<ul style="list-style-type: none; text-align:right; margin:0;padding:0">::foreach items::
 	  <li style="margin-bottom: 0px; padding-bottom: 5px; border-bottom: 1px dotted; height: 36px ">
 		  <div style="margin: 0; text-decoration: none; white-space:nowrap; float:left; ">
-		  		<img id="itemBtn::id::" style="margin: 0 10px; text-decoration: none; float:left; width:36px; ::if numChildren::::else::display: none; ::end::" 
+		  		<img id="itemBtn::idList::::id::" style="margin: 0 10px; text-decoration: none; float:left; width:36px; ::if numChildren::::else::display: none; ::end::" 
 		  			src="::Config.FO_URL::/public/assets/themes/default/extjs/images/default/tree/elbow-plus.gif" />
 		  		<img style="margin: 0 10px; text-decoration: none; float:left; width:36px; ::if numChildren::display: none; ::end::" 
 		  			src="::Config.FO_URL::/public/assets/themes/default/extjs/images/default/tree/elbow.gif" />
-				<div id="selectBtn::id::" style=" vertical-align: middle; margin-top: 5; text-decoration: none; height: 100%; ">
+				<div id="selectBtn::idList::::id::" style=" vertical-align: middle; margin-top: 5; text-decoration: none; height: 100%; ">
 					::name::
 				</div>
 		  </div>
@@ -43,4 +43,5 @@
 <!--   ::items::  -->   
 <br /><br /><br /><br /><br /><br /><br /><br /><hr />
 Debug:
+<small>::idList::</small>  
 <small>::items::</small>  

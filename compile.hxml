@@ -21,8 +21,10 @@
 -resource intermedia/fengOffice/client/templates/contacts_detail.html@contacts_detail
 -resource intermedia/fengOffice/client/templates/mail_contents_detail.html@mail_contents_detail
 -resource intermedia/fengOffice/client/templates/login.html@login
+-lib feffects
 #--no-traces
 #-js bin/App.js
+
 
 
 
@@ -41,6 +43,7 @@
 -resource intermedia/fengOffice/server/templates/activated.html@activated
 -cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/MobileApp/
 -resource intermedia/fengOffice/server/templates/embed_file_video.html@embed_file_video
+
 
 #-cmd cp -R bin/MobileApp/* /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/
 

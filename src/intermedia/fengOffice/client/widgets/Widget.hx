@@ -2,6 +2,18 @@ package intermedia.fengOffice.client.widgets;
 
 import js.Lib;
 import js.Dom;
+import intermedia.fengOffice.client.application.Config;
+import intermedia.fengOffice.client.application.Lang;
+
+import feffects.Tween;
+import feffects.easing.Quart;
+
+enum WidgetState{
+	loading;
+	error(msg:String);
+	none;
+}
+
 
 /**
  * main screen container, with header, body and footer
@@ -9,6 +21,7 @@ import js.Dom;
  * querry FO objects and display them
  */
 class Widget {
+	public static inline var OLD_BODY_ID:String = "OLD_BODY_ID";
 	/**
 	 * parent container
 	 */
@@ -28,42 +41,100 @@ class Widget {
 	public function new(id:String, title:String, container:HtmlDom){
 	      _container = container;
 	      _id = id;
+		  oldBody = null;
+		  
 		// render the template
 		var str = haxe.Resource.getString("widget");
 		var t = new haxe.Template(str);
 		var output = t.execute({id:id, title:title});
 		_container.innerHTML = output;
 
-/*		Lib.document.getElementById("WindowsId"+_id+"HomeBtn").onclick = _onHomeBtn;
-		Lib.document.getElementById("WindowsId"+_id+"WorkspaceBtn").onclick = _onWorkspaceBtn;
-		Lib.document.getElementById("WindowsId"+_id+"TabBtn").onclick = _onTabBtn;
-		Lib.document.getElementById("WindowsId"+_id+"ListBtn").onclick = _onListBtn;
-//		Lib.document.getElementById("WindowsId"+_id+"FilterBtn").onclick = _onFilterBtn;
-*/
 
 		// handle the size of the body
 		Lib.window.onresize = refresh;
 		refresh();
 	}
-/*	public function _onHomeBtn(e:Event){
-		if (onHomeBtn != null) onHomeBtn();
-	}
-	public function _onWorkspaceBtn(e:Event){
-		if (onWorkspaceBtn != null) onWorkspaceBtn();
-	}
-	public function _onTabBtn(e:Event){
-		if (onTabBtn != null) onTabBtn();
-	}
-	public function _onListBtn(e:Event){
-		if (onListBtn != null) onListBtn();
-	}
-*/	/**
+	/**
 	 * refresh the size of the body 
 	 */
 	public function refresh(e:Event = null):Void {
 	      var desiredBodyHeight = Lib.document.body.clientHeight - (getTitleElement().clientHeight + getFooterElement().clientHeight);
 	      //desiredBodyHeight -= 10;//65;
-	      getBodyElement().style.height = desiredBodyHeight + "px";
+	      var body = getBodyElement();
+	      body.style.height = desiredBodyHeight + "px";
+		  
+		  if (oldBody != null){
+			opacity = 1;
+			// start the transition
+			body.parentNode.style.left =  "50px";//_container.clientWidth + "px";
+	        // creating the tween
+	        var tween = new Tween( _container.clientWidth, 0, 250, Quart.easeOut );
+	        // setting the update function ( finished function is optional )
+	        tween.setTweenHandlers( move, finished );
+	        // launch the tween
+	        tween.start();
+		  }
+	}
+	private var oldBody:HtmlDom;
+	/**
+	 * 
+	 */
+	public function startTransition(){
+		refresh();		
+		
+		// create a new body so that the old one will disappear with an animation
+		oldBody = getBodyElement();
+		
+		var animContainer:HtmlDom = Lib.document.createElement("div");
+		var newBody:HtmlDom = Lib.document.createElement("div");
+		for (prop in Reflect.fields(oldBody.style))
+			Reflect.setField(newBody.style, prop, Reflect.field(oldBody.style, prop));
+		newBody.style.overflow = "auto";
+		Reflect.setField(newBody.style, "opacity", 0);
+		
+		animContainer.style.position="absolute";
+		animContainer.appendChild(newBody);
+		
+		// attach the new body to the dom and swith IDs
+		oldBody.parentNode.parentNode.appendChild(animContainer);
+		var tmpId:String = oldBody.id;
+		oldBody.id = OLD_BODY_ID;
+		newBody.id = tmpId;
+    
+	}
+    function finished( e : Float )
+    {
+        trace ( "tween finished" );
+		Reflect.setField(oldBody.style, "opacity", 0);
+		Reflect.setField(getBodyElement().style, "opacity", 1);
+		// remove the old body with a transition animation
+		oldBody.parentNode.parentNode.removeChild(oldBody.parentNode);
+		oldBody = null;
+		refresh();
+    }		
+	var opacity:Float;
+    function move( e : Float )
+    {
+		var body = getBodyElement();
+		body.parentNode.style.left = Math.round(e) + "px";
+		Reflect.setField(oldBody.style, "opacity", opacity);
+		Reflect.setField(body.style, "opacity", 1-opacity);
+		opacity -= .05;
+    }		
+		
+	/**
+	 * refresh the size of the body 
+	 */
+	public function setState(state:WidgetState):Void {
+		switch (state){
+			case loading:
+				// display the loading wheel
+				var str = haxe.Resource.getString("loading");
+				var t = new haxe.Template(str);
+				var output = t.execute({config:Config, Lang:Lang});
+				setBody(output);
+			default:
+		}
 	}
 	/**
 	 * get a reference to the title dom
@@ -76,6 +147,12 @@ class Widget {
 	 */
 	public function getBodyElement():HtmlDom {
 	      return Lib.document.getElementById("WindowsId"+_id+"Body");
+	}
+	/**
+	 * get a reference to the old body element, which is being removed with a transition animation
+	 */
+	public function getOldBodyElement():HtmlDom {
+	      return Lib.document.getElementById(OLD_BODY_ID);
 	}
 	/**
 	 * get a reference to the title dom
@@ -112,6 +189,7 @@ class Widget {
 	 */
 	public function setFooter(footer:String):Void{
 	      Lib.document.getElementById("WindowsId"+_id+"Footer").innerHTML = footer;
+		  refresh();
 	}
 	/**
 	 * get the footer

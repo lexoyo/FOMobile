@@ -33,10 +33,12 @@ class HomeScreen {
 		 refresh();
 	}
 	public function refresh(){
+		var rand = Math.round(10000*Math.random());
+		
 		// render the template
 		var str = haxe.Resource.getString("home");
 		var t = new haxe.Template(str);
-		var output = t.execute({config:Config, appState:AppState.getInstance(), Lang:Lang, Config:Config});
+		var output = t.execute({config:Config, appState:AppState.getInstance(), Lang:Lang, Config:Config, id:rand});
 		
 		// body
 		_widget.getBodyElement().innerHTML = output;
@@ -47,14 +49,14 @@ class HomeScreen {
 		_widget.refresh();
 		
 		// callbacks for click on the icons 
-		Lib.document.getElementById("workspaceBtn").onclick = _workspaceBtnCallback;
-		Lib.document.getElementById("filesBtn").onclick = _filesBtnCallback;
-		Lib.document.getElementById("tasksBtn").onclick = _tasksBtnCallback;
-		Lib.document.getElementById("notesBtn").onclick = _notesBtnCallback;
-		Lib.document.getElementById("emailsBtn").onclick = _emailsBtnCallback;
-		Lib.document.getElementById("linksBtn").onclick = _linksBtnCallback;
-		Lib.document.getElementById("calendarBtn").onclick = _calendarBtnCallback;
-		Lib.document.getElementById("contactsBtn").onclick = _contactsBtnCallback;
+		Lib.document.getElementById("workspaceBtn"+rand).onclick = _workspaceBtnCallback;
+		Lib.document.getElementById("filesBtn"+rand).onclick = _filesBtnCallback;
+		Lib.document.getElementById("tasksBtn"+rand).onclick = _tasksBtnCallback;
+		Lib.document.getElementById("notesBtn"+rand).onclick = _notesBtnCallback;
+		Lib.document.getElementById("emailsBtn"+rand).onclick = _emailsBtnCallback;
+		Lib.document.getElementById("linksBtn"+rand).onclick = _linksBtnCallback;
+		Lib.document.getElementById("calendarBtn"+rand).onclick = _calendarBtnCallback;
+		Lib.document.getElementById("contactsBtn"+rand).onclick = _contactsBtnCallback;
 	}
 	public function _workspaceBtnCallback(e:Event){
 		// workaround no persistence

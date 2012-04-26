@@ -78,6 +78,8 @@ class FOObjectDetail {
 	}
 	public function refresh(event:Event = null){
 		if (onLoading != null) onLoading(true);
+		//_widget.setState(loading);
+		_widget.startTransition();
 		
 		trace("call getObject("+_item.id);
 	    _api.getObject(_item.id,cast(_displayItem), onError);

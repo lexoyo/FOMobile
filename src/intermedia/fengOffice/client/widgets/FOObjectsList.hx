@@ -25,6 +25,7 @@ class FOObjectsList {
 	private var _widget : Widget;
 	private var _prevItems : Array<Dynamic>;
 	private var _curItem : Dynamic;
+	private var _id : Int;
 	/**
 	 * @param	parentItem	the parent item, with a field "id"
 	 */
@@ -37,6 +38,7 @@ class FOObjectsList {
 	      refresh();
 	}
 	private function _displayItems(items:List<Dynamic>):Void {
+			_id = Math.round(10000*Math.random());
 		if (onLoading != null) onLoading(false);
  		trace("Items: "+items);
 		// render the template
@@ -48,7 +50,7 @@ class FOObjectsList {
 		var parent = null;
 		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
 		//trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
-		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title, Lang:Lang, Config:Config});
+		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title, Lang:Lang, Config:Config, idList:_id});
 
 		// attach to the dom
 		_widget.getBodyElement().innerHTML = output;
@@ -56,17 +58,17 @@ class FOObjectsList {
 		// add interactions
 		var t = this;
 		for (w in items){
-		    Lib.document.getElementById("itemBtn"+w.id).onclick = function(e){t.openItem(w);};
-		    Lib.document.getElementById("selectBtn"+w.id).onclick = function(e){t.selectItem(w);};
+		    Lib.document.getElementById("itemBtn"+_id+w.id).onclick = function(e){t.openItem(w);};
+		    Lib.document.getElementById("selectBtn"+_id+w.id).onclick = function(e){t.selectItem(w);};
 		}
 		if (onChange != null) onChange(_curItem);
 
 		if (_prevItems.length <= 0) disableUp();
 		else enableUp();
 
-		Lib.document.getElementById("upBtn").onclick = onUp;
-		Lib.document.getElementById("refreshBtn").onclick = refresh;
-		Lib.document.getElementById("selectBtn").onclick = function(e){t.selectItem(t._curItem);};
+		Lib.document.getElementById("upBtn"+_id).onclick = onUp;
+		Lib.document.getElementById("refreshBtn"+_id).onclick = refresh;
+		Lib.document.getElementById("selectBtn"+_id).onclick = function(e){t.selectItem(t._curItem);};
 
 
 		// render the template for footer
@@ -85,8 +87,8 @@ class FOObjectsList {
 
 		// add interactions
 		Lib.document.getElementById("listFooterHomeBtn").onclick = onHome;
-//		Lib.document.getElementById("listFooterBackBtn").onclick = onBack;
-//		Lib.document.getElementById("listFooterForwardBtn").onclick = onForward;
+//		Lib.document.getElementById("listFooterBackBtn"+id).onclick = onBack;
+//		Lib.document.getElementById("listFooterForwardBtn"+id).onclick = onForward;
 	}
 	public function openItem(item:Dynamic){
 	      _prevItems.push(_curItem);
@@ -108,18 +110,22 @@ class FOObjectsList {
 		else curId = AppState.getInstance().curWorkspace.id; // -1 means all items
   
 		if (onLoading != null) onLoading(true);
+		//_widget.setState(loading);
+		_widget.startTransition();
 		
 		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+"");
 	    _api.listMembers(AppState.getInstance().curServiceType, curId,_displayItems, onError);
 	}
 	public function enableUp(){
+			trace("upBtn enabled "+_id);
 	      try{
-		      cast(Lib.document.getElementById("upBtn")).disabled = false;
+		      cast(Lib.document.getElementById("upBtn"+_id)).disabled = false;
 	      }catch(e:Dynamic){}
 	}
 	public function disableUp(){
+			trace("upBtn disabled "+_id);
 	      try{
-		      cast(Lib.document.getElementById("upBtn")).disabled = true;
+		      cast(Lib.document.getElementById("upBtn"+_id)).disabled = true;
 	      }catch(e:Dynamic){}
 	}
 }
