@@ -38,30 +38,6 @@ class haxe_io_Bytes {
 	public function toString() {
 		return $this->b;
 	}
-	public function toHex() {
-		$s = new StringBuf();
-		$chars = new _hx_array(array());
-		$str = "0123456789abcdef";
-		{
-			$_g1 = 0; $_g = strlen($str);
-			while($_g1 < $_g) {
-				$i = $_g1++;
-				$chars->push(_hx_char_code_at($str, $i));
-				unset($i);
-			}
-		}
-		{
-			$_g1 = 0; $_g = $this->length;
-			while($_g1 < $_g) {
-				$i = $_g1++;
-				$c = ord($this->b[$i]);
-				$s->b .= chr($chars[$c >> 4]);
-				$s->b .= chr($chars[$c & 15]);
-				unset($i,$c);
-			}
-		}
-		return $s->b;
-	}
 	public function getData() {
 		return $this->b;
 	}

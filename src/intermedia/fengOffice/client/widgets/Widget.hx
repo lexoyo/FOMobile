@@ -67,9 +67,9 @@ class Widget {
 		  if (oldBody != null && opacity==0){
 			opacity = 1;
 			// start the transition
-			body.parentNode.style.left =  "50px";//_container.clientWidth + "px";
+			body.parentNode.style.left =  "100px";//_container.clientWidth + "px"; 
 	        // creating the tween
-	        var tween = new Tween( _container.clientWidth, 0, 250, Quart.easeOut );
+	        var tween = new Tween( _container.clientWidth, 0, 500, Quart.easeOut );
 	        // setting the update function ( finished function is optional )
 	        tween.setTweenHandlers( move, finished );
 	        // launch the tween
@@ -90,14 +90,17 @@ class Widget {
 		
 		var animContainer:HtmlDom = Lib.document.createElement("div");
 		var newBody:HtmlDom = Lib.document.createElement("div");
-		for (prop in Reflect.fields(oldBody.style))
-			Reflect.setField(newBody.style, prop, Reflect.field(oldBody.style, prop));
 		newBody.style.overflow = "auto";
 		Reflect.setField(newBody.style, "opacity", 0);
-		
 		animContainer.style.position="absolute";
+		animContainer.style.width="100%";
 		animContainer.appendChild(newBody);
-		
+
+		for (prop in Reflect.fields(oldBody.style))
+			Reflect.setField(newBody.style, prop, Reflect.field(oldBody.style, prop));
+		for (prop in Reflect.fields(oldBody.parentNode.style))
+			Reflect.setField(animContainer.style, prop, Reflect.field(oldBody.parentNode.style, prop));
+
 		// attach the new body to the dom and swith IDs
 		oldBody.parentNode.parentNode.appendChild(animContainer);
 		var tmpId:String = oldBody.id;
@@ -123,7 +126,7 @@ class Widget {
 		body.parentNode.style.left = Math.round(e) + "px";
 		Reflect.setField(oldBody.style, "opacity", opacity);
 		Reflect.setField(body.style, "opacity", 1-opacity);
-		opacity -= .05;
+		opacity -= .03;
     }		
 		
 	/**

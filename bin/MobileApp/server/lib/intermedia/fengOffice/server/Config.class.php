@@ -4,8 +4,8 @@ class intermedia_fengOffice_server_Config {
 	public function __construct() {
 		if(!php_Boot::$skip_constructor) {
 		$this->FO_ROOT_PATH = "../..";
-		$this->PLUGIN_NAME = "Mobile App";
-		$this->PLUGIN_FOLDER_NAME = "MobileApp";
+		$this->PLUGIN_NAME = "mobile_app";
+		$this->PLUGIN_FOLDER_NAME = "mobile_app";
 		$this->PLUGIN_ROOT_PATH = $this->FO_ROOT_PATH . "/plugins/" . $this->PLUGIN_NAME;
 		include_once($this->FO_ROOT_PATH . "/config/config.php");
 		$this->TABLE_PREFIX = TABLE_PREFIX;

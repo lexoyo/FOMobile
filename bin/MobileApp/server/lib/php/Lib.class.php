@@ -54,7 +54,7 @@ class php_Lib {
 		if($path->length === 0) {
 			$o->$name = $t;
 		} else {
-			$so = ((isset($o->$name)) ? $o->$name : _hx_anonymous(array()));
+			$so = php_Lib_0($name, $o, $path, $t);
 			php_Lib::appendType($so, $path, $t);
 			$o->$name = $so;
 		}
@@ -70,11 +70,10 @@ class php_Lib {
 		return $o;
 	}
 	static function loadLib($pathToLib) {
-		$prefix = null;
 		$_hx_types_array = array();
  		$_hx_cache_content = '';
  		//Calling this function will put all types present in the specified types in the $_hx_types_array
- 		_hx_build_paths($pathToLib, $_hx_types_array, array(), $prefix);
+ 		_hx_build_paths($pathToLib, $_hx_types_array, array());
  
  		for($i=0;$i<count($_hx_types_array);$i++) {
  			//For every type that has been found, create its description
@@ -96,4 +95,11 @@ class php_Lib {
  
 	}
 	function __toString() { return 'php.Lib'; }
+}
+function php_Lib_0(&$name, &$o, &$path, &$t) {
+	if(isset($o->$name)) {
+		return $o->$name;
+	} else {
+		return _hx_anonymous(array());
+	}
 }

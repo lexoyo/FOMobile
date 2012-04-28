@@ -20,6 +20,21 @@ class intermedia_fengOffice_server_Api {
 		return true;
 	}
 	public function authenticate($userName, $userPass) {
+		if($userName === "" && $userPass === "") {
+			php_Session::start();
+			if(php_Session::exists("mobile_app_user_id")) {
+				$id = php_Session::get("mobile_app_user_id");
+				$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` \x0A\x09\x09\x09    \x09\x09WHERE `object_id`='" . $id . "'";
+				$res = $this->_db->request($sql);
+				if($res !== null && $res->getLength() > 0) {
+					$user = $res->results()->first();
+					$token = $user->token;
+					$user = intermedia_fengOffice_cross_UserTools::fromDynamic($user);
+					$user->token = $token;
+					return $user;
+				}
+			}
+		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` \x0A\x09    \x09\x09WHERE `username`='" . $userName . "'";
 		$res = $this->_db->request($sql);
 		if($res === null || $res->getLength() === 0) {

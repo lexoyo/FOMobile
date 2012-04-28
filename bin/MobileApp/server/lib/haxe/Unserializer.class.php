@@ -8,12 +8,7 @@ class haxe_Unserializer {
 		$this->pos = 0;
 		$this->scache = new _hx_array(array());
 		$this->cache = new _hx_array(array());
-		$r = haxe_Unserializer::$DEFAULT_RESOLVER;
-		if($r === null) {
-			$r = _hx_qtype("Type");
-			haxe_Unserializer::$DEFAULT_RESOLVER = $r;
-		}
-		$this->setResolver($r);
+		$this->setResolver(haxe_Unserializer::$DEFAULT_RESOLVER);
 	}}
 	public $buf;
 	public $pos;
@@ -40,7 +35,7 @@ class haxe_Unserializer {
 		$fpos = $this->pos;
 		while(true) {
 			$c = ord(substr($this->buf,$this->pos,1));
-			if(($c === 0)) {
+			if($c === 0) {
 				break;
 			}
 			if($c === 45) {

@@ -38,6 +38,7 @@ ToDo for beta:
 - children: display a "+" when there are subtasks
 - display the elements of all children (recursive sql)
 - user rights and role
+- ajout logout 
 
 Todo after?
 - in the view of a context, display the info of FO dashboard (last docs, last comments, late tasks...) 

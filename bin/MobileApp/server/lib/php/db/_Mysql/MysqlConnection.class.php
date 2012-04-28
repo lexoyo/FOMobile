@@ -1,6 +1,6 @@
 <?php
 
-class php_db__Mysql_MysqlConnection implements sys_db_Connection{
+class php_db__Mysql_MysqlConnection implements php_db_Connection{
 	public function __construct($c) {
 		if(!php_Boot::$skip_constructor) {
 		$this->c = $c;
@@ -12,7 +12,7 @@ class php_db__Mysql_MysqlConnection implements sys_db_Connection{
 	}
 	public function request($s) {
 		$h = mysql_query($s, $this->c);
-		if(($h === false)) {
+		if($h === false) {
 			throw new HException("Error while executing " . $s . " (" . (mysql_error($this->c) . ")"));
 		}
 		return new php_db__Mysql_MysqlResultSet($h, $this->c);
@@ -25,36 +25,12 @@ class php_db__Mysql_MysqlConnection implements sys_db_Connection{
 	}
 	public function addValue($s, $v) {
 		if(is_int($v) || is_null($v)) {
-			$x = $v;
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$s->b .= $x;
+			$s->b .= $v;
 		} else {
 			if(is_bool($v)) {
-				$x = (($v) ? 1 : 0);
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$s->b .= $x;
+				$s->b .= php_db__Mysql_MysqlConnection_0($this, $s, $v);
 			} else {
-				$x = $this->quote(Std::string($v));
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$s->b .= $x;
+				$s->b .= $this->quote(Std::string($v));
 			}
 		}
 	}
@@ -84,4 +60,11 @@ class php_db__Mysql_MysqlConnection implements sys_db_Connection{
 			throw new HException('Unable to call «'.$m.'»');
 	}
 	function __toString() { return 'php.db._Mysql.MysqlConnection'; }
+}
+function php_db__Mysql_MysqlConnection_0(&$»this, &$s, &$v) {
+	if($v) {
+		return 1;
+	} else {
+		return 0;
+	}
 }

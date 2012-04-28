@@ -8,7 +8,7 @@ class php_io_FileOutput extends haxe_io_Output {
 	public $__f;
 	public function writeByte($c) {
 		$r = fwrite($this->__f, chr($c));
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileOutput_0($this, $c, $r);
 			return;
 		}
@@ -21,14 +21,14 @@ class php_io_FileOutput extends haxe_io_Output {
 			php_io_FileOutput_1($this, $b, $l, $p, $s);
 		}
 		$r = fwrite($this->__f, $s, $l);
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileOutput_2($this, $b, $l, $p, $r, $s);
 		}
 		return $r;
 	}
 	public function flush() {
 		$r = fflush($this->__f);
-		if(($r === false)) {
+		if($r === false) {
 			throw new HException(haxe_io_Error::Custom("An error occurred"));
 		}
 	}
@@ -40,7 +40,7 @@ class php_io_FileOutput extends haxe_io_Output {
 	}
 	public function seek($p, $pos) {
 		$w = null;
-		$»t = ($pos);
+		$»t = $pos;
 		switch($»t->index) {
 		case 0:
 		{
@@ -56,13 +56,13 @@ class php_io_FileOutput extends haxe_io_Output {
 		}break;
 		}
 		$r = fseek($this->__f, $p, $w);
-		if(($r === false)) {
+		if($r === false) {
 			throw new HException(haxe_io_Error::Custom("An error occurred"));
 		}
 	}
 	public function tell() {
 		$r = ftell($this->__f);
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileOutput_3($this, $r);
 		}
 		return $r;

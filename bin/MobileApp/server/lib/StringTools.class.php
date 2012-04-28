@@ -55,7 +55,7 @@ class StringTools {
 		return ord(substr($s,$index,1));
 	}
 	static function isEOF($c) {
-		return ($c === 0);
+		return $c === 0;
 	}
 	function __toString() { return 'StringTools'; }
 }

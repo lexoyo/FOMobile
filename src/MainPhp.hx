@@ -10,6 +10,9 @@ import haxe.remoting.Context;
 
 class MainPhp {	
 	public function new(){
+
+		// **
+		// init DB
 		var db = new Db({
 				host:Config.getInstance().DB_HOST, 
 				user:Config.getInstance().DB_USER,
@@ -17,6 +20,9 @@ class MainPhp {
 				database:Config.getInstance().DB_NAME
 			});
 		db.open();
+		
+		// **
+		// create the API object
 		var api:Api;
 		try{
 			api = new Api(db);
@@ -27,16 +33,28 @@ class MainPhp {
 			// get the template
 			var str = haxe.Resource.getString("not-activated");
 			var t = new haxe.Template(str);
-			var output = t.execute({config:Config, error:e});
+			var output = t.execute({config:Config.getInstance(), error:e});
  			Lib.print(output);
 			return;
 		}
+		
+		
+		/////////////////////////////////////////////////////////////
+		// UNIT TESTS 
+		/////////////////////////////////////////////////////////////
+
 /*		trace("************************<br />");
 		trace("auth<br />");
 		trace("************************<br />");
 		trace("____a: "+api.authenticate("a", "a"));
 		trace("<br />");
+		trace("<br />");
 		trace("____b: "+api.authenticate("test", "test"));
+		trace("<br />"); 
+		trace("<br />"); 
+/*
+		trace("____session: "+api.authenticate("", ""));
+		trace("<br />");
 		trace("<br />"); 
 
 /*		trace("************************<br />");
@@ -78,6 +96,9 @@ class MainPhp {
 		trace("name = "+api.getObject(oid, "a", token).name+"<br />");
 		trace(api.getObject(oid, "a", token)+"<br />");
 /**/		// create an incoming connection and give access to the "instance" object 
+		
+		// **
+		// answers the call
 		var context = new Context(); 
 		context.addObject("api",api); 
 		try{
@@ -90,8 +111,12 @@ class MainPhp {
 			db.close();
 			trace( "error: "+e);
 		}
-/**/
+
+		// **
+		// cleanup
 		db.close();
+		
+		// **
 		// handle normal request
 		var str = haxe.Resource.getString("activated");
 		var t = new haxe.Template(str);

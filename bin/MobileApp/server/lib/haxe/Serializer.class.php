@@ -22,76 +22,16 @@ class haxe_Serializer {
 	public function serializeString($s) {
 		$x = $this->shash->get($s);
 		if($x !== null) {
-			{
-				$x1 = "R";
-				if(is_null($x1)) {
-					$x1 = "null";
-				} else {
-					if(is_bool($x1)) {
-						$x1 = (($x1) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x1;
-			}
-			{
-				$x1 = $x;
-				if(is_null($x1)) {
-					$x1 = "null";
-				} else {
-					if(is_bool($x1)) {
-						$x1 = (($x1) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x1;
-			}
+			$this->buf->b .= "R";
+			$this->buf->b .= $x;
 			return;
 		}
 		$this->shash->set($s, $this->scount++);
-		{
-			$x1 = "y";
-			if(is_null($x1)) {
-				$x1 = "null";
-			} else {
-				if(is_bool($x1)) {
-					$x1 = (($x1) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x1;
-		}
+		$this->buf->b .= "y";
 		$s = rawurlencode($s);
-		{
-			$x1 = strlen($s);
-			if(is_null($x1)) {
-				$x1 = "null";
-			} else {
-				if(is_bool($x1)) {
-					$x1 = (($x1) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x1;
-		}
-		{
-			$x1 = ":";
-			if(is_null($x1)) {
-				$x1 = "null";
-			} else {
-				if(is_bool($x1)) {
-					$x1 = (($x1) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x1;
-		}
-		{
-			$x1 = $s;
-			if(is_null($x1)) {
-				$x1 = "null";
-			} else {
-				if(is_bool($x1)) {
-					$x1 = (($x1) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x1;
-		}
+		$this->buf->b .= strlen($s);
+		$this->buf->b .= ":";
+		$this->buf->b .= $s;
 	}
 	public function serializeRef($v) {
 		{
@@ -99,30 +39,8 @@ class haxe_Serializer {
 			while($_g1 < $_g) {
 				$i = $_g1++;
 				if(_hx_equal($this->cache[$i], $v)) {
-					{
-						$x = "r";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-						unset($x);
-					}
-					{
-						$x = $i;
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-						unset($x);
-					}
+					$this->buf->b .= "r";
+					$this->buf->b .= $i;
 					return true;
 				}
 				unset($i);
@@ -142,132 +60,40 @@ class haxe_Serializer {
 				unset($f);
 			}
 		}
-		{
-			$x = "g";
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
-		}
+		$this->buf->b .= "g";
 	}
 	public function serialize($v) {
-		$»t = (Type::typeof($v));
+		$»t = Type::typeof($v);
 		switch($»t->index) {
 		case 0:
 		{
-			$x = "n";
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
+			$this->buf->b .= "n";
 		}break;
 		case 1:
 		{
 			if(_hx_equal($v, 0)) {
-				{
-					$x = "z";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "z";
 				return;
 			}
-			{
-				$x = "i";
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
-			}
-			{
-				$x = $v;
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
-			}
+			$this->buf->b .= "i";
+			$this->buf->b .= $v;
 		}break;
 		case 2:
 		{
 			if(Math::isNaN($v)) {
-				$x = "k";
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
+				$this->buf->b .= "k";
 			} else {
 				if(!Math::isFinite($v)) {
-					$x = (($v < 0) ? "m" : "p");
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
+					$this->buf->b .= haxe_Serializer_0($this, $v);
 				} else {
-					{
-						$x = "d";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-					}
-					{
-						$x = $v;
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-					}
+					$this->buf->b .= "d";
+					$this->buf->b .= $v;
 				}
 			}
 		}break;
 		case 3:
 		{
-			$x = (($v) ? "t" : "f");
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
+			$this->buf->b .= haxe_Serializer_1($this, $v);
 		}break;
 		case 6:
 		$c = $»t->params[0];
@@ -282,17 +108,7 @@ class haxe_Serializer {
 			switch($c) {
 			case _hx_qtype("Array"):{
 				$ucount = 0;
-				{
-					$x = "a";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "a";
 				$l = _hx_len($v);
 				{
 					$_g = 0;
@@ -303,41 +119,10 @@ class haxe_Serializer {
 						} else {
 							if($ucount > 0) {
 								if($ucount === 1) {
-									$x = "n";
-									if(is_null($x)) {
-										$x = "null";
-									} else {
-										if(is_bool($x)) {
-											$x = (($x) ? "true" : "false");
-										}
-									}
-									$this->buf->b .= $x;
-									unset($x);
+									$this->buf->b .= "n";
 								} else {
-									{
-										$x = "u";
-										if(is_null($x)) {
-											$x = "null";
-										} else {
-											if(is_bool($x)) {
-												$x = (($x) ? "true" : "false");
-											}
-										}
-										$this->buf->b .= $x;
-										unset($x);
-									}
-									{
-										$x = $ucount;
-										if(is_null($x)) {
-											$x = "null";
-										} else {
-											if(is_bool($x)) {
-												$x = (($x) ? "true" : "false");
-											}
-										}
-										$this->buf->b .= $x;
-										unset($x);
-									}
+									$this->buf->b .= "u";
+									$this->buf->b .= $ucount;
 								}
 								$ucount = 0;
 							}
@@ -348,64 +133,16 @@ class haxe_Serializer {
 				}
 				if($ucount > 0) {
 					if($ucount === 1) {
-						$x = "n";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
+						$this->buf->b .= "n";
 					} else {
-						{
-							$x = "u";
-							if(is_null($x)) {
-								$x = "null";
-							} else {
-								if(is_bool($x)) {
-									$x = (($x) ? "true" : "false");
-								}
-							}
-							$this->buf->b .= $x;
-						}
-						{
-							$x = $ucount;
-							if(is_null($x)) {
-								$x = "null";
-							} else {
-								if(is_bool($x)) {
-									$x = (($x) ? "true" : "false");
-								}
-							}
-							$this->buf->b .= $x;
-						}
+						$this->buf->b .= "u";
+						$this->buf->b .= $ucount;
 					}
 				}
-				{
-					$x = "h";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "h";
 			}break;
 			case _hx_qtype("List"):{
-				{
-					$x = "l";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "l";
 				$v1 = $v;
 				if(null == $v1) throw new HException('null iterable');
 				$»it = $v1->iterator();
@@ -413,55 +150,15 @@ class haxe_Serializer {
 					$i = $»it->next();
 					$this->serialize($i);
 				}
-				{
-					$x = "h";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "h";
 			}break;
 			case _hx_qtype("Date"):{
 				$d = $v;
-				{
-					$x = "v";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
-				{
-					$x = $d->toString();
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "v";
+				$this->buf->b .= $d->toString();
 			}break;
 			case _hx_qtype("Hash"):{
-				{
-					$x = "b";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "b";
 				$v1 = $v;
 				if(null == $v1) throw new HException('null iterable');
 				$»it = $v1->keys();
@@ -470,72 +167,20 @@ class haxe_Serializer {
 					$this->serializeString($k);
 					$this->serialize($v1->get($k));
 				}
-				{
-					$x = "h";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "h";
 			}break;
 			case _hx_qtype("IntHash"):{
-				{
-					$x = "q";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "q";
 				$v1 = $v;
 				if(null == $v1) throw new HException('null iterable');
 				$»it = $v1->keys();
 				while($»it->hasNext()) {
 					$k = $»it->next();
-					{
-						$x = ":";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-						unset($x);
-					}
-					{
-						$x = $k;
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-						unset($x);
-					}
+					$this->buf->b .= ":";
+					$this->buf->b .= $k;
 					$this->serialize($v1->get($k));
 				}
-				{
-					$x = "h";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "h";
 			}break;
 			case _hx_qtype("haxe.io.Bytes"):{
 				$v1 = $v;
@@ -560,91 +205,21 @@ class haxe_Serializer {
 						$chars .= _hx_char_at($b64, $b1 >> 2) . _hx_char_at($b64, $b1 << 4 & 63);
 					}
 				}
-				{
-					$x = "s";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
-				{
-					$x = strlen($chars);
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
-				{
-					$x = ":";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
-				{
-					$x = $chars;
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= "s";
+				$this->buf->b .= strlen($chars);
+				$this->buf->b .= ":";
+				$this->buf->b .= $chars;
 			}break;
 			default:{
 				$this->cache->pop();
 				if(_hx_field($v, "hxSerialize") !== null) {
-					{
-						$x = "C";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-					}
+					$this->buf->b .= "C";
 					$this->serializeString(Type::getClassName($c));
 					$this->cache->push($v);
 					$v->hxSerialize($this);
-					{
-						$x = "g";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-					}
+					$this->buf->b .= "g";
 				} else {
-					{
-						$x = "c";
-						if(is_null($x)) {
-							$x = "null";
-						} else {
-							if(is_bool($x)) {
-								$x = (($x) ? "true" : "false");
-							}
-						}
-						$this->buf->b .= $x;
-					}
+					$this->buf->b .= "c";
 					$this->serializeString(Type::getClassName($c));
 					$this->cache->push($v);
 					$this->serializeFields($v);
@@ -657,17 +232,7 @@ class haxe_Serializer {
 			if($this->useCache && $this->serializeRef($v)) {
 				return;
 			}
-			{
-				$x = "o";
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
-			}
+			$this->buf->b .= "o";
 			$this->serializeFields($v);
 		}break;
 		case 7:
@@ -677,78 +242,20 @@ class haxe_Serializer {
 				return;
 			}
 			$this->cache->pop();
-			{
-				$x = (($this->useEnumIndex) ? "j" : "w");
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
-			}
+			$this->buf->b .= haxe_Serializer_2($this, $e, $v);
 			$this->serializeString(Type::getEnumName($e));
 			if($this->useEnumIndex) {
-				{
-					$x = ":";
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
-				{
-					$x = $v->index;
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= ":";
+				$this->buf->b .= $v->index;
 			} else {
 				$this->serializeString($v->tag);
 			}
-			{
-				$x = ":";
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
-			}
+			$this->buf->b .= ":";
 			$l = count($v->params);
 			if($l === 0 || _hx_field($v, "params") === null) {
-				$x = 0;
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
+				$this->buf->b .= 0;
 			} else {
-				{
-					$x = $l;
-					if(is_null($x)) {
-						$x = "null";
-					} else {
-						if(is_bool($x)) {
-							$x = (($x) ? "true" : "false");
-						}
-					}
-					$this->buf->b .= $x;
-				}
+				$this->buf->b .= $l;
 				{
 					$_g = 0;
 					while($_g < $l) {
@@ -770,17 +277,7 @@ class haxe_Serializer {
 		}
 	}
 	public function serializeException($e) {
-		{
-			$x = "x";
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
-		}
+		$this->buf->b .= "x";
 		$this->serialize($e);
 	}
 	public function __call($m, $a) {
@@ -802,4 +299,25 @@ class haxe_Serializer {
 		return $s->toString();
 	}
 	function __toString() { return $this->toString(); }
+}
+function haxe_Serializer_0(&$»this, &$v) {
+	if($v < 0) {
+		return "m";
+	} else {
+		return "p";
+	}
+}
+function haxe_Serializer_1(&$»this, &$v) {
+	if($v) {
+		return "t";
+	} else {
+		return "f";
+	}
+}
+function haxe_Serializer_2(&$»this, &$e, &$v) {
+	if($»this->useEnumIndex) {
+		return "j";
+	} else {
+		return "w";
+	}
 }

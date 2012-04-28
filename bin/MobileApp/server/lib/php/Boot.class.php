@@ -9,7 +9,6 @@ class php_Boot {
 	function __toString() { return 'php.Boot'; }
 }
 {
-	$_hx_class_prefix = null;
 	
 function _hx_add($a, $b) {
 	if (!_hx_is_numeric($a) || !_hx_is_numeric($b)) {
@@ -21,7 +20,8 @@ function _hx_add($a, $b) {
 		
 function _hx_anonymous($arr = array()) {
 	$o = new _hx_anonymous();
-	foreach($arr as $k => $v)
+	reset($arr);
+	while(list($k, $v) = each($arr))
 		$o->$k = $v;
 	return $o;
 }
@@ -61,7 +61,7 @@ class _hx_array implements ArrayAccess, IteratorAggregate {
 	}
 
 	function join($sep) {
-		return implode($sep, $this->»a);
+		return implode($this->»a, $sep);
 	}
 
 	function pop() {
@@ -124,7 +124,7 @@ class _hx_array implements ArrayAccess, IteratorAggregate {
 	}
 
 	function toString() {
-		return '['.implode(', ', $this->»a).']';
+		return '['.implode($this->»a, ', ').']';
 	}
 
 	function __toString() {
@@ -198,9 +198,6 @@ class _hx_array_iterator implements Iterator {
 }
 
 function _hx_array_get($a, $pos) { return $a[$pos]; }
-
-function _hx_array_increment($a, $pos) { return $a[$pos] += 1; }
-function _hx_array_decrement($a, $pos) { return $a[$pos] -= 1; }
 
 function _hx_array_assign($a, $i, $v) { return $a[$i] = $v; }
 
@@ -285,8 +282,8 @@ function _hx_explode2($s, $delimiter) {
 function _hx_field($o, $field) {
 	if(_hx_has_field($o, $field)) {
 		if($o instanceof _hx_type) {
-			if(is_callable($c = array($o->__tname__, $field)) && !property_exists($o->__tname__, $field)) {
-				return $c;
+			if(is_callable(array($o->__tname__, $field))) {
+				return array($o->__tname__, $field);
 			} else {
 				$name = $o->__tname__;
 				return eval('return '.$name.'::$'.$field.';');
@@ -569,18 +566,8 @@ function _hx_string_rec($o, $s) {
 		if(is_callable($o)) return '«function»';
 		$str = '[';
 		$s .= "	";
-		$first = true;
-		$assoc = true;
-		foreach($o as $k => $v)
-		{
-			if ($first && $k === 0)
-				$assoc = false;
-			$str .= ($first ? '' : ', ') . ($assoc 
-				? _hx_string_rec($k, $s) . '=>' . _hx_string_rec($o[$k], $s)
-				: _hx_string_rec($o[$k], $s)
-			);
-			$first = false;
-		}
+		for($i = 0; $i < count($o); $i++)
+			$str .= ($i > 0 ? ', ' : '') . _hx_string_rec($o[$i], $s);
 		$str .= ']';
 		return $str;
 	}
@@ -788,20 +775,14 @@ _hx_register_type(new _hx_enum('Void',     'Void'));
 $_hx_libdir = dirname(__FILE__) . '/..';
 $_hx_autload_cache_file = $_hx_libdir . '/../cache/haxe_autoload.php';
 if(!file_exists($_hx_autload_cache_file)) {
-	function _hx_build_paths($d, &$_hx_types_array, $pack, $prefix) {
+	function _hx_build_paths($d, &$_hx_types_array, $pack) {
 		$h = opendir($d);
 		while(false !== ($f = readdir($h))) {
 			$p = $d.'/'.$f;
 			if($f == '.' || $f == '..')
 				continue;
-				if (is_file($p) && substr($f, -4) == '.php') {
+			if(is_file($p) && substr($f, -4) == '.php') {
 				$bn = basename($f, '.php');
-				if ($prefix)
-				{
-					if ($prefix != substr($bn, 0, $lenprefix = strlen($prefix)))
-						continue;
-					$bn = substr($bn, $lenprefix);
-				}
 				if(substr($bn, -6) == '.class') {
 					$bn = substr($bn, 0, -6);
 					$t = 0;
@@ -819,13 +800,13 @@ if(!file_exists($_hx_autload_cache_file)) {
 				$qname = ($bn == 'HList' && empty($pack)) ? 'List' : join(array_merge($pack, array($bn)), '.');
 				$_hx_types_array[] = array(
 					'path' => $p,
-					'name' => $prefix . $bn,
+					'name' => $bn,
 					'type' => $t,
 					'qname' => $qname,
-					'phpname' => join(array_merge($pack, array($prefix . $bn)), '_')
+					'phpname' => join(array_merge($pack, array($bn)), '_')
 				);
 			} else if(is_dir($p))
-				_hx_build_paths($p, $_hx_types_array, array_merge($pack, array($f)), $prefix);
+				_hx_build_paths($p, $_hx_types_array, array_merge($pack, array($f)));
 		}
 		closedir($h);
 	}
@@ -835,7 +816,7 @@ if(!file_exists($_hx_autload_cache_file)) {
 ';
 	$_hx_types_array = array();
 
-	_hx_build_paths($_hx_libdir, $_hx_types_array, array(), $_hx_class_prefix);
+	_hx_build_paths($_hx_libdir, $_hx_types_array, array());
 
 	for($i=0;$i<count($_hx_types_array);$i++) {
 		$_hx_cache_content .= '_hx_register_type(new ';

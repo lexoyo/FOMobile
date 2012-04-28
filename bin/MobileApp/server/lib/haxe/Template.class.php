@@ -15,7 +15,7 @@ class haxe_Template {
 	public $stack;
 	public $buf;
 	public function execute($context, $macros) {
-		$this->macros = (($macros === null) ? _hx_anonymous(array()) : $macros);
+		$this->macros = haxe_Template_0($this, $context, $macros);
 		$this->context = $context;
 		$this->stack = new HList();
 		$this->buf = new StringBuf();
@@ -187,25 +187,25 @@ class haxe_Template {
 				throw new HException("Unexpected '" . $s . "' in " . $expr);
 			} else throw $»e;;
 		}
-		return array(new _hx_lambda(array(&$data, &$e, &$expr, &$l, &$s), "haxe_Template_0"), 'execute');
+		return array(new _hx_lambda(array(&$data, &$e, &$expr, &$l, &$s), "haxe_Template_1"), 'execute');
 	}
 	public function makeConst($v) {
 		haxe_Template::$expr_trim->match($v);
 		$v = haxe_Template::$expr_trim->matched(1);
 		if(_hx_char_code_at($v, 0) === 34) {
 			$str = _hx_substr($v, 1, strlen($v) - 2);
-			return array(new _hx_lambda(array(&$str, &$v), "haxe_Template_1"), 'execute');
+			return array(new _hx_lambda(array(&$str, &$v), "haxe_Template_2"), 'execute');
 		}
 		if(haxe_Template::$expr_int->match($v)) {
 			$i = Std::parseInt($v);
-			return array(new _hx_lambda(array(&$i, &$v), "haxe_Template_2"), 'execute');
+			return array(new _hx_lambda(array(&$i, &$v), "haxe_Template_3"), 'execute');
 		}
 		if(haxe_Template::$expr_float->match($v)) {
 			$f = Std::parseFloat($v);
-			return array(new _hx_lambda(array(&$f, &$v), "haxe_Template_3"), 'execute');
+			return array(new _hx_lambda(array(&$f, &$v), "haxe_Template_4"), 'execute');
 		}
 		$me = $this;
-		return array(new _hx_lambda(array(&$me, &$v), "haxe_Template_4"), 'execute');
+		return array(new _hx_lambda(array(&$me, &$v), "haxe_Template_5"), 'execute');
 	}
 	public function makePath($e, $l) {
 		$p = $l->first();
@@ -220,7 +220,7 @@ class haxe_Template {
 		$f = $field->p;
 		haxe_Template::$expr_trim->match($f);
 		$f = haxe_Template::$expr_trim->matched(1);
-		return $this->makePath(array(new _hx_lambda(array(&$e, &$f, &$field, &$l, &$p), "haxe_Template_5"), 'execute'), $l);
+		return $this->makePath(array(new _hx_lambda(array(&$e, &$f, &$field, &$l, &$p), "haxe_Template_6"), 'execute'), $l);
 	}
 	public function makeExpr($l) {
 		return $this->makePath($this->makeExpr2($l), $l);
@@ -248,47 +248,31 @@ class haxe_Template {
 			if($p2 === null || $p2->p !== ")") {
 				throw new HException($p2->p);
 			}
-			return haxe_Template_6($this, $e1, $e2, $l, $p, $p1, $p2);
+			return haxe_Template_7($this, $e1, $e2, $l, $p, $p1, $p2);
 		}break;
 		case "!":{
 			$e = $this->makeExpr($l);
-			return array(new _hx_lambda(array(&$e, &$l, &$p), "haxe_Template_7"), 'execute');
+			return array(new _hx_lambda(array(&$e, &$l, &$p), "haxe_Template_8"), 'execute');
 		}break;
 		case "-":{
 			$e = $this->makeExpr($l);
-			return array(new _hx_lambda(array(&$e, &$l, &$p), "haxe_Template_8"), 'execute');
+			return array(new _hx_lambda(array(&$e, &$l, &$p), "haxe_Template_9"), 'execute');
 		}break;
 		}
 		throw new HException($p->p);
 	}
 	public function run($e) {
-		$»t = ($e);
+		$»t = $e;
 		switch($»t->index) {
 		case 0:
 		$v = $»t->params[0];
 		{
-			$x = Std::string($this->resolve($v));
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
+			$this->buf->b .= Std::string($this->resolve($v));
 		}break;
 		case 1:
 		$e1 = $»t->params[0];
 		{
-			$x = Std::string(call_user_func($e1));
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
+			$this->buf->b .= Std::string(call_user_func($e1));
 		}break;
 		case 2:
 		$eelse = $»t->params[2]; $eif = $»t->params[1]; $e1 = $»t->params[0];
@@ -305,15 +289,7 @@ class haxe_Template {
 		case 3:
 		$str = $»t->params[0];
 		{
-			$x = $str;
-			if(is_null($x)) {
-				$x = "null";
-			} else {
-				if(is_bool($x)) {
-					$x = (($x) ? "true" : "false");
-				}
-			}
-			$this->buf->b .= $x;
+			$this->buf->b .= $str;
 		}break;
 		case 4:
 		$l = $»t->params[0];
@@ -365,7 +341,7 @@ class haxe_Template {
 			$»it = $params->iterator();
 			while($»it->hasNext()) {
 				$p = $»it->next();
-				$»t2 = ($p);
+				$»t2 = $p;
 				switch($»t2->index) {
 				case 0:
 				$v1 = $»t2->params[0];
@@ -381,20 +357,12 @@ class haxe_Template {
 			}
 			$this->buf = $old;
 			try {
-				$x = Std::string(Reflect::callMethod($this->macros, $v, $pl));
-				if(is_null($x)) {
-					$x = "null";
-				} else {
-					if(is_bool($x)) {
-						$x = (($x) ? "true" : "false");
-					}
-				}
-				$this->buf->b .= $x;
+				$this->buf->b .= Std::string(Reflect::callMethod($this->macros, $v, $pl));
 			}catch(Exception $»e) {
 				$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 				$e1 = $_ex_;
 				{
-					$plstr = haxe_Template_9($this, $e, $e1, $m, $old, $params, $pl, $v);
+					$plstr = haxe_Template_10($this, $e, $e1, $m, $old, $params, $pl, $v);
 					$msg = "Macro call " . $m . "(" . $plstr . ") failed (" . Std::string($e1) . ")";
 					throw new HException($msg);
 				}
@@ -427,7 +395,14 @@ haxe_Template::$expr_trim = new EReg("^[ ]*([^ ]+)[ ]*\$", "");
 haxe_Template::$expr_int = new EReg("^[0-9]+\$", "");
 haxe_Template::$expr_float = new EReg("^([+-]?)(?=\\d|,\\d)\\d*(,\\d*)?([Ee]([+-]?\\d+))?\$", "");
 haxe_Template::$globals = _hx_anonymous(array());
-function haxe_Template_0(&$data, &$e, &$expr, &$l, &$s) {
+function haxe_Template_0(&$»this, &$context, &$macros) {
+	if($macros === null) {
+		return _hx_anonymous(array());
+	} else {
+		return $macros;
+	}
+}
+function haxe_Template_1(&$data, &$e, &$expr, &$l, &$s) {
 	{
 		try {
 			return call_user_func($e);
@@ -440,86 +415,86 @@ function haxe_Template_0(&$data, &$e, &$expr, &$l, &$s) {
 		}
 	}
 }
-function haxe_Template_1(&$str, &$v) {
+function haxe_Template_2(&$str, &$v) {
 	{
 		return $str;
 	}
 }
-function haxe_Template_2(&$i, &$v) {
+function haxe_Template_3(&$i, &$v) {
 	{
 		return $i;
 	}
 }
-function haxe_Template_3(&$f, &$v) {
+function haxe_Template_4(&$f, &$v) {
 	{
 		return $f;
 	}
 }
-function haxe_Template_4(&$me, &$v) {
+function haxe_Template_5(&$me, &$v) {
 	{
 		return $me->resolve($v);
 	}
 }
-function haxe_Template_5(&$e, &$f, &$field, &$l, &$p) {
+function haxe_Template_6(&$e, &$f, &$field, &$l, &$p) {
 	{
 		return Reflect::field(call_user_func($e), $f);
 	}
 }
-function haxe_Template_6(&$»this, &$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_7(&$»this, &$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	switch($p1->p) {
 	case "+":{
-		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_10"), 'execute');
-	}break;
-	case "-":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_11"), 'execute');
 	}break;
-	case "*":{
+	case "-":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_12"), 'execute');
 	}break;
-	case "/":{
+	case "*":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_13"), 'execute');
 	}break;
-	case ">":{
+	case "/":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_14"), 'execute');
 	}break;
-	case "<":{
+	case ">":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_15"), 'execute');
 	}break;
-	case ">=":{
+	case "<":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_16"), 'execute');
 	}break;
-	case "<=":{
+	case ">=":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_17"), 'execute');
 	}break;
-	case "==":{
+	case "<=":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_18"), 'execute');
 	}break;
-	case "!=":{
+	case "==":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_19"), 'execute');
 	}break;
-	case "&&":{
+	case "!=":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_20"), 'execute');
 	}break;
-	case "||":{
+	case "&&":{
 		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_21"), 'execute');
+	}break;
+	case "||":{
+		return array(new _hx_lambda(array(&$e1, &$e2, &$l, &$p, &$p1, &$p2), "haxe_Template_22"), 'execute');
 	}break;
 	default:{
 		throw new HException("Unknown operation " . $p1->p);
 	}break;
 	}
 }
-function haxe_Template_7(&$e, &$l, &$p) {
+function haxe_Template_8(&$e, &$l, &$p) {
 	{
 		$v = call_user_func($e);
 		return $v === null || _hx_equal($v, false);
 	}
 }
-function haxe_Template_8(&$e, &$l, &$p) {
+function haxe_Template_9(&$e, &$l, &$p) {
 	{
 		return -call_user_func($e);
 	}
 }
-function haxe_Template_9(&$»this, &$e, &$e1, &$m, &$old, &$params, &$pl, &$v) {
+function haxe_Template_10(&$»this, &$e, &$e1, &$m, &$old, &$params, &$pl, &$v) {
 	try {
 		return $pl->join(",");
 	}catch(Exception $»e) {
@@ -530,62 +505,62 @@ function haxe_Template_9(&$»this, &$e, &$e1, &$m, &$old, &$params, &$pl, &$v) {
 		}
 	}
 }
-function haxe_Template_10(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_11(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return _hx_add(call_user_func($e1), call_user_func($e2));
 	}
 }
-function haxe_Template_11(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_12(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) - call_user_func($e2);
 	}
 }
-function haxe_Template_12(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_13(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) * call_user_func($e2);
 	}
 }
-function haxe_Template_13(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_14(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) / call_user_func($e2);
 	}
 }
-function haxe_Template_14(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_15(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) > call_user_func($e2);
 	}
 }
-function haxe_Template_15(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_16(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) < call_user_func($e2);
 	}
 }
-function haxe_Template_16(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_17(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) >= call_user_func($e2);
 	}
 }
-function haxe_Template_17(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_18(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) <= call_user_func($e2);
 	}
 }
-function haxe_Template_18(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_19(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return _hx_equal(call_user_func($e1), call_user_func($e2));
 	}
 }
-function haxe_Template_19(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_20(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return !_hx_equal(call_user_func($e1), call_user_func($e2));
 	}
 }
-function haxe_Template_20(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_21(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) && call_user_func($e2);
 	}
 }
-function haxe_Template_21(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
+function haxe_Template_22(&$e1, &$e2, &$l, &$p, &$p1, &$p2) {
 	{
 		return call_user_func($e1) || call_user_func($e2);
 	}

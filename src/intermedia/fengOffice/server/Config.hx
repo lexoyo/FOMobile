@@ -31,7 +31,7 @@ class Config {
 	public var DB_HOST:String;
 	/**
 	 * DB config created by FO during install, comes from config/config.php
-	 */
+	 */ 
 	public var DB_USER:String;
 	/**
 	 * DB config created by FO during install, comes from config/config.php
@@ -51,8 +51,8 @@ class Config {
 	 */
 	private function new(){
 		FO_ROOT_PATH = "../..";
-		PLUGIN_NAME  = "Mobile App";
-		PLUGIN_FOLDER_NAME  = "MobileApp";
+		PLUGIN_NAME  = "mobile_app";
+		PLUGIN_FOLDER_NAME  = "mobile_app";
 		PLUGIN_ROOT_PATH = FO_ROOT_PATH + "/plugins/"+PLUGIN_NAME;
 
 		untyped __call__ ("include_once", FO_ROOT_PATH+"/config/config.php");

@@ -34,6 +34,7 @@
 
 
 
+
 --next
 
 -php bin/MobileApp/server/
@@ -41,11 +42,12 @@
 -cp src
 -resource intermedia/fengOffice/server/templates/not-activated.html@not-activated
 -resource intermedia/fengOffice/server/templates/activated.html@activated
--cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/MobileApp/
 -resource intermedia/fengOffice/server/templates/embed_file_video.html@embed_file_video
+-cmd cp -R bin/MobileApp/* /home/lexa/Documents/repositories/fengoffice/plugins/mobile_app/
+
+#-cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/mobile_app/
 
 
-#-cmd cp -R bin/MobileApp/* /home/lexa/Documents/repositories/fengoffice/plugins/MobileApp/
 
 
 

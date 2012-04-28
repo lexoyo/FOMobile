@@ -32,10 +32,34 @@ class Application {
 	 */
 	public function new(){
 		api = new Api();
-		goAuthPage();
+		
+/*		if (js.Cookie.exists("PHPSESSID")){
+			Lib.alert("PHPSESSID = "+js.Cookie.get("PHPSESSID"));
+			Lib.alert("PHPSESSID = "+js.Cookie.get("http___localhost_8888_repositories_tests_fengoffice2token"));
+		}
+*/		
+		// **
+		// check if the user is allready authenticated in FO
+		
+		// check the cookie of FO  
+		var str = StringTools.replace(Lib.window.location.href, "/","_");
+		str = StringTools.replace(str, ":","_");
+		str = str.substr(0, str.indexOf("_plugins_"+Config.PLUGIN_NAME));
+		var autoAuth:Bool = js.Cookie.exists(str+"id");
+
+		// check the "autoAuth" param (used in the redirection of the mobile_app FO plugin)
+		autoAuth = autoAuth || (Lib.window.location.href.indexOf("autoAuth") > 0);		
+		if (autoAuth){
+			trace("Allready authenticated in FO, try to enter");
+			doOnSubmit("", "");
+		}
+		else{
+			goAuthPage();
+		}
 	}
 	private function goAuthPage(errorMsg:String=""){
-		DeeplinkManager.getInstance().setDeeplink("auth", function (deeplink:String) { goAuthPage(errorMsg); } );
+		var t = this;
+		DeeplinkManager.getInstance().setDeeplink("auth", function (deeplink:String) { t.goAuthPage(errorMsg); } );
 		// get the template
 		var str = haxe.Resource.getString("login");
 		var t = new haxe.Template(str);
@@ -48,6 +72,9 @@ class Application {
 	private function onSubmit(event:Event){
 		var userName = cast(Lib.document.getElementById("userName")).value;
 		var userPass = cast(Lib.document.getElementById("userPass")).value;
+		doOnSubmit(userName, userPass);
+	}
+	private function doOnSubmit(userName:String, userPass:String){
 		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		widget.setState(loading);
 		api.authenticate(userName, userPass, onAuth);
@@ -67,7 +94,8 @@ class Application {
 	 * callback from the view
 	 */
 	private function goHome(e:Event = null){
-		DeeplinkManager.getInstance().setDeeplink("home", function (deeplink:String) { goHome(e); } );
+		var t = this;
+		DeeplinkManager.getInstance().setDeeplink("home", function (deeplink:String) { t.goHome(e); } );
 		
 		widget.startTransition();
 		
@@ -75,7 +103,8 @@ class Application {
 		homeScreen.onChange = goList;
 	}
 	private function goList(srv:ServiceType){
-		DeeplinkManager.getInstance().setDeeplink("list", function (deeplink:String) { goListNoDeeplink(srv); });
+		var t = this;
+		DeeplinkManager.getInstance().setDeeplink("list", function (deeplink:String) { t.goListNoDeeplink(srv); });
 		trace("List selected "+srv);
 		goListNoDeeplink(srv);
 	}
@@ -97,7 +126,8 @@ class Application {
 		list.onSelect = _onSelectItem;
 	}
 	private function goDetail(srv:ServiceType, item:Dynamic){
-		DeeplinkManager.getInstance().setDeeplink("detail", function (deeplink:String) { goDetail(srv, item); } );
+		var t = this;
+		DeeplinkManager.getInstance().setDeeplink("detail", function (deeplink:String) { t.goDetail(srv, item); } );
 		trace("Show detail of "+item);
 		AppState.getInstance().curServiceType = srv;
 		AppState.getInstance().curItem = item;

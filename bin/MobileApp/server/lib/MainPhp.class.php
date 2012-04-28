@@ -14,7 +14,7 @@ class MainPhp {
 				$db->close();
 				$str = haxe_Resource::getString("not-activated");
 				$t = new haxe_Template($str);
-				$output = $t->execute(_hx_anonymous(array("config" => _hx_qtype("intermedia.fengOffice.server.Config"), "error" => $e)), null);
+				$output = $t->execute(_hx_anonymous(array("config" => intermedia_fengOffice_server_Config::getInstance(), "error" => $e)), null);
 				php_Lib::hprint($output);
 				return;
 			}
@@ -31,7 +31,7 @@ class MainPhp {
 			$e2 = $_ex_;
 			{
 				$db->close();
-				haxe_Log::trace("error: " . $e2, _hx_anonymous(array("fileName" => "MainPhp.hx", "lineNumber" => 91, "className" => "MainPhp", "methodName" => "new")));
+				haxe_Log::trace("error: " . $e2, _hx_anonymous(array("fileName" => "MainPhp.hx", "lineNumber" => 112, "className" => "MainPhp", "methodName" => "new")));
 			}
 		}
 		$db->close();

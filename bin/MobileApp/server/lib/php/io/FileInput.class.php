@@ -11,7 +11,7 @@ class php_io_FileInput extends haxe_io_Input {
 			php_io_FileInput_0($this);
 		}
 		$r = fread($this->__f, 1);
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileInput_1($this, $r);
 		}
 		return ord($r);
@@ -21,7 +21,7 @@ class php_io_FileInput extends haxe_io_Input {
 			php_io_FileInput_2($this, $l, $p, $s);
 		}
 		$r = fread($this->__f, $l);
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileInput_3($this, $l, $p, $r, $s);
 		}
 		$b = haxe_io_Bytes::ofString($r);
@@ -36,7 +36,7 @@ class php_io_FileInput extends haxe_io_Input {
 	}
 	public function seek($p, $pos) {
 		$w = null;
-		$»t = ($pos);
+		$»t = $pos;
 		switch($»t->index) {
 		case 0:
 		{
@@ -52,20 +52,20 @@ class php_io_FileInput extends haxe_io_Input {
 		}break;
 		}
 		$r = fseek($this->__f, $p, $w);
-		if(($r === false)) {
+		if($r === false) {
 			throw new HException(haxe_io_Error::Custom("An error occurred"));
 		}
 	}
 	public function tell() {
 		$r = ftell($this->__f);
-		if(($r === false)) {
+		if($r === false) {
 			php_io_FileInput_4($this, $r);
 		}
 		return $r;
 	}
 	public function readLine() {
 		$r = fgets($this->__f);
-		if((false === $r)) {
+		if(false === $r) {
 			throw new HException(new haxe_io_Eof());
 		}
 		return rtrim($r, "\x0D\x0A");

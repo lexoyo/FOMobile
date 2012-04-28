@@ -15,7 +15,7 @@ class intermedia_fengOffice_cross_UserTools {
 				$prop = $_g1[$_g];
 				++$_g;
 				$propValue = Reflect::field($obj, $prop);
-				$퍁 = (Type::typeof($propValue));
+				$퍁 = Type::typeof($propValue);
 				switch($퍁->index) {
 				case 6:
 				$c = $퍁->params[0];

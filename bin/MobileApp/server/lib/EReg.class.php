@@ -63,7 +63,7 @@ class EReg {
 		$by = str_replace("\\\$", "\\\\\$", $by);
 		$by = str_replace("\$\$", "\\\$", $by);
 		if(!preg_match('/\\([^?].+?\\)/', $this->re)) $by = preg_replace('/\$(\d+)/', '\\\$\1', $by);
-		return preg_replace($this->re, $by, $s, (($this->hglobal) ? -1 : 1));
+		return preg_replace($this->re, $by, $s, EReg_0($this, $by, $s));
 	}
 	public function customReplace($s, $f) {
 		$buf = "";
@@ -89,4 +89,11 @@ class EReg {
 			throw new HException('Unable to call «'.$m.'»');
 	}
 	function __toString() { return 'EReg'; }
+}
+function EReg_0(&$»this, &$by, &$s) {
+	if($»this->hglobal) {
+		return -1;
+	} else {
+		return 1;
+	}
 }
