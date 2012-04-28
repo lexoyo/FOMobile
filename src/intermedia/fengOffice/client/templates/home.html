@@ -1,13 +1,20 @@
   <div id="homeScreen::id::" style="padding: 10px; ">
 <!-- home screen = current selection (workspace, tags, filter) + tabs (docs, emails, contact...)  -->
-	<ul style="margin: 20; padding: 0; list-style-type: none; display: block; ">
-		<li id="workspaceBtn::id::" style="margin : 0px; margin: 0; padding: 0; ">
+	<ul style="margin: 20; padding: 0; list-style-type: none; display: block; height:50px;">
+		<li id="workspaceBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:left; ">
 			<img src="./assets/navigation/logo_big.png" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
 			<div style="display: inline-block; vertical-align: top; " >
 				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_WORKSPACE_LABEL::</small><br />
 				<strong style="margin: 0; padding: 0; ">::appState.curWorkspace.name::</strong>
 				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.CHANGE_WORKSPACE_LABEL::</small>
 			</div>
+		</li>
+		<li id="workspaceBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:right;">
+			<div style="display: inline-block; vertical-align: top; " >
+				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_USER_LABEL::</small><br />
+				<strong style="margin: 0; padding: 0; ">::appState.curUser.username::</strong>
+			</div>
+			<img src="::if appState.curUser.picture_file::::Config.FO_URL::::appState.curUser.picture_file::::else::./assets/navigation/logo_big.png::end::" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
 		</li>
 	</ul>
 	<ul style="margin: 0; padding: 0; list-style-type: none; background-color: transparent; ">

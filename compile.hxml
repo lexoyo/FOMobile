@@ -1,4 +1,4 @@
--js bin/MobileApp/App.js
+-js bin/mobile_app/App.js
 -main MainJs
 -cp src
 -resource intermedia/fengOffice/client/templates/widget.html@widget
@@ -37,15 +37,15 @@
 
 --next
 
--php bin/MobileApp/server/
+-php bin/mobile_app/server/
 -main MainPhp
 -cp src
 -resource intermedia/fengOffice/server/templates/not-activated.html@not-activated
 -resource intermedia/fengOffice/server/templates/activated.html@activated
 -resource intermedia/fengOffice/server/templates/embed_file_video.html@embed_file_video
--cmd cp -R bin/MobileApp/* /home/lexa/Documents/repositories/fengoffice/plugins/mobile_app/
+-cmd cp -R bin/mobile_app/* /home/lexa/Documents/repositories/fengoffice/plugins/mobile_app/
 
-#-cmd cp -R bin/MobileApp/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/mobile_app/
+#-cmd cp -R bin/mobile_app/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/mobile_app/
 
 
 

@@ -31,7 +31,7 @@ class intermedia_fengOffice_server_Api {
 					$token = $user->token;
 					$user = intermedia_fengOffice_cross_UserTools::fromDynamic($user);
 					$user->token = $token;
-					return $user;
+					return $this->_getContactDetails($user);
 				}
 			}
 		}
@@ -48,7 +48,7 @@ class intermedia_fengOffice_server_Api {
 		if(sha1($user->salt . $userPass) !== $token) {
 			return intermedia_fengOffice_cross_UserTools::fromError("Wrong user name or password");
 		}
-		$user = intermedia_fengOffice_cross_UserTools::fromDynamic($user);
+		$user = intermedia_fengOffice_cross_UserTools::fromDynamic($this->_getContactDetails($user));
 		$user->token = $token;
 		return $user;
 	}
@@ -56,22 +56,22 @@ class intermedia_fengOffice_server_Api {
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->created_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->created_by = $res->next();
+			$obj->created_by = $this->_getContactDetails($res->next());
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->updated_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->updated_by = $res->next();
+			$obj->updated_by = $this->_getContactDetails($res->next());
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->trashed_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->trashed_by = $res->next();
+			$obj->trashed_by = $this->_getContactDetails($res->next());
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->archived_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->archived_by = $res->next();
+			$obj->archived_by = $this->_getContactDetails($res->next());
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
 		$res = $this->_db->request($sql);
@@ -86,6 +86,11 @@ class intermedia_fengOffice_server_Api {
 		} else {
 			$obj->numChildren = 0;
 		}
+		return $obj;
+	}
+	public function _getContactDetails($obj) {
+		$obj->picture_file = intermedia_fengOffice_cross_Utils::getFilePath($obj->picture_file);
+		$obj->avatar_file = intermedia_fengOffice_cross_Utils::getFilePath($obj->avatar_file);
 		return $obj;
 	}
 	public function getObject($oid, $user, $token) {
@@ -119,7 +124,7 @@ class intermedia_fengOffice_server_Api {
 		$res1 = $this->_db->request($sql1);
 		if($res1 !== null && $res1->getLength() > 0) {
 			$objTmp = $res1->next();
-			$path = "/upload/" . _hx_string_call($objTmp->repository_id, "substr", array(0, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(3, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(6, 3)) . "/" . _hx_string_call($objTmp->repository_id, "substr", array(9));
+			$path = intermedia_fengOffice_cross_Utils::getFilePath($objTmp->repository_id);
 			if(_hx_equal($objTmp->type_string, "text/html")) {
 				$content = php_io_File::getContent(intermedia_fengOffice_server_Config::getInstance()->FO_ROOT_PATH . $path);
 				$obj->properties->htmlContent = $content;

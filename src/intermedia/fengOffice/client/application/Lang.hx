@@ -23,15 +23,16 @@ class Lang {
 	////////////////////////////////
 	// login page
 	////////////////////////////////
-	public static var LOGIN_BTN:String = "Login";
+	public static var LOGIN_BTN:String = "Login"; 
 	public static var PASS_LABEL:String = "Password:";
 	public static var USERNAME_LABEL:String = "Email or username:";
 	////////////////////////////////
 	// home page
 	////////////////////////////////
 	public static var CURRENT_WORKSPACE_LABEL:String = "Current workspace";
-	public static var CHANGE_WORKSPACE_LABEL:String = "change";
-	public static var FILES_LABEL:String = "Files";
+	public static var CURRENT_USER_LABEL:String = "Current user";
+	public static var CHANGE_WORKSPACE_LABEL:String = "change"; 
+	public static var FILES_LABEL:String = "Files"; 
 	public static var TASKS_LABEL:String = "Tasks";
 	public static var NOTES_LABEL:String = "Notes";
 	public static var EMAILS_LABEL:String = "Emails";

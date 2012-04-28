@@ -49,4 +49,5 @@ Todo after?
 - admin?
 - Mettre vue detail sous info?? Ou btn voir qui charge le contenu ds la mme page
 - Utiliser menu raph pr nav entre type d objet
-
+- logo de la boite plutot que feng (dynamic)
+- dashboard?

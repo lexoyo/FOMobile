@@ -1,6 +1,7 @@
 package intermedia.fengOffice.server; 
 
 import intermedia.fengOffice.cross.Data;
+import intermedia.fengOffice.cross.Utils;
 import php.db.ResultSet;
 import php.Lib;
 import php.io.File;
@@ -51,41 +52,6 @@ class Api {
 		// case of a returning user, with token in the session cookie
 		if (userName == "" && userPass == ""){
 		
-/*
-		php.Session.setId(php.Web.getCookies().get("PHPSESSID"));
-		trace("-- "+php.Session.getCookieParams());
-		php.Session.start();
-		trace("-- "+php.Session.get("http___localhost_8888_repositories_tests_fengoffice2token"));
-		trace("-- "+php.Web.getCookies().get("PHPSESSID"));
-*/		
-		
-//		trace("<br /><br /><br />"+php.Web.getCookies());
-//		trace("<br /><br /><br />"+php.Web.getClientHeaders());
-//		trace("<br /><br /><br />xxxx "+untyped __php__("print_r($_SERVER, true)"));
-
-			// retrieve the token from the session
-/*			var str = StringTools.replace(Config.getInstance().ROOT_URL, "/","_");
-			str = StringTools.replace(str, ":","_");
-			var token = php.Web.getCookies().get(str + "token");
-			var id = php.Web.getCookies().get(str + "id");
-			
-			// get the user correponding to the token
-			//trace(str + " => "+php.Web.getCookies().get(str + "token"));
-	        //object_id,first_name,surname,is_company,company_id,brand_colors,department,job_title,birthday,timezone,user_type,is_active_user,token,display_name,username,picture_file,avatar_file,comments,last_login,last_visit,last_activity,disabled,default_billing_id 
-	        var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` 
-		    		WHERE `object_id`='"+id+"'";
-			trace("-------------------<br/>"+sql+"<br/>-------------------<br/>");
-			var res = _db.request( sql );
-	        if(res != null && res.length > 0) { 
-				var user:Dynamic = res.results().first();
-
-				trace(user.token + " --- "+token + " --- "+untyped __call__("sha1", "U1FWBgNWUQ5SUBYGFUI="));
-				return null;
-				// safe fields only
-				user = UserTools.fromDynamic(user);
-				// force the token since we really want to send it 
-				user.token = token;
-*/
 			php.Session.start();
 			if (php.Session.exists("mobile_app_user_id")){
 
@@ -108,7 +74,7 @@ class Api {
 					user.token = token;
 
 					//trace("YES "+user);
-			        return user;
+			        return _getContactDetails(user);
 				}
 				
 	        }
@@ -139,7 +105,7 @@ class Api {
 			return UserTools.fromError("Wrong user name or password");
 
 		// safe fields only
-		user = UserTools.fromDynamic(user);
+		user = UserTools.fromDynamic(_getContactDetails(user));
 		
 		// force the token since we really want to send it 
 		user.token = token;
@@ -155,22 +121,22 @@ class Api {
 		var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.created_by_id; 
 		var res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.created_by = res.next();
+			obj.created_by = _getContactDetails(res.next());
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.updated_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.updated_by = res.next();
+			obj.updated_by = _getContactDetails(res.next());
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.trashed_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.trashed_by = res.next();
+			obj.trashed_by = _getContactDetails(res.next());
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.archived_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.archived_by = res.next();
+			obj.archived_by = _getContactDetails(res.next());
 			
 		//////////////////////////////
 		// find the object detail table
@@ -199,6 +165,17 @@ class Api {
 
 		return obj;
 	}
+	/**
+	 * add details to the contact
+	 */
+	private function _getContactDetails(obj:User):User{
+		// TODO: user_type comments
+		// resolve files paths
+		obj.picture_file = Utils.getFilePath(obj.picture_file);
+		obj.avatar_file = Utils.getFilePath(obj.avatar_file); 
+		return obj;		
+	}
+	
 	/** 
 	 * Retrieves all object information
 	 * mimic the name of the service in v1 api, http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_api_documentation
@@ -256,11 +233,7 @@ class Api {
 			var objTmp:Dynamic = res.next();
 			// trace("<br />----- retrieve content of a file <br />"+sql+"<br />--"+objTmp+"---<br />");
 			// build the file path depending on the id (which equals project_file_revisions.repository_id)
-			var path:String = "/upload/" 
-				+ objTmp.repository_id.substr(0, 3) + "/" 
-				+ objTmp.repository_id.substr(3, 3) + "/"
-				+ objTmp.repository_id.substr(6, 3) + "/" 
-				+ objTmp.repository_id.substr(9);
+			var path:String = Utils.getFilePath(objTmp.repository_id);
 			// trace("file path: "+path+"<br />");
 			// case of a text file
 			if (objTmp.type_string == "text/html"){
