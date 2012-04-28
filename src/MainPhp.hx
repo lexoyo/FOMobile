@@ -81,18 +81,19 @@ class MainPhp {
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
 		var token = api.authenticate("a", "a").token;
-		trace("Members: "+api.listMembers(ServiceTypes.PROJECT_FILES, 4, "a", token)+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.PROJECT_FILES, 4, "a", token)){
+		//trace("Members: "+api.listMembers(ServiceTypes.PROJECT_TASKS, 6, "a", token)+"<br /><br /><br /><br />");
+		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 6, "a", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
-			trace(workspace.name+ "<br />");
+//			trace(obj.name+", "+obj.id+", "+obj.numChildren+ "<br />");
+			trace(obj.name+", "+obj.id+", "+obj+ "<br /><br /><br />");
 		}
 		trace("<br />");
 /*		trace("************************<br />");
 		trace("Objects<br />");
 		trace("************************<br />");
 		var token = api.authenticate("a", "a").token;
-		var oid:Int =11;//api.getContextList().first().id;
-		trace("workspace with id "+oid+"<br />");
+		var oid:Int =102;//api.getContextList().first().id;
+		trace("object with id "+oid+"<br />");
 		trace("name = "+api.getObject(oid, "a", token).name+"<br />");
 		trace(api.getObject(oid, "a", token)+"<br />");
 /**/		// create an incoming connection and give access to the "instance" object 

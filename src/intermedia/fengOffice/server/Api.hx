@@ -234,11 +234,17 @@ class Api {
 			// trace("<br />----- retrieve content of a file <br />"+sql+"<br />--"+objTmp+"---<br />");
 			// build the file path depending on the id (which equals project_file_revisions.repository_id)
 			var path:String = Utils.getFilePath(objTmp.repository_id);
-			// trace("file path: "+path+"<br />");
+			//trace("file path: "+Config.getInstance().FO_ROOT_PATH+path+"<br />");
 			// case of a text file
 			if (objTmp.type_string == "text/html"){
 				// retrieve the content of the file
-				var content:String = File.getContent(Config.getInstance().FO_ROOT_PATH + path);
+				var content:String = "";
+				try{
+					content = File.getContent(Config.getInstance().FO_ROOT_PATH + path);
+				}
+				catch(msg:String){
+					content = "Error: failed to open stream: No such file or directory";
+				}
 				// add html content to the object
 				obj.properties.htmlContent = content; 
 				// trace("<br />----- case of a text file <br />"+obj.properties.htmlContent+"<br />-----<br />");
@@ -288,7 +294,8 @@ class Api {
 		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces)
 		var sql = "SELECT * FROM "+Config.getInstance().TABLE_PREFIX+"objects 
 							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+srv+".`object_id` 
-							FROM "+Config.getInstance().TABLE_PREFIX+srv+")"; 
+							FROM "+Config.getInstance().TABLE_PREFIX+srv+")
+							AND "+Config.getInstance().TABLE_PREFIX+"objects.`trashed_by_id`=0"; 
 		// case with a parent
 		/*	SELECT *
 			FROM test3_objects
@@ -340,11 +347,6 @@ class Api {
 
 		// Convert dates to string
 		var l=new List();
-/*
-l.add({name:"test1"});
-l.add({name:"test2"});
-return l;
-*/
 		//////////////////////////////
 		// format each item
 		var r:List<Dynamic> = res.results();
@@ -355,28 +357,4 @@ return l;
 		}
 		return l;
 	}
-	/**
-	 * Generic list for Feng Office content objects
-	 * mimic the name of the service in v1 api, http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_api_documentation
-	 * @param	srv	the object type handler, ServiceType value � required
-	 * @param	order_dir
-	 * @param	order
-	 * @param	members
-	 * @param	created_by_id
-	 * @param	assigned_to
-	 * @param	status
-	 * @return	array of objects
-	 */
-/*	public function listing(
-				srv:String, 
-				order_dir:String = "", 
-				order:String = "", 
-				members:String = "", 
-				created_by_id:String = "", 
-				assigned_to:String = "", 
-				status:String = "" ):List<Dynamic> {
-
-		return null;
-	}
-*/
 }

@@ -12,6 +12,7 @@ class Db {
     public function open() {
 		if (_connection == null){
 	        _connection = Mysql.connect(_params);
+			_connection.request("SET NAMES utf8");
 			
 	        if (_connection == null) {
 	            throw ('Could not connect to the database');

@@ -126,7 +126,15 @@ class intermedia_fengOffice_server_Api {
 			$objTmp = $res1->next();
 			$path = intermedia_fengOffice_cross_Utils::getFilePath($objTmp->repository_id);
 			if(_hx_equal($objTmp->type_string, "text/html")) {
-				$content = php_io_File::getContent(intermedia_fengOffice_server_Config::getInstance()->FO_ROOT_PATH . $path);
+				$content = "";
+				try {
+					$content = php_io_File::getContent(intermedia_fengOffice_server_Config::getInstance()->FO_ROOT_PATH . $path);
+				}catch(Exception $»e) {
+					$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
+					if(is_string($msg = $_ex_)){
+						$content = "Error: failed to open stream: No such file or directory";
+					} else throw $»e;;
+				}
 				$obj->properties->htmlContent = $content;
 			} else {
 				if(StringTools::startsWith($objTmp->type_string, "image")) {
@@ -155,7 +163,7 @@ class intermedia_fengOffice_server_Api {
 		if(!$this->_checkAuth($user, $token)) {
 			throw new HException("authentication faild");
 		}
-		$sql = "SELECT * FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ")";
+		$sql = "SELECT * FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ")\x0A\x09\x09\x09\x09\x09\x09\x09AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`trashed_by_id`=0";
 		if($parentId >= 0) {
 			$sql .= " AND (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members WHERE `member_id`  in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq1 WHERE memberRq1.`object_id`=" . $parentId . "))";
 			if($parentId === 0) {

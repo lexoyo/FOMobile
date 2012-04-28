@@ -10,6 +10,7 @@ class intermedia_fengOffice_server_Db {
 	public function open() {
 		if($this->_connection === null) {
 			$this->_connection = php_db_Mysql::connect($this->_params);
+			$this->_connection->request("SET NAMES utf8");
 			if($this->_connection === null) {
 				throw new HException("Could not connect to the database");
 			}
