@@ -52,34 +52,28 @@ class intermedia_fengOffice_server_Api {
 		$user->token = $token;
 		return $user;
 	}
-	public function _getDetails($obj) {
+	public function _getDetails($obj, $table_name) {
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->created_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->created_by = $this->_getContactDetails($res->next());
+			$obj->created_by = intermedia_fengOffice_cross_UserTools::fromDynamic($this->_getContactDetails($res->next()));
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->updated_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->updated_by = $this->_getContactDetails($res->next());
+			$obj->updated_by = intermedia_fengOffice_cross_UserTools::fromDynamic($this->_getContactDetails($res->next()));
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->trashed_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->trashed_by = $this->_getContactDetails($res->next());
+			$obj->trashed_by = intermedia_fengOffice_cross_UserTools::fromDynamic($this->_getContactDetails($res->next()));
 		}
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "contacts` WHERE `object_id`=" . $obj->archived_by_id;
 		$res = $this->_db->request($sql);
 		if($res !== null && $res->getLength() > 0) {
-			$obj->archived_by = $this->_getContactDetails($res->next());
+			$obj->archived_by = intermedia_fengOffice_cross_UserTools::fromDynamic($this->_getContactDetails($res->next()));
 		}
-		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
-		$res = $this->_db->request($sql);
-		$objTmp = $res->next();
-		$obj->type = $objTmp->type;
-		$obj->icon = $objTmp->icon;
-		$obj->table_name = $objTmp->table_name;
-		$sql = "SELECT COUNT(id) FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $obj->table_name . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $obj->table_name . ")" . " AND (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members WHERE `member_id`  in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq1 WHERE memberRq1.`object_id`=" . $obj->id . "))" . " OR " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members WHERE `parent_member_id` in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq2 WHERE memberRq2.`object_id`=" . $obj->id . ")))";
+		$sql = "SELECT COUNT(id) FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $table_name . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $table_name . ")" . " AND (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members WHERE `member_id`=" . $obj->id . ")" . " OR " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members WHERE `parent_member_id` in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq2 WHERE memberRq2.`object_id`=" . $obj->id . ")))";
 		$res1 = $this->_db->request($sql);
 		if($res1 !== null && $res1->getLength() > 0) {
 			$obj->numChildren = Reflect::field($res1->next(), "COUNT(id)");
@@ -103,29 +97,20 @@ class intermedia_fengOffice_server_Api {
 			return intermedia_fengOffice_cross_SafeObjectTools::fromError("Object not found");
 		}
 		$obj = $res->next();
-		$obj = $this->_getDetails($obj);
+		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
+		$res = $this->_db->request($sql);
+		$objTmp = $res->next();
+		$obj = $this->_getDetails($obj, $objTmp->table_name);
+		$obj->type = $objTmp->type;
+		$obj->icon = $objTmp->icon;
+		$obj->table_name = $objTmp->table_name;
 		$detailTableName = $obj->table_name;
-		$sql1 = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $detailTableName . "` WHERE `object_id`=" . $obj->id;
-		$res1 = $this->_db->request($sql1);
-		$obj->properties = _hx_anonymous(array());
-		if($res1 !== null || $res1->getLength() > 0) {
-			$objTmp = $res1->next();
-			{
-				$_g = 0; $_g1 = Reflect::fields($objTmp);
-				while($_g < $_g1->length) {
-					$prop = $_g1[$_g];
-					++$_g;
-					$obj->properties->{$prop} = Reflect::field($objTmp, $prop);
-					unset($prop);
-				}
-			}
-		}
-		$sql1 = "SELECT repository_id, type_string, filesize, revision_number FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "project_file_revisions where file_id=" . $oid . " ORDER BY revision_number DESC LIMIT 1";
-		$res1 = $this->_db->request($sql1);
-		if($res1 !== null && $res1->getLength() > 0) {
-			$objTmp = $res1->next();
-			$path = intermedia_fengOffice_cross_Utils::getFilePath($objTmp->repository_id);
-			if(_hx_equal($objTmp->type_string, "text/html")) {
+		$sql = "SELECT repository_id, type_string, filesize, revision_number FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "project_file_revisions where file_id=" . $oid . " ORDER BY revision_number DESC LIMIT 1";
+		$res = $this->_db->request($sql);
+		if($res !== null && $res->getLength() > 0) {
+			$objTmp1 = $res->next();
+			$path = intermedia_fengOffice_cross_Utils::getFilePath($objTmp1->repository_id);
+			if(_hx_equal($objTmp1->type_string, "text/html")) {
 				$content = "";
 				try {
 					$content = php_io_File::getContent(intermedia_fengOffice_server_Config::getInstance()->FO_ROOT_PATH . $path);
@@ -137,40 +122,66 @@ class intermedia_fengOffice_server_Api {
 				}
 				$obj->properties->htmlContent = $content;
 			} else {
-				if(StringTools::startsWith($objTmp->type_string, "image")) {
+				if(StringTools::startsWith($objTmp1->type_string, "image")) {
 					$obj->properties->htmlContent = "<img src='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "' />";
 				} else {
-					if(StringTools::startsWith($objTmp->type_string, "video")) {
+					if(StringTools::startsWith($objTmp1->type_string, "video")) {
 						$str = haxe_Resource::getString("embed_file_video");
 						$t = new haxe_Template($str);
-						$output = $t->execute(_hx_anonymous(array("config" => _hx_qtype("intermedia.fengOffice.server.Config"), "src" => intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path, "mime_type" => $objTmp->type_string)), null);
+						$output = $t->execute(_hx_anonymous(array("config" => _hx_qtype("intermedia.fengOffice.server.Config"), "src" => intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path, "mime_type" => $objTmp1->type_string)), null);
 						$obj->properties->htmlContent = $output;
 					} else {
-						$obj->properties->htmlContent = "<a href='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "'>" . $path . "</a> (" . $objTmp->type_string . ")";
+						$obj->properties->htmlContent = "<a href='" . intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path . "'>" . $path . "</a> (" . $objTmp1->type_string . ")";
 					}
 				}
 			}
 			$obj->properties->url = intermedia_fengOffice_server_Config::getInstance()->ROOT_URL . $path;
-			$obj->properties->filesize = $objTmp->filesize;
-			$obj->properties->revision_number = $objTmp->revision_number;
+			$obj->properties->filesize = $objTmp1->filesize;
+			$obj->properties->revision_number = $objTmp1->revision_number;
 		}
 		return intermedia_fengOffice_cross_SafeObjectTools::fromDynamic($obj);
 	}
-	public function listMembers($srv, $parentId, $user, $token) {
+	public function listMembers($srv, $parentId, $workspaceId, $contactId, $trashed, $user, $token) {
+		if($trashed === null) {
+			$trashed = false;
+		}
+		if($contactId === null) {
+			$contactId = -1;
+		}
+		if($workspaceId === null) {
+			$workspaceId = -1;
+		}
 		if($parentId === null) {
 			$parentId = -1;
 		}
 		if(!$this->_checkAuth($user, $token)) {
 			throw new HException("authentication faild");
 		}
-		$sql = "SELECT * FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects \x0A\x09\x09\x09\x09\x09\x09\x09WHERE " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ".`object_id` \x0A\x09\x09\x09\x09\x09\x09\x09FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ")\x0A\x09\x09\x09\x09\x09\x09\x09AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`trashed_by_id`=0";
-		if($parentId >= 0) {
-			$sql .= " AND (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members WHERE `member_id`  in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq1 WHERE memberRq1.`object_id`=" . $parentId . "))";
-			if($parentId === 0) {
-				$sql .= " OR " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members WHERE `parent_member_id`=0))";
-			} else {
-				$sql .= " OR " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id` in (SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members WHERE `parent_member_id` in (SELECT id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq2 WHERE memberRq2.`object_id`=" . $parentId . ")))";
+		if($srv !== "project_tasks" && $parentId > -1) {
+			if($parentId > 0) {
+				$workspaceId = $parentId;
 			}
+			$parentId = -1;
+		}
+		$sql = "SELECT * FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects ";
+		$sql .= " \x0A\x09\x09\x09INNER JOIN (\x0A\x09\x09\x09\x09" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . "\x0A\x09\x09\x09\x09) ON (" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ".`object_id`=" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id`";
+		if($parentId > -1) {
+			$sql .= " AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . $srv . ".`parent_id`=" . $parentId;
+		}
+		$sql .= (intermedia_fengOffice_server_Api_0($this, $contactId, $parentId, $sql, $srv, $token, $trashed, $user, $workspaceId)) . ")";
+		if($workspaceId > -1) {
+			if($srv === "workspaces") {
+				if($workspaceId === 0) {
+					$sql .= " \x0A\x09\x09\x09\x09\x09WHERE id IN (\x0A\x09\x09\x09\x09\x09\x09SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members\x0A\x09\x09\x09\x09\x09\x09WHERE `parent_member_id`=0\x0A\x09\x09\x09\x09\x09\x09AND `object_type_id`=1\x0A\x09\x09\x09\x09\x09)";
+				} else {
+					$sql .= " \x0A\x09\x09\x09\x09\x09WHERE id IN (\x0A\x09\x09\x09\x09\x09\x09SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members\x0A\x09\x09\x09\x09\x09\x09WHERE `parent_member_id`\x0A    \x09\x09\x09\x09\x09IN (\x0A\x09\x09\x09\x09\x09\x09\x09SELECT id\x0A\x09\x09\x09\x09\x09\x09\x09    FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "members AS memberRq2\x0A\x09\x09\x09\x09\x09\x09\x09    WHERE memberRq2.`object_id`=" . $workspaceId . "\x0A\x09\x09\x09\x09\x09\x09)\x0A\x09\x09\x09\x09\x09\x09AND `object_type_id`=1\x0A\x09\x09\x09\x09\x09)";
+				}
+			} else {
+				$sql .= " \x0A\x09\x09\x09\x09WHERE id IN (\x0A\x09\x09\x09\x09\x09SELECT object_id FROM " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members\x0A\x09\x09\x09\x09\x09WHERE (\x0A\x09\x09\x09\x09\x09\x09" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members.`object_id`=" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id`\x0A\x09\x09\x09\x09\x09\x09AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members.`member_id`=" . $workspaceId . "\x0A\x09\x09\x09\x09\x09)\x0A\x09\x09\x09\x09)";
+			}
+		}
+		if($contactId > -1) {
+			$sql .= " \x0A\x09\x09\x09WHERE id IN (\x0A\x09\x09\x09\x09SELECT object_id " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members\x0A\x09\x09\x09\x09WHERE (\x0A\x09\x09\x09\x09\x09" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members.`object_id`=" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`id`\x0A\x09\x09\x09\x09\x09AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_members.`member_id`=" . $contactId . "\x0A\x09\x09\x09\x09)\x0A\x09\x09\x09)";
 		}
 		$sql .= " ORDER BY updated_on DESC";
 		$res = $this->_db->request($sql);
@@ -183,7 +194,7 @@ class intermedia_fengOffice_server_Api {
 		$»it = $r->iterator();
 		while($»it->hasNext()) {
 			$item = $»it->next();
-			$item = intermedia_fengOffice_cross_SafeObjectTools::fromDynamic($this->_getDetails($item));
+			$item = intermedia_fengOffice_cross_SafeObjectTools::fromDynamic($this->_getDetails($item, $srv));
 			$l->add($item);
 		}
 		return $l;
@@ -199,4 +210,11 @@ class intermedia_fengOffice_server_Api {
 			throw new HException('Unable to call «'.$m.'»');
 	}
 	function __toString() { return 'intermedia.fengOffice.server.Api'; }
+}
+function intermedia_fengOffice_server_Api_0(&$»this, &$contactId, &$parentId, &$sql, &$srv, &$token, &$trashed, &$user, &$workspaceId) {
+	if($trashed) {
+		return "";
+	} else {
+		return " AND " . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "objects.`trashed_by_id`=0";
+	}
 }

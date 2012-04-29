@@ -52,40 +52,30 @@ class MainPhp {
 		trace("____b: "+api.authenticate("test", "test"));
 		trace("<br />"); 
 		trace("<br />"); 
-/*
-		trace("____session: "+api.authenticate("", ""));
-		trace("<br />");
-		trace("<br />"); 
-
-/*		trace("************************<br />");
-		trace("workspaces<br />");
-		trace("************************<br />");
-		for (workspace in api.getContextList()){
-			trace(workspace.name+"<br />");
-		}
-		trace("<br />");
-/*
+/**
 		trace("************************<br />");
 		trace("all Workspace<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
 		var token = api.authenticate("a", "a").token;
-		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES, 0, "a", token)+"<br />");
-		for (workspace in api.listMembers(ServiceTypes.WORKSPACES, 4, "a", token)){
+		trace("workspaces "+api.listMembers(ServiceTypes.WORKSPACES, -1, 0, "a", token)+"<br />");
+		for (workspace in api.listMembers(ServiceTypes.WORKSPACES, -1, 6, "a", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 			trace(workspace.name + " - "+workspace.id+ "<br />");
 		}
-		trace("<br />");
-/*		trace("************************<br />");
+		trace("<br />"); 
+/** 	trace("************************<br />");
 		trace("Tasks, files, ...<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
 		var token = api.authenticate("a", "a").token;
 		//trace("Members: "+api.listMembers(ServiceTypes.PROJECT_TASKS, 6, "a", token)+"<br /><br /><br /><br />");
-		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 6, "a", token)){
+//sub task:		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 7, "a", token)){
+//tasks of a context
+		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 0, 6, "a", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 //			trace(obj.name+", "+obj.id+", "+obj.numChildren+ "<br />");
-			trace(obj.name+", "+obj.id+", "+obj+ "<br /><br /><br />");
+			trace("<b>"+obj.name+"</b>, "+obj.id+", "+obj+ "<br /><br /><br />"); 
 		}
 		trace("<br />");
 /*		trace("************************<br />");

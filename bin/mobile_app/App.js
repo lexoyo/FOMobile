@@ -347,13 +347,16 @@ intermedia.fengOffice.client.Api.prototype.getObject = function(oid,onResult,onE
 	else cnx.setErrorHandler($closure(this,"defaultOnError"));
 	cnx.resolve("api").resolve("getObject").call([oid,this._user.username,this._user.token],onResult);
 }
-intermedia.fengOffice.client.Api.prototype.listMembers = function(srv,parentId,onResult,onError) {
+intermedia.fengOffice.client.Api.prototype.listMembers = function(srv,parentId,workspaceId,contactId,trashed,onResult,onError) {
+	if(trashed == null) trashed = false;
+	if(contactId == null) contactId = -1;
+	if(workspaceId == null) workspaceId = -1;
 	if(parentId == null) parentId = -1;
 	if(!this._checkAuth()) return;
 	var cnx = haxe.remoting.HttpAsyncConnection.urlConnect("." + "/indexPhp.php");
 	if(onError != null) cnx.setErrorHandler(onError);
 	else cnx.setErrorHandler($closure(this,"defaultOnError"));
-	cnx.resolve("api").resolve("listMembers").call([srv,parentId,this._user.username,this._user.token],onResult);
+	cnx.resolve("api").resolve("listMembers").call([srv,parentId,workspaceId,contactId,trashed,this._user.username,this._user.token],onResult);
 }
 intermedia.fengOffice.client.Api.prototype.__class__ = intermedia.fengOffice.client.Api;
 haxe.Public = function() { }
@@ -674,14 +677,14 @@ intermedia.fengOffice.client.widgets.FOObjectsList.prototype.onUp = function(eve
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.refresh = function(event) {
 	var curId;
 	if(this._curItem != null) curId = this._curItem.id;
-	else curId = intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace.id;
+	else curId = 0;
 	if(this.onLoading != null) this.onLoading(true);
 	this._widget.startTransition();
-	haxe.Log.trace("call listMembers(" + intermedia.fengOffice.client.application.AppState.getInstance().curServiceType + ", " + curId + "",{ fileName : "FOObjectsList.hx", lineNumber : 116, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "refresh"});
-	this._api.listMembers(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType,curId,$closure(this,"_displayItems"),this.onError);
+	haxe.Log.trace("call listMembers(" + intermedia.fengOffice.client.application.AppState.getInstance().curServiceType + ", " + curId + ", " + intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace.id + ", -1",{ fileName : "FOObjectsList.hx", lineNumber : 116, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "refresh"});
+	this._api.listMembers(intermedia.fengOffice.client.application.AppState.getInstance().curServiceType,curId,intermedia.fengOffice.client.application.AppState.getInstance().curWorkspace.id,-1,null,$closure(this,"_displayItems"),this.onError);
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.enableUp = function() {
-	haxe.Log.trace("upBtn enabled " + this._id,{ fileName : "FOObjectsList.hx", lineNumber : 120, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "enableUp"});
+	haxe.Log.trace("upBtn enabled " + this._id,{ fileName : "FOObjectsList.hx", lineNumber : 122, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "enableUp"});
 	try {
 		(js.Lib.document.getElementById("upBtn" + this._id)).disabled = false;
 	}
@@ -693,7 +696,7 @@ intermedia.fengOffice.client.widgets.FOObjectsList.prototype.enableUp = function
 	}
 }
 intermedia.fengOffice.client.widgets.FOObjectsList.prototype.disableUp = function() {
-	haxe.Log.trace("upBtn disabled " + this._id,{ fileName : "FOObjectsList.hx", lineNumber : 126, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "disableUp"});
+	haxe.Log.trace("upBtn disabled " + this._id,{ fileName : "FOObjectsList.hx", lineNumber : 128, className : "intermedia.fengOffice.client.widgets.FOObjectsList", methodName : "disableUp"});
 	try {
 		(js.Lib.document.getElementById("upBtn" + this._id)).disabled = true;
 	}
@@ -2086,7 +2089,7 @@ intermedia.fengOffice.cross.ServiceTypes.prototype.__class__ = intermedia.fengOf
 intermedia.fengOffice.cross.SafeObjectTools = function() { }
 intermedia.fengOffice.cross.SafeObjectTools.__name__ = ["intermedia","fengOffice","cross","SafeObjectTools"];
 intermedia.fengOffice.cross.SafeObjectTools.fromError = function(msg) {
-	return { error_msg : msg, object_id : -1, id : -1, name : "", properties : null, numChildren : 0, object_type_id : -1, type : "", icon : "", table_name : "", created_on : "", created_by_id : -1, created_by : null, updated_on : "", updated_by_id : -1, updated_by : null, trashed_on : "", trashed_by_id : -1, trashed_by : null, archived_on : "", archived_by_id : -1, archived_by : null};
+	return { error_msg : msg, object_id : -1, id : -1, name : "", numChildren : 0, object_type_id : -1, type : "", icon : "", table_name : "", created_on : "", created_by_id : -1, created_by : null, updated_on : "", updated_by_id : -1, updated_by : null, trashed_on : "", trashed_by_id : -1, trashed_by : null, archived_on : "", archived_by_id : -1, archived_by : null};
 }
 intermedia.fengOffice.cross.SafeObjectTools.fromDynamic = function(obj) {
 	if(obj == null) return null;
@@ -2109,29 +2112,20 @@ intermedia.fengOffice.cross.SafeObjectTools.fromDynamic = function(obj) {
 			}
 		}
 	}
+	var res = { };
 	{
-		var _g = 0, _g1 = Reflect.fields(obj.properties);
+		var _g = 0, _g1 = Reflect.fields(obj);
 		while(_g < _g1.length) {
 			var prop = _g1[_g];
 			++_g;
-			var propValue = Reflect.field(obj.properties,prop);
-			var $e = Type["typeof"](propValue);
-			switch( $e[1] ) {
-			case 6:
-			var c = $e[2];
-			{
-				obj.properties[prop] = "" + Std.string(propValue);
-			}break;
-			default:{
-				null;
-			}break;
-			}
+			var propValue = Reflect.field(obj,prop);
+			res[prop] = propValue;
 		}
 	}
-	return { error_msg : "", object_id : obj.object_id, id : obj.id, name : obj.name, properties : obj.properties, numChildren : obj.numChildren, object_type_id : obj.object_type_id, type : obj.type, icon : obj.icon, table_name : obj.table_name, created_on : obj.created_on, created_by_id : obj.created_by_id, created_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.created_by), updated_on : obj.updated_on, updated_by_id : obj.updated_by_id, updated_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.updated_by), trashed_on : obj.trashed_on, trashed_by_id : obj.trashed_by_id, trashed_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.trashed_by), archived_on : obj.archived_on, archived_by_id : obj.archived_by_id, archived_by : intermedia.fengOffice.cross.UserTools.fromDynamic(obj.archived_by)};
+	return res;
 }
 intermedia.fengOffice.cross.SafeObjectTools.createEmpty = function() {
-	return { error_msg : "", object_id : -1, id : 0, name : "All Workspaces", properties : { }, numChildren : 0, object_type_id : -1, type : "", icon : "", table_name : "", created_on : "", created_by_id : -1, updated_on : "", updated_by_id : -1, trashed_on : "", trashed_by_id : -1, archived_on : "", archived_by_id : -1, updated_by : null, created_by : null, trashed_by : null, archived_by : null};
+	return { error_msg : "", object_id : -1, id : 0, name : "All Workspaces", numChildren : 0, object_type_id : -1, type : "", icon : "", table_name : "", created_on : "", created_by_id : -1, updated_on : "", updated_by_id : -1, trashed_on : "", trashed_by_id : -1, archived_on : "", archived_by_id : -1, updated_by : null, created_by : null, trashed_by : null, archived_by : null};
 }
 intermedia.fengOffice.cross.SafeObjectTools.prototype.__class__ = intermedia.fengOffice.cross.SafeObjectTools;
 intermedia.fengOffice.cross.UserTools = function() { }

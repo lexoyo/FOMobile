@@ -1,6 +1,7 @@
 package intermedia.fengOffice.cross;
 
 typedef ServiceType = String;
+typedef SafeObject = Dynamic;
 
 
 class ServiceTypes {
@@ -53,6 +54,7 @@ typedef User = {
 /**
  * contains properties which can be transfered to the client
  */
+/*
 typedef SafeObject = {
 	error_msg:String,
 
@@ -79,7 +81,7 @@ typedef SafeObject = {
     trashed_on : String, 
     trashed_by_id : Int, 
 
-    archived_on : String, 
+    archived_on : String,
     archived_by_id : Int, 
 	
 	// attributes resolved from the contacts table
@@ -100,7 +102,7 @@ class SafeObjectTools{
 		    id : -1, 
 		    name : "", 
 
-			properties : null,
+//			properties : null,
 			numChildren : 0,
 						
 		    object_type_id : -1, 
@@ -140,16 +142,22 @@ class SafeObjectTools{
 			    default:
 			}
 		}
-	    for (prop in Reflect.fields(obj.properties)){
+/*	    for (prop in Reflect.fields(obj.properties)){
 			var propValue = Reflect.field(obj.properties, prop);
 			switch (Type.typeof(propValue)){
 			    case TClass(c):
 					Reflect.setField(obj.properties, prop, ""+Std.string(propValue));
 			    default:
 			}
+		}*/
+		var res:Dynamic = {};
+	    for (prop in Reflect.fields(obj)){
+			var propValue = Reflect.field(obj, prop);
+			Reflect.setField(res, prop, propValue);
 		}
+		return res;
 		// returns only the safe fields
-		return {
+/*		return {
 			error_msg:"",
 		    object_id:obj.object_id,
 		    id : obj.id, 
@@ -178,7 +186,7 @@ class SafeObjectTools{
 		    archived_on : obj.archived_on, 
 		    archived_by_id : obj.archived_by_id,
 		    archived_by : UserTools.fromDynamic(obj.archived_by) 
-		};
+		};*/
 	}
 	public static function createEmpty():SafeObject{
 		return {
@@ -187,7 +195,7 @@ class SafeObjectTools{
 		    id : 0, // to list only items in the root folder, -1 would list all workspaces 
 		    name : "All Workspaces", 
 			
-			properties : {},
+//			properties : {},
 			numChildren : 0,
 			
 		    object_type_id : -1,

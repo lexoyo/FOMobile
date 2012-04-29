@@ -115,49 +115,37 @@ class Api {
 	/**
 	 * add details to the object
 	 */
-	private function _getDetails(obj:Dynamic):SafeObject{
+	private function _getDetails(obj:Dynamic, table_name:String):SafeObject{
 		// ***
 		// resolve contacts
 		var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.created_by_id; 
 		var res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.created_by = _getContactDetails(res.next());
+			obj.created_by = UserTools.fromDynamic(_getContactDetails(res.next()));
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.updated_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.updated_by = _getContactDetails(res.next());
+			obj.updated_by = UserTools.fromDynamic(_getContactDetails(res.next()));
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.trashed_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.trashed_by = _getContactDetails(res.next());
+			obj.trashed_by = UserTools.fromDynamic(_getContactDetails(res.next()));
 
 		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"contacts` WHERE `object_id`="+obj.archived_by_id; 
 		res = _db.request( sql );
 		if (res != null && res.length > 0)
-			obj.archived_by = _getContactDetails(res.next());
+			obj.archived_by = UserTools.fromDynamic(_getContactDetails(res.next()));
 			
-		//////////////////////////////
-		// find the object detail table
-		// SELECT * FROM `fo_object_types` WHERE id=4
-		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
-		res = _db.request( sql );
-		var objTmp:Dynamic = res.next();
-		
-		// keep several props
-		obj.type = objTmp.type;
-		obj.icon = objTmp.icon;
-		obj.table_name = objTmp.table_name;
-		
 		// ***
 		// compute number of children
 		sql = "SELECT COUNT(id) FROM "+Config.getInstance().TABLE_PREFIX+"objects 
-							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+obj.table_name+".`object_id` 
-							FROM "+Config.getInstance().TABLE_PREFIX+obj.table_name+")" 
-							+ " AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`  in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq1 WHERE memberRq1.`object_id`="+obj.id+"))"
+							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+table_name+".`object_id` 
+							FROM "+Config.getInstance().TABLE_PREFIX+table_name+")" 
+							+ " AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`="+obj.id+")"
 							+ " OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id` in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq2 WHERE memberRq2.`object_id`="+obj.id+")))";
-		
+//		trace("** "+sql+"<br/>");
 		var res = _db.request( sql );
 		if(res != null && res.length > 0)
 			obj.numChildren = Reflect.field(res.next(), "COUNT(id)");
@@ -197,8 +185,20 @@ class Api {
 		// trace("<br />----- retrieve the object <br />"+sql+"<br />--"+obj+"---<br />");
 
 		//////////////////////////////
+		// find the object detail table
+		// SELECT * FROM `fo_object_types` WHERE id=4
+		sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+"object_types` WHERE id="+obj.object_type_id;
+		res = _db.request( sql );
+		var objTmp:Dynamic = res.next();
+		
+		//////////////////////////////
 		// retrieve details of the object in the object detail table
-		obj = _getDetails(obj);
+		obj = _getDetails(obj, objTmp.table_name);
+		
+		// keep several props
+		obj.type = objTmp.type;
+		obj.icon = objTmp.icon;
+		obj.table_name = objTmp.table_name;
 		
 		// store the name of the table containing the object details
 		var detailTableName = obj.table_name;
@@ -206,7 +206,7 @@ class Api {
 
 		// retrieve details of the object in the object detail table
 		//SELECT * FROM `fo_project_webpages` WHERE `object_id`=76
-		var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+detailTableName+"` WHERE `object_id`="+obj.id; 
+/*		var sql = "SELECT * FROM `"+Config.getInstance().TABLE_PREFIX+detailTableName+"` WHERE `object_id`="+obj.id; 
 		var res = _db.request( sql );
 
 		// add details to the object
@@ -218,7 +218,7 @@ class Api {
 				Reflect.setField(obj.properties, prop, Reflect.field(objTmp, prop));
 			}
 		}
-		
+*/		
 		
 		//////////////////////////////
 		// retrieve content of a file
@@ -285,60 +285,103 @@ class Api {
 	 * @param	srv	the member object type hander - required
 	 * @return	array of objects
 	 */
-	public function listMembers(srv:ServiceType, parentId:Int = -1, user:String, token:String):List<Dynamic> {
+	public function listMembers(srv:ServiceType, parentId:Int = -1, workspaceId:Int = -1, contactId:Int = -1, trashed:Bool = false, user:String, token:String):List<Dynamic> {
 
 		if (!_checkAuth(user, token)) throw("authentication faild");
 
-		//////////////////////////////
-		// get the list of workspaces 
-		// SELECT * FROM fo_objects WHERE fo_objects.`id` in (SELECT fo_workspaces.`object_id` FROM fo_workspaces)
-		var sql = "SELECT * FROM "+Config.getInstance().TABLE_PREFIX+"objects 
-							WHERE "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT "+Config.getInstance().TABLE_PREFIX+srv+".`object_id` 
-							FROM "+Config.getInstance().TABLE_PREFIX+srv+")
-							AND "+Config.getInstance().TABLE_PREFIX+"objects.`trashed_by_id`=0"; 
-		// case with a parent
-		/*	SELECT *
-			FROM test3_objects
-			WHERE test3_objects.`id`
-			IN (
-				SELECT test3_project_files.`object_id`
-				FROM test3_project_files
-			) AND (
-				test3_objects.`id`
-				IN (
-					SELECT object_id
-					FROM test3_object_members
-					WHERE `member_id`
-					IN (
-						SELECT id
-						FROM test3_members AS memberRq2
-						WHERE memberRq2.`object_id` =4
-					)
-				)
-				OR test3_objects.`id`
-				IN (
-					SELECT object_id
-					FROM test3_members
-					WHERE `parent_member_id`
-					IN (
-						SELECT id
-						FROM test3_members AS memberRq2
-						WHERE memberRq2.`object_id` =4
-					)
+// for workspaces, the parent is the context
+if (srv!=ServiceTypes.PROJECT_TASKS && parentId > -1){
+	if (parentId>0)
+		workspaceId = parentId;
+	parentId = -1;
+}
+		/*
+			SELECT *
+			FROM foV2_objects
+//		PARENT:
+			INNER JOIN (
+				foV2_project_tasks
+				) ON (
+					foV2_project_tasks.`object_id`=foV2_objects.`id` 
+					AND foV2_project_tasks.`parent_id`=7
+					AND foV2_objects.`trashed_by_id`=0
+			    )
+//		CONTEXT / WORKSPACE
+			WHERE id IN (
+				SELECT object_id FROM foV2_object_members
+				WHERE (
+				  foV2_object_members.`object_id`=foV2_objects.`id` 
+				  AND foV2_object_members.`member_id`=6
 				)
 			)
-			ORDER BY updated_on DESC
-		 */
-		if (parentId >= 0){
-		    sql += " AND ("+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members WHERE `member_id`  in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq1 WHERE memberRq1.`object_id`="+parentId+"))";
-			if (parentId == 0)
-			    sql += " OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id`=0))";
-			else
-			    sql += " OR "+Config.getInstance().TABLE_PREFIX+"objects.`id` in (SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members WHERE `parent_member_id` in (SELECT id FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq2 WHERE memberRq2.`object_id`="+parentId+")))";
+//		CONTACT
+			AND id IN (
+				SELECT object_id FROM foV2_object_members
+				WHERE (
+			  		foV2_object_members.`object_id`=foV2_objects.`id` 
+			  		AND foV2_object_members.`member_id`=2
+				)
+			)
+		*/
+		var sql = "SELECT * FROM "+Config.getInstance().TABLE_PREFIX+"objects ";
+			sql += " 
+			INNER JOIN (
+				"+Config.getInstance().TABLE_PREFIX+srv+"
+				) ON ("+
+					Config.getInstance().TABLE_PREFIX+srv+".`object_id`="+Config.getInstance().TABLE_PREFIX+"objects.`id`";
+			if (parentId > -1){
+				sql+=" AND "+Config.getInstance().TABLE_PREFIX+srv+".`parent_id`="+parentId;
+			}
+			sql+=(trashed?"":" AND "+Config.getInstance().TABLE_PREFIX+"objects.`trashed_by_id`=0")+")"; 
+		if (workspaceId > -1){
+			if (srv==ServiceTypes.WORKSPACES){
+				if (workspaceId == 0){
+					sql += " 
+					WHERE id IN (
+						SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members
+						WHERE `parent_member_id`=0
+						AND `object_type_id`=1
+					)"; 
+				}
+				else{ 
+					sql += " 
+					WHERE id IN (
+						SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"members
+						WHERE `parent_member_id`
+    					IN (
+							SELECT id
+							    FROM "+Config.getInstance().TABLE_PREFIX+"members AS memberRq2
+							    WHERE memberRq2.`object_id`="+workspaceId+"
+						)
+						AND `object_type_id`=1
+					)"; 
+				}
+			}
+			else{
+				sql += " 
+				WHERE id IN (
+					SELECT object_id FROM "+Config.getInstance().TABLE_PREFIX+"object_members
+					WHERE (
+						"+Config.getInstance().TABLE_PREFIX+"object_members.`object_id`="+Config.getInstance().TABLE_PREFIX+"objects.`id`
+						AND "+Config.getInstance().TABLE_PREFIX+"object_members.`member_id`="+workspaceId+"
+					)
+				)"; 
+			} 
+		}
+		if (contactId > -1){
+			sql += " 
+			WHERE id IN (
+				SELECT object_id "+Config.getInstance().TABLE_PREFIX+"object_members
+				WHERE (
+					"+Config.getInstance().TABLE_PREFIX+"object_members.`object_id`="+Config.getInstance().TABLE_PREFIX+"objects.`id`
+					AND "+Config.getInstance().TABLE_PREFIX+"object_members.`member_id`="+contactId+"
+				)
+			)"; 
 		}
 		sql += " ORDER BY updated_on DESC";
-
-//		trace("<br />----- request <br />"+sql+"<br />-----<br />");
+		
+		
+		//trace("<br />----- request <br />"+sql+"<br />-----<br />");
 		var res = _db.request( sql );
 		if(res == null || res.length == 0) { 
 		    return new List();
@@ -347,12 +390,14 @@ class Api {
 
 		// Convert dates to string
 		var l=new List();
+//		l.add({name:"test éàèà", id:1});
+//		return l;
 		//////////////////////////////
 		// format each item
 		var r:List<Dynamic> = res.results();
 		for (item in r.iterator()){
 			// retrieve details of the object in the object detail table
-			item = SafeObjectTools.fromDynamic(_getDetails(item));
+			item = SafeObjectTools.fromDynamic(_getDetails(item, srv));
 		    l.add(item);
 		}
 		return l;

@@ -107,14 +107,16 @@ class FOObjectsList {
 		//trace("refresh "+_curItem);
 		var curId : Int;
 		if (_curItem != null) curId = _curItem.id;
-		else curId = AppState.getInstance().curWorkspace.id; // -1 means all items
+		else curId = 0; 
   
 		if (onLoading != null) onLoading(true);
 		//_widget.setState(loading);
 		_widget.startTransition();
 		
-		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+"");
-	    _api.listMembers(AppState.getInstance().curServiceType, curId,_displayItems, onError);
+		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+", "+AppState.getInstance().curWorkspace.id+", -1");
+	    _api.listMembers(AppState.getInstance().curServiceType, 
+			curId, AppState.getInstance().curWorkspace.id,-1/*AppState.getInstance().curContact.id*/,
+			_displayItems, onError);
 	}
 	public function enableUp(){
 			trace("upBtn enabled "+_id);

@@ -86,7 +86,7 @@ class Api {
 	 * mimic the name of the service in v1 api, http://www.fengoffice.com/web/wiki/doku.php/feng_office_2_api_documentation
 	 * @param	srv	the member object type hander - required
 	 */
-	public function listMembers(srv:ServiceType, parentId:Int = -1, onResult:List<Dynamic>->Void, onError:Dynamic->Void = null):Void {
+	public function listMembers(srv:ServiceType, parentId:Int = -1, workspaceId:Int = -1, contactId:Int = -1, trashed:Bool = false, onResult:List<Dynamic>->Void, onError:Dynamic->Void = null):Void {
 		if (!_checkAuth()) return;
 
 		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
@@ -96,7 +96,7 @@ class Api {
 		else
 			cnx.setErrorHandler( defaultOnError );
 		  
-		cnx.api.listMembers.call([srv, parentId, _user.username, _user.token], onResult);
+		cnx.api.listMembers.call([srv, parentId, workspaceId, contactId, trashed, _user.username, _user.token], onResult);
 	}
 	/**
 	 * Generic list for Feng Office content objects
