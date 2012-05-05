@@ -1,5 +1,6 @@
 package intermedia.fengOffice.client.widgets; 
 
+import intermedia.fengOffice.client.widgets.Widget;
 import intermedia.fengOffice.client.application.AppState; 
 import intermedia.fengOffice.client.application.Lang; 
 import intermedia.fengOffice.client.application.Config; 
@@ -21,6 +22,9 @@ class FOObjectsList {
 	public var onBack:Dynamic->Void;
 	public var onForward:Dynamic->Void;
 
+	public var onChangeWorkspace:Dynamic->Void;
+	public var onLogout:Dynamic->Void;
+	
 	private var _api : Api;
 	private var _widget : Widget;
 	private var _prevItems : Array<Dynamic>;
@@ -51,7 +55,8 @@ class FOObjectsList {
 		var parent = null;
 		if (_prevItems.length>0) parent = _prevItems[_prevItems.length-1];
 		//trace("paernt = "+parent+" - "+_prevItems.length+" - "+_prevItems[0]+" - "+_prevItems);
-		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title, Lang:Lang, Config:Config, idList:_id});
+		var output = t.execute({items:items, hasParent:(_prevItems.length>0), parent:parent, curItem:_curItem, title:title, 
+			Lang:Lang, Config:Config, idList:_id, appState:AppState.getInstance()});
 
 		// attach to the dom
 		_widget.getBodyElement().innerHTML = output;
@@ -70,6 +75,9 @@ class FOObjectsList {
 		Lib.document.getElementById("upBtn"+_id).onclick = onUp;
 		Lib.document.getElementById("refreshBtn"+_id).onclick = refresh;
 		Lib.document.getElementById("selectBtn"+_id).onclick = function(e){t.selectItem(t._curItem);};
+		
+		Lib.document.getElementById("workspaceBtn"+_id).onclick = onChangeWorkspace;
+		Lib.document.getElementById("userBtn"+_id).onclick = onLogout;
 
 
 		// render the template for footer
@@ -111,7 +119,7 @@ class FOObjectsList {
 		else curId = 0; 
   
 		if (onLoading != null) onLoading(true);
-		//_widget.setState(loading);
+		_widget.setState(loading);
 		_widget.startTransition();
 		
 		trace("call listMembers("+AppState.getInstance().curServiceType+", "+curId+", "+AppState.getInstance().curWorkspace.id+", -1");

@@ -1,5 +1,6 @@
 package intermedia.fengOffice.client.widgets; 
 
+import intermedia.fengOffice.client.widgets.Widget;
 import intermedia.fengOffice.cross.Data;
 import js.Lib;
 import js.Dom;
@@ -79,7 +80,7 @@ class FOObjectDetail {
 	}
 	public function refresh(event:Event = null){
 		if (onLoading != null) onLoading(true);
-		//_widget.setState(loading);
+		_widget.setState(loading);
 		_widget.startTransition();
 		
 		trace("call getObject("+_item.id);

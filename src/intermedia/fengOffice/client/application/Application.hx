@@ -133,6 +133,15 @@ class Application {
 		list = new FOObjectsList(api, widget, displayError);
 		list.onHome = goHome;
 		list.onSelect = _onSelectItem;
+
+		var t = this;
+		list.onChangeWorkspace = function (e){
+			AppState.getInstance().curWorkspace = SafeObjectTools.createEmpty();		
+			t.goList(ServiceTypes.WORKSPACES);
+		};
+		list.onLogout = function (e){
+			t.goAuthPage();  
+		};
 	}
 	private function goDetail(srv:ServiceType, item:Dynamic){
 		var t = this;

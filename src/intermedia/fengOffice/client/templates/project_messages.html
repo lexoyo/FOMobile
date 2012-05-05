@@ -1,12 +1,28 @@
-  <div style="padding: 0px; ">
-    <div>
-		<button id="upBtn::idList::" type="button">::Lang.UP::</button>
-		<button id="refreshBtn::idList::" type="button">::Lang.REFRESH::</button>
-		<button id="selectBtn::idList::" style="::if hasParent::::else::display:none; ::end::" type="button">::Lang.ITEM_SELECT::</button>
-    </div>
-    <div style="height:30px; display:block; height:100px; ">
+  <div style="padding: 10px; ">
+	<ul style="margin: 0; padding: 0; list-style-type: none; display: inline-block; width: 100%;">
+		<li id="workspaceBtn::idList::" style="margin : 0 0 0 20px; padding: 0; float:left; ">
+			<img src="./assets/navigation/logo_big.png" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
+			<div style="display: inline-block; vertical-align: top; " >
+				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_WORKSPACE_LABEL::</small><br />
+				<strong style="margin: 0; padding: 0; ">::appState.curWorkspace.name::</strong>
+				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.CHANGE_WORKSPACE_LABEL::</small>
+			</div>
+		</li>
+		<li id="userBtn::idList::" style="margin: 0 20px 0 0; padding: 0; float:right;">
+			<div style="display: inline-block; vertical-align: top; " >
+				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_USER_LABEL::</small><br />
+				<strong style="margin: 0; padding: 0; ">::appState.curUser.username::</strong>
+				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.LOGOUT_LABEL::</small>
+			</div>
+ 			<img src="::if appState.curUser.picture_file::::Config.FO_URL::::appState.curUser.picture_file::::else::./assets/navigation/default-avatar.png::end::" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
+<!--
+ -->
+		</li>
+	</ul>
+	<hr style="color: #70BF44; background-color: #70BF44; height: 1px; " />
+    <div style="height:70px; display:block; ">
     	<!--  <h2>::title::</h2> -->
-    	<small style="margin: 100px; vertical-align: middle; display: block; margin: 30px 10px; ">
+    	<small style="vertical-align: middle; display: block; margin: 0 10px; ">
 	    	<div>
 	    		<img src="assets/objects/note.png" style="margin: 5px; vertical-align: middle; float:left; "/>
 	    	</div>
@@ -23,6 +39,11 @@
 			    ::end::
 			 </div>
 	    </small>
+    </div>
+    <div style="display:none" >
+		<button id="upBtn::idList::" type="button">::Lang.UP::</button>
+		<button id="refreshBtn::idList::" type="button">::Lang.REFRESH::</button>
+		<button id="selectBtn::idList::" style="::if hasParent::::else::display:none; ::end::" type="button">::Lang.ITEM_SELECT::</button>
     </div>
     <div style="border-top: 1px dotted; ">
 	<ul style="list-style-type: none; text-align:right; margin:0;padding:0">::foreach items::

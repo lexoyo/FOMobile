@@ -65,7 +65,11 @@ class Widget {
 	      body.style.height = desiredBodyHeight + "px";
 		  
 		  if (oldBody != null && opacity==0){
-			opacity = 1;
+/*
+
+	WITH TRANSITION:
+
+ 			opacity = 1;
 			// start the transition
 			body.parentNode.style.left =  "100px";//_container.clientWidth + "px"; 
 	        // creating the tween
@@ -74,6 +78,8 @@ class Widget {
 	        tween.setTweenHandlers( move, finished );
 	        // launch the tween
 	        tween.start();
+*/
+			finished(0);
 		  }
 	}
 	private var oldBody:HtmlDom;

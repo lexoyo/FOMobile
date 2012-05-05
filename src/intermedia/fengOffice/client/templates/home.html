@@ -1,7 +1,7 @@
   <div id="homeScreen::id::" style="padding: 10px; ">
 <!-- home screen = current selection (workspace, tags, filter) + tabs (docs, emails, contact...)  -->
-	<ul style="margin: 20; padding: 0; list-style-type: none; display: block; height:50px;">
-		<li id="workspaceBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:left; ">
+	<ul style="margin: 0; padding: 0; list-style-type: none; display: inline-block; width: 100%;">
+		<li id="workspaceBtn::id::" style="margin : 0 0 0 20px; padding: 0; float:left; ">
 			<img src="./assets/navigation/logo_big.png" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
 			<div style="display: inline-block; vertical-align: top; " >
 				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_WORKSPACE_LABEL::</small><br />
@@ -9,7 +9,7 @@
 				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.CHANGE_WORKSPACE_LABEL::</small>
 			</div>
 		</li>
-		<li id="userBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:right;">
+		<li id="userBtn::id::" style="margin: 0 20px 0 0; padding: 0; float:right;">
 			<div style="display: inline-block; vertical-align: top; " >
 				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_USER_LABEL::</small><br />
 				<strong style="margin: 0; padding: 0; ">::appState.curUser.username::</strong>
@@ -20,34 +20,35 @@
  -->
 		</li>
 	</ul>
-	<ul style="margin: 0; padding: 0; list-style-type: none; background-color: transparent; ">
-	   	<li id="filesBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/files.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.FILES_LABEL::</p>
-    	</li>
-    	<li id="tasksBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/tasks.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.TASKS_LABEL::</p>
-	    </li>
-    	<li id="notesBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/note.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.NOTES_LABEL::</p>
-    	</li>
-    	<li id="emailsBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/email.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.EMAILS_LABEL::</p>
-    	</li>
-    	<li id="linksBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/weblink.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.LINKS_LABEL::</p>
-    	</li>
-    	<li id="calendarBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/view_calendar_day.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.CALENDAR_LABEL::</p>
-    	</li>
-    	<li id="contactsBtn::id::" style="margin : 20px; display: inline-block; ">
-    		<div style="background-image: url(assets/objects/groups.png); margin : 0px; width: 50px; height: 50px; "></div>
-    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.CONTACTS_LABEL::</p>
-    	</li>
-	</ul>
+	<hr style="color: #70BF44; background-color: #70BF44; height: 1px; " />
+		<ul style="margin: 0; padding: 0; list-style-type: none; background-color: transparent; ">
+		   	<li id="filesBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/files.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.FILES_LABEL::</p>
+	    	</li>
+	    	<li id="tasksBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/tasks.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.TASKS_LABEL::</p>
+		    </li>
+	    	<li id="notesBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/note.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.NOTES_LABEL::</p>
+	    	</li>
+	    	<li id="emailsBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/email.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.EMAILS_LABEL::</p>
+	    	</li>
+	    	<li id="linksBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/weblink.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.LINKS_LABEL::</p>
+	    	</li>
+	    	<li id="calendarBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/view_calendar_day.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.CALENDAR_LABEL::</p>
+	    	</li>
+	    	<li id="contactsBtn::id::" style="margin : 8px 20px; display: inline-block; ">
+	    		<div style="background-image: url(assets/objects/groups.png); margin : 0px; width: 50px; height: 50px; "></div>
+	    		<p style="margin : 0px; width: 50px; text-align:center; ">::Lang.CONTACTS_LABEL::</p>
+	    	</li>
+		</ul>
   </div>

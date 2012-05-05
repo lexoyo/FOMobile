@@ -14,12 +14,12 @@ class Lang {
 	public static var ITEM_OPEN:String = "Info";
 	public static var WORKSPACES_TEXT:String = "Select a workspace bellow, or click on the "+" sign to see the content of a workspace.";
 	public static var TASKS_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var EMAILS_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var FILES_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var EVENTS_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var NOTES_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var CONTACTS_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
-	public static var WEB_PAGES_TEXT:String = "Select a task bellow to see its details, or click on the "+" sign to see the sub-tasks.";
+	public static var EMAILS_TEXT:String = "Select an email bellow to see its details.";
+	public static var FILES_TEXT:String = "Select a file bellow to see its content.";
+	public static var EVENTS_TEXT:String = "Select an event bellow to see its details.";
+	public static var NOTES_TEXT:String = "Select a note bellow to see its content.";
+	public static var CONTACTS_TEXT:String = "Select a contact bellow to see its details.";
+	public static var WEB_PAGES_TEXT:String = "Select a link bellow to see the targeted web page.";
 	////////////////////////////////
 	// login page
 	////////////////////////////////

@@ -22,7 +22,7 @@
 -resource intermedia/fengOffice/client/templates/mail_contents_detail.html@mail_contents_detail
 -resource intermedia/fengOffice/client/templates/login.html@login
 -lib feffects
-#--no-traces
+--no-traces
 #-js bin/App.js
 
 --next
