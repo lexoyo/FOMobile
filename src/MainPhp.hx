@@ -64,15 +64,15 @@ class MainPhp {
 			trace(workspace.name + " - "+workspace.id+ "<br />");
 		}
 		trace("<br />"); 
-/** 	trace("************************<br />");
+/* 	trace("************************<br />");
 		trace("Tasks, files, ...<br />");
 		trace("************************<br />");
 //		var oid:Int = api.getContextList().first().id;
-		var token = api.authenticate("a", "a").token;
+		var token = api.authenticate("test", "test").token;
 		//trace("Members: "+api.listMembers(ServiceTypes.PROJECT_TASKS, 6, "a", token)+"<br /><br /><br /><br />");
 //sub task:		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 7, "a", token)){
 //tasks of a context
-		for (obj in api.listMembers(ServiceTypes.PROJECT_TASKS, 0, 6, "a", token)){
+		for (obj in api.listMembers(ServiceTypes.PROJECT_FILES, 0, 15, "test", token)){
 //			trace(api.getObject(workspace.id).name+" = " +workspace.name+ "<br />");
 //			trace(obj.name+", "+obj.id+", "+obj.numChildren+ "<br />");
 			trace("<b>"+obj.name+"</b>, "+obj.id+", "+obj+ "<br /><br /><br />"); 
@@ -81,11 +81,12 @@ class MainPhp {
 /*		trace("************************<br />");
 		trace("Objects<br />");
 		trace("************************<br />");
-		var token = api.authenticate("a", "a").token;
-		var oid:Int =102;//api.getContextList().first().id;
+		var logpass = "test";
+		var token = api.authenticate(logpass, logpass).token;
+		var oid:Int =104;//api.getContextList().first().id;
 		trace("object with id "+oid+"<br />");
-		trace("name = "+api.getObject(oid, "a", token).name+"<br />");
-		trace(api.getObject(oid, "a", token)+"<br />");
+		trace("name = "+api.getObject(oid, logpass, token).name+"<br />");
+		trace(api.getObject(oid, logpass, token)+"<br />");
 /**/		// create an incoming connection and give access to the "instance" object 
 		
 		// **

@@ -29,9 +29,10 @@ class FOObjectsList {
 	/**
 	 * @param	parentItem	the parent item, with a field "id"
 	 */
-	public function new(api:Api, widget:Widget):Void {
+	public function new(api:Api, widget:Widget, onError:Null<String->Void> = null):Void {
 	      _api = api;
 	      _widget = widget;
+		  this.onError = onError;
 		  //_curItem = AppState.getInstance().curWorkspace;
 	      // init the process, get the top level contexts
 	      _prevItems = new Array();

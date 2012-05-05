@@ -97,6 +97,7 @@ class intermedia_fengOffice_server_Api {
 			return intermedia_fengOffice_cross_SafeObjectTools::fromError("Object not found");
 		}
 		$obj = $res->next();
+		$obj->properties = _hx_anonymous(array());
 		$sql = "SELECT * FROM `" . intermedia_fengOffice_server_Config::getInstance()->TABLE_PREFIX . "object_types` WHERE id=" . $obj->object_type_id;
 		$res = $this->_db->request($sql);
 		$objTmp = $res->next();

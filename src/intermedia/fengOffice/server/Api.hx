@@ -182,6 +182,7 @@ class Api {
 		    return SafeObjectTools.fromError("Object not found");
 		}
 		var obj:SafeObject = res.next();
+		obj.properties = {};
 		// trace("<br />----- retrieve the object <br />"+sql+"<br />--"+obj+"---<br />");
 
 		//////////////////////////////
@@ -219,13 +220,11 @@ class Api {
 			}
 		}
 */		
-		
 		//////////////////////////////
 		// retrieve content of a file
 		// SELECT repository_id, type_string FROM test3_project_file_revisions where file_id=11 ORDER BY revision_number DESC LIMIT 1
 		sql = "SELECT repository_id, type_string, filesize, revision_number FROM "+Config.getInstance().TABLE_PREFIX+"project_file_revisions where file_id="+oid+" ORDER BY revision_number DESC LIMIT 1"; 
 		res = _db.request( sql );
-
 		// case of a file
 		if(res != null && res.length > 0) { 
 			//////////////////////////////

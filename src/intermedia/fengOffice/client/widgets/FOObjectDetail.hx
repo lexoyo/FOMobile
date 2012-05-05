@@ -24,11 +24,12 @@ class FOObjectDetail {
 	/**
 	 * @param	parentItem	the parent item, with a field "id"
 	 */
-	public function new(api:Api, widget:Widget, serviceType:ServiceType, item:Dynamic, parentItem:Dynamic=null):Void {
+	public function new(api:Api, widget:Widget, serviceType:ServiceType, item:Dynamic, parentItem:Dynamic=null, onError:Null<String->Void> = null):Void {
 	      _api = api;
 	      _widget = widget;
 	      _serviceType = serviceType;
 	      _item = item;
+		  this.onError = onError;
 		  
 	      // init the process
 	      refresh();

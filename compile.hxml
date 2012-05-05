@@ -25,16 +25,6 @@
 #--no-traces
 #-js bin/App.js
 
-
-
-
-
-
-
-
-
-
-
 --next
 
 -php bin/mobile_app/server/
@@ -44,7 +34,6 @@
 -resource intermedia/fengOffice/server/templates/activated.html@activated
 -resource intermedia/fengOffice/server/templates/embed_file_video.html@embed_file_video
 -cmd cp -R bin/mobile_app/* /home/lexa/Documents/repositories/fengoffice/plugins/mobile_app/
-
 #-cmd cp -R bin/mobile_app/ /Users/lexa/Documents/repositories/tests/fengoffice2/plugins/mobile_app/
 
 

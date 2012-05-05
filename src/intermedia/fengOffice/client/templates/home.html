@@ -9,12 +9,15 @@
 				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.CHANGE_WORKSPACE_LABEL::</small>
 			</div>
 		</li>
-		<li id="workspaceBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:right;">
+		<li id="userBtn::id::" style="margin : 0px; margin: 0; padding: 0; float:right;">
 			<div style="display: inline-block; vertical-align: top; " >
 				<small style="margin: 0; padding: 0; ">::Lang.CURRENT_USER_LABEL::</small><br />
 				<strong style="margin: 0; padding: 0; ">::appState.curUser.username::</strong>
+				<small style="margin: 0; padding: 0; text-decoration: underline; ">::Lang.LOGOUT_LABEL::</small>
 			</div>
-			<img src="::if appState.curUser.picture_file::::Config.FO_URL::::appState.curUser.picture_file::::else::./assets/navigation/logo_big.png::end::" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
+ 			<img src="::if appState.curUser.picture_file::::Config.FO_URL::::appState.curUser.picture_file::::else::./assets/navigation/default-avatar.png::end::" style="margin : 0px; width: 40px; height: 40px; display: inline-block; " />
+<!--
+ -->
 		</li>
 	</ul>
 	<ul style="margin: 0; padding: 0; list-style-type: none; background-color: transparent; ">

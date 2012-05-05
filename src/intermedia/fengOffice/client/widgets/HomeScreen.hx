@@ -26,6 +26,10 @@ class HomeScreen {
 	 */
 	public var onChange:ServiceType->Void;
 	/**
+	 * callback for a click on an icon
+	 */
+	public var onLogout:Void->Void;
+	/**
 	 * constructor
 	 */
 	public function new(widget:Widget):Void {
@@ -50,6 +54,7 @@ class HomeScreen {
 		
 		// callbacks for click on the icons 
 		Lib.document.getElementById("workspaceBtn"+rand).onclick = _workspaceBtnCallback;
+		Lib.document.getElementById("userBtn"+rand).onclick = _userBtnCallback;
 		Lib.document.getElementById("filesBtn"+rand).onclick = _filesBtnCallback;
 		Lib.document.getElementById("tasksBtn"+rand).onclick = _tasksBtnCallback;
 		Lib.document.getElementById("notesBtn"+rand).onclick = _notesBtnCallback;
@@ -63,6 +68,12 @@ class HomeScreen {
 		AppState.getInstance().curWorkspace = SafeObjectTools.createEmpty();		
 		if (onChange != null) 
 			onChange(ServiceTypes.WORKSPACES);
+	}
+	public function _userBtnCallback(e:Event){
+		// workaround no persistence
+		AppState.getInstance().curUser = UserTools.fromDynamic({});		
+		if (onLogout != null) 
+			onLogout();
 	}
 	public function _filesBtnCallback(e:Event){
 		if (onChange != null) 

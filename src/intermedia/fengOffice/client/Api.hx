@@ -23,7 +23,7 @@ class Api {
 	 */
 	private function defaultOnError(err)
 	{
-		trace("Error : "+Std.string(err));
+		trace("Error (API default error handler) : "+Std.string(err));
 	}
 
 	/**
@@ -90,7 +90,7 @@ class Api {
 		if (!_checkAuth()) return;
 
 		var cnx = haxe.remoting.HttpAsyncConnection.urlConnect(Config.GATEWAY_URL);
-		
+
 		if (onError != null)
 			cnx.setErrorHandler( onError );
 		else

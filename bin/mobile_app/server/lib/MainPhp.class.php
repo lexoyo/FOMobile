@@ -31,7 +31,7 @@ class MainPhp {
 			$e2 = $_ex_;
 			{
 				$db->close();
-				haxe_Log::trace("error: " . $e2, _hx_anonymous(array("fileName" => "MainPhp.hx", "lineNumber" => 103, "className" => "MainPhp", "methodName" => "new")));
+				haxe_Log::trace("error: " . $e2, _hx_anonymous(array("fileName" => "MainPhp.hx", "lineNumber" => 104, "className" => "MainPhp", "methodName" => "new")));
 			}
 		}
 		$db->close();

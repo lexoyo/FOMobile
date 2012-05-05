@@ -140,6 +140,9 @@ class Widget {
 				var t = new haxe.Template(str);
 				var output = t.execute({config:Config, Lang:Lang});
 				setBody(output);
+			case error(msg):
+				Lib.document.getElementById("errorMsg").innerHTML = msg;
+				refresh();
 			default:
 		}
 	}

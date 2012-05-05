@@ -77,7 +77,15 @@ class Application {
 	private function doOnSubmit(userName:String, userPass:String){
 		widget = new Widget("MainWidget", "Feng Office App", Lib.document.getElementById("main"));
 		widget.setState(loading);
-		api.authenticate(userName, userPass, onAuth);
+		api.authenticate(userName, userPass, onAuth, displayError);
+	}
+	private function displayError(msg:String){
+		if (widget != null){
+			widget.setState(error(msg));
+		}
+		else{
+			trace("Error : "+msg);
+		}
 	}
 	private function onAuth(user:User){
 		if (user.error_msg != ""){
@@ -101,6 +109,7 @@ class Application {
 		
 		var homeScreen = new HomeScreen(widget);
 		homeScreen.onChange = goList;
+		homeScreen.onLogout = function () { t.goAuthPage(); } ;
 	}
 	private function goList(srv:ServiceType){
 		var t = this;
@@ -121,7 +130,7 @@ class Application {
 			objectLists.set(srv, list);
 		}
 */		
-		list = new FOObjectsList(api, widget);
+		list = new FOObjectsList(api, widget, displayError);
 		list.onHome = goHome;
 		list.onSelect = _onSelectItem;
 	}
@@ -132,9 +141,8 @@ class Application {
 		AppState.getInstance().curServiceType = srv;
 		AppState.getInstance().curItem = item;
 		
-		var detailView : FOObjectDetail = new FOObjectDetail(api, widget, srv, item, AppState.getInstance().curWorkspace);
+		var detailView : FOObjectDetail = new FOObjectDetail(api, widget, srv, item, AppState.getInstance().curWorkspace,displayError);
 		detailView.onHome = goHome;
-		//detailView.onChange = ;
 	}
 	private function _onSelectItem(item:Dynamic){
 		trace("item selected: "+item);
