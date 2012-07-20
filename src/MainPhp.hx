@@ -38,9 +38,44 @@ class MainPhp {
 			return;
 		}
 		
+		// **
+		// answers the call
 		
+		// create an incoming connection and give access to the "instance" object 
+		var context = new Context(); 
+		context.addObject("api",api); 
+		try{
+			if (HttpConnection.handleRequest(context)) {
+			      db.close();
+			      return;
+			}
+		}catch(e:Dynamic)
+		{
+			db.close();
+			trace( "error: "+e);
+		}
+
+		// **
+		// cleanup
+		db.close();
+		
+		// **
+		// handle normal request
+		var str = haxe.Resource.getString("activated");
+		var t = new haxe.Template(str);
+		var output = t.execute({config:Config.getInstance()});
+		Lib.print(output);
+		return;
+	}
+	
+	public static function main() {
+		//trace("Hello From FDT haXe !");
+		new MainPhp();
+	}
+}
 		/////////////////////////////////////////////////////////////
 		// UNIT TESTS 
+		// TODO: put this as "real" unit tests with utest
 		/////////////////////////////////////////////////////////////
 
 /*		trace("************************<br />");
@@ -87,38 +122,4 @@ class MainPhp {
 		trace("object with id "+oid+"<br />");
 		trace("name = "+api.getObject(oid, logpass, token).name+"<br />");
 		trace(api.getObject(oid, logpass, token)+"<br />");
-/**/		// create an incoming connection and give access to the "instance" object 
-		
-		// **
-		// answers the call
-		var context = new Context(); 
-		context.addObject("api",api); 
-		try{
-			if (HttpConnection.handleRequest(context)) {
-			      db.close();
-			      return;
-			}
-		}catch(e:Dynamic)
-		{
-			db.close();
-			trace( "error: "+e);
-		}
-
-		// **
-		// cleanup
-		db.close();
-		
-		// **
-		// handle normal request
-		var str = haxe.Resource.getString("activated");
-		var t = new haxe.Template(str);
-		var output = t.execute({config:Config.getInstance()});
-		Lib.print(output);
-		return;
-	}
-	
-	public static function main() {
-		//trace("Hello From FDT haXe !");
-		new MainPhp();
-	}
-}
+/**/
